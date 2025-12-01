@@ -1,0 +1,38 @@
+*,
+html,
+body {
+    scroll-behavior: smooth;
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.content {
+    h1 {
+        @apply mb-5;
+    }
+
+    h2 {
+        @apply mb-2;
+    }
+
+    p {
+        @apply text-gray-400 mb-6;
+    }
+
+    ul {
+        @apply text-gray-400 mb-6 list-disc pl-4;
+    }
+
+    a {
+        @apply text-white underline;
+    }
+}
+
+.container {
+    @apply mx-auto px-4 md:max-w-[90%] w-full;
+}
+
+.basic-link {
+    @apply text-primary font-semibold transition-all hover:opacity-70;
+}

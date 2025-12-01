@@ -1,0 +1,17 @@
+{
+    "MESSAGES": {},
+    "VALIDATIONS": {},
+    "METADATA": {
+        "ROOT": {
+            "TITLE": "Title",
+            "DESCRIPTION": "Description",
+            "OG_TITLE": "OG Title",
+            "OG_DESCRIPTION": "OG Description",
+            "OG_IMAGE_ALT": "OG Image Alt"
+        },
+        "NOT_FOUND": {
+            "TITLE": "Page Not Found",
+            "DESCRIPTION": "The page you are looking for does not exist."
+        }
+    }
+}
