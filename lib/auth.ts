@@ -14,3 +14,5 @@ export function auth(
 ) {
     return getServerSession(...args, AUTH_CONFIG);
 }
+
+export const getServerAuth = async () => getServerSession(AUTH_CONFIG);
