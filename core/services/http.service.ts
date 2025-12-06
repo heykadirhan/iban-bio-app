@@ -38,7 +38,10 @@ export namespace HttpService {
         return fetchWithRetry(url, requestOptions).catch((err) => {
             if (typeof window !== 'undefined') {
                 if (err.status === 401) return;
-                const errMessage = Array.isArray(err) ? err[0] : err;
+                const parsedErr = JSON.parse(err || '{}');
+                const errMessage = Array.isArray(parsedErr)
+                    ? parsedErr[0]?.message || parsedErr[0]
+                    : parsedErr?.message || parsedErr || 'Something went wrong';
                 toast.error(errMessage);
             }
             return Promise.reject(err);

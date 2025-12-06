@@ -13,7 +13,7 @@ export async function GET(
         await connectDB();
 
         const user = await UserModel.findOne({ username }).select(
-            'displayName bio avatarUrl allowSearchByPhone',
+            'displayName title bio avatarUrl allowSearchByPhone',
         );
 
         if (!user) {
@@ -23,19 +23,21 @@ export async function GET(
             );
         }
 
-        const methods = await PaymentMethodModel.find({
+        const paymentMethods = await PaymentMethodModel.find({
             user: user._id,
-            visibility: { $ne: PaymentMethodVisibility.PRIVATE },
+            visibility: PaymentMethodVisibility.PUBLIC,
         })
             .lean()
             .sort({ order: 1 });
 
+        await UserModel.updateOne(
+            { _id: user._id },
+            { $inc: { viewCount: 1 } },
+        );
+
         return NextResponse.json({
             profile: user,
-            methods: methods.map((m) => ({
-                ...m,
-                value: decrypt({ iv: m.iv, content: m.encryptedValue }),
-            })),
+            paymentMethods,
         });
     } catch (error: any) {
         return NextResponse.json(

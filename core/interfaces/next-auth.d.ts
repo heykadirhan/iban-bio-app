@@ -2,10 +2,10 @@ import { DefaultSession, DefaultUser } from 'next-auth';
 import { DefaultJWT } from 'next-auth/jwt';
 
 interface CustomUser {
-    isAdmin: boolean;
-    fullName: string;
-    hiddenProfile: boolean;
-    facility: { _id: string; name: string; slug: string } | null;
+    displayName: string;
+    phoneNumber: string;
+    username: string;
+    avatarUrl: string;
 }
 
 declare module 'next-auth/jwt' {

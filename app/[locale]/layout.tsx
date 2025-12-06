@@ -83,7 +83,7 @@ export default async function RootLayout({
             </Script>
             <GoogleAnalytics gaId={process.env.GA_ID} />
 
-            <body className={`${fontFamily.className} antialiased`}>
+            <body className={`${fontFamily.className} antialiased dark`}>
                 <NextIntlClientProvider>
                     <Toaster
                         position="bottom-right"
