@@ -8,6 +8,7 @@ import {
     ArrowUpRight,
     PlusCircle,
     Share,
+    Settings,
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { HttpService } from '@/core/services';
@@ -56,6 +57,13 @@ export function DashboardPage() {
                             </p>
                         </div>
                         <div className="flex gap-2">
+                            <Link href={Routes.SETTINGS}>
+                                <button
+                                    className="p-2 bg-white/5 hover:bg-white/10 rounded-lg transition-colors"
+                                    title="Settings">
+                                    <Settings size={16} />
+                                </button>
+                            </Link>
                             <button
                                 onClick={() => setIsShareModalOpen(true)}
                                 className="p-2 bg-white/5 hover:bg-white/10 rounded-lg transition-colors"

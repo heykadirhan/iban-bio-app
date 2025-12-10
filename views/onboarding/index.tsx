@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
     ArrowRight,
     User,
@@ -10,15 +10,15 @@ import {
     Sparkles,
     Wallet,
     Camera,
-    Loader2,
-    XIcon,
-    LinkIcon,
-    Globe,
-    Lock,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Endpoints, RegexPatterns, Routes } from '@/core/constants';
+import {
+    Endpoints,
+    PROFILE_VISIBILITY_OPTIONS,
+    RegexPatterns,
+    Routes,
+} from '@/core/constants';
 import z from 'zod';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -30,42 +30,12 @@ import {
     FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import {
-    InputGroup,
-    InputGroupAddon,
-    InputGroupText,
-    InputGroupInput,
-} from '@/components/ui/input-group';
-import { cn } from '@/lib/utils';
 import toast from 'react-hot-toast';
-import debounce from 'lodash.debounce';
 import { HttpService } from '@/core/services';
 import { ProfileVisibility } from '@/core/enums';
 import { Label } from '@/components/ui/label';
-
-const VISIBILITY_OPTIONS = [
-    {
-        id: 'public',
-        label: 'Public & Phone',
-        desc: 'Everyone who knows your username, link, or phone number',
-        icon: Globe,
-        color: 'bg-green-500/10 text-green-500 border-green-500/20',
-    },
-    {
-        id: 'link_only',
-        label: 'Expirable Links',
-        desc: 'Generate private & secure link that expires',
-        icon: LinkIcon,
-        color: 'bg-amber-500/10 text-amber-500 border-amber-500/20',
-    },
-    {
-        id: 'private',
-        label: 'Private',
-        desc: 'Only you can access your profile',
-        icon: Lock,
-        color: 'bg-red-500/10 text-red-500 border-red-500/20',
-    },
-];
+import { InputUsername } from '@/components/input-username';
+import { ProfileVisibilityOption } from '@/components/profile-visibility-option';
 
 const PERSONAS = [
     {
@@ -97,9 +67,7 @@ const PERSONAS = [
 export default function OnboardingPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [step, setStep] = useState(1);
-    const [usernameAvailability, setUsernameAvailability] = useState<
-        'idle' | 'loading' | 'available' | 'in-use'
-    >('idle');
+    const [usernameAvailable, setUsernameAvailable] = useState<boolean>(false);
 
     const formSchema = z.object({
         avatarUrl: z.string().optional(),
@@ -135,49 +103,14 @@ export default function OnboardingPage() {
         control: form.control,
         name: 'username',
     });
-    const visibility = useWatch({
-        control: form.control,
-        name: 'visibility',
-    });
+
     const persona = useWatch({
         control: form.control,
         name: 'persona',
     });
 
-    const checkUsernameAvailability = async (username: string) => {
-        if (!username) {
-            setUsernameAvailability('idle');
-            return;
-        }
-
-        setIsLoading(true);
-        setUsernameAvailability('loading');
-
-        try {
-            await HttpService.request(Endpoints.AUTH_CHECK_USERNAME, {
-                method: 'POST',
-                body: JSON.stringify({ username }),
-            });
-
-            setUsernameAvailability('available');
-        } catch {
-            setUsernameAvailability('in-use');
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    const debouncedCheckUsernameAvailability = useCallback(
-        debounce(checkUsernameAvailability, 300),
-        [],
-    );
-
-    useEffect(() => {
-        debouncedCheckUsernameAvailability(username);
-    }, [username]);
-
-    const submitForm = async (values: IFormSchema) => {
-        if (usernameAvailability !== 'available') {
+    const submitForm = async () => {
+        if (!usernameAvailable) {
             toast.error(
                 'Username is not available, please choose another one.',
             );
@@ -298,43 +231,12 @@ export default function OnboardingPage() {
                                         render={({ field }) => (
                                             <FormItem>
                                                 <FormControl>
-                                                    <InputGroup>
-                                                        <InputGroupInput
-                                                            {...field}
-                                                            placeholder="your-username"
-                                                        />
-                                                        <InputGroupAddon>
-                                                            <InputGroupText>
-                                                                iban.bio/
-                                                            </InputGroupText>
-                                                        </InputGroupAddon>
-                                                        <InputGroupAddon align="inline-end">
-                                                            {usernameAvailability !==
-                                                                'idle' && (
-                                                                <div
-                                                                    className={cn(
-                                                                        'flex size-5 items-center justify-center rounded-full',
-                                                                        usernameAvailability ===
-                                                                            'loading'
-                                                                            ? 'bg-transparent'
-                                                                            : usernameAvailability ===
-                                                                              'available'
-                                                                            ? 'bg-green-500/20 text-green-500'
-                                                                            : 'bg-red-500/20 text-red-500',
-                                                                    )}>
-                                                                    {usernameAvailability ===
-                                                                    'available' ? (
-                                                                        <Check className="size-3" />
-                                                                    ) : usernameAvailability ===
-                                                                      'in-use' ? (
-                                                                        <XIcon className="size-3" />
-                                                                    ) : (
-                                                                        <Loader2 className="animate-spin" />
-                                                                    )}
-                                                                </div>
-                                                            )}
-                                                        </InputGroupAddon>
-                                                    </InputGroup>
+                                                    <InputUsername
+                                                        field={field}
+                                                        onChangeAvailablity={
+                                                            setUsernameAvailable
+                                                        }
+                                                    />
                                                 </FormControl>
                                                 <p className="text-xs text-zinc-500">
                                                     This will be your unique
@@ -355,7 +257,7 @@ export default function OnboardingPage() {
                                     render={({ field }) => (
                                         <FormItem>
                                             <div className="grid grid-cols-3 gap-2 mb-2">
-                                                {VISIBILITY_OPTIONS.map(
+                                                {PROFILE_VISIBILITY_OPTIONS.map(
                                                     (option) => (
                                                         <button
                                                             key={option.id}
@@ -363,36 +265,13 @@ export default function OnboardingPage() {
                                                                 field.onChange(
                                                                     option.id,
                                                                 )
-                                                            }
-                                                            type="button"
-                                                            className={`
-                            relative flex flex-col items-center justify-center gap-2 p-3 rounded-xl border transition-all duration-200
-                            ${
-                                visibility === option.id
-                                    ? `${option.color} bg-opacity-10 border-opacity-50 shadow-sm ring-1 ring-inset ring-white/10`
-                                    : 'bg-zinc-900 border-zinc-800 text-zinc-500 hover:bg-zinc-800 hover:text-zinc-300'
-                            }
-                          `}>
-                                                            <option.icon
-                                                                size={20}
+                                                            }>
+                                                            <ProfileVisibilityOption
+                                                                option={option}
+                                                                value={
+                                                                    field.value
+                                                                }
                                                             />
-                                                            <div className="text-center">
-                                                                <p className="text-xs font-bold">
-                                                                    {
-                                                                        option.label
-                                                                    }
-                                                                </p>
-                                                                <p className="text-[10px] opacity-70 hidden sm:block mt-0.5">
-                                                                    {
-                                                                        option.desc
-                                                                    }
-                                                                </p>
-                                                            </div>
-
-                                                            {visibility ===
-                                                                option.id && (
-                                                                <div className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-current shadow-[0_0_5px_currentColor]"></div>
-                                                            )}
                                                         </button>
                                                     ),
                                                 )}

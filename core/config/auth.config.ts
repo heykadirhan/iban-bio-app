@@ -4,6 +4,7 @@ import { connectDB } from '@/lib/db';
 import { Routes } from '@core/constants';
 import { AuthOptions } from 'next-auth';
 import { OTPModel, UserModel } from '@core/models';
+import { ProfileVisibility } from '../enums';
 
 export const AUTH_CONFIG: AuthOptions = {
     providers: [
@@ -50,6 +51,8 @@ export const AUTH_CONFIG: AuthOptions = {
                     displayName: user.displayName,
                     username: user.username,
                     avatarUrl: user.avatarUrl,
+                    bio: user.bio,
+                    visibility: user.visibility,
                 };
             },
         }),
@@ -96,6 +99,8 @@ export const AUTH_CONFIG: AuthOptions = {
                     (user as any).name || (user as any).displayName;
                 token.avatarUrl =
                     (user as any).image || (user as any).avatarUrl;
+                token.bio = (user as any).bio;
+                token.visibility = (user as any).visibility;
             }
 
             if (trigger === 'update' && session) {
@@ -112,6 +117,8 @@ export const AUTH_CONFIG: AuthOptions = {
                 session.user.displayName = token.displayName as string;
                 session.user.username = token.username as string;
                 session.user.avatarUrl = token.avatarUrl as string;
+                session.user.bio = token.bio as string;
+                session.user.visibility = token.visibility as ProfileVisibility;
             }
             return session;
         },

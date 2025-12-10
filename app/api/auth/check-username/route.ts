@@ -1,6 +1,6 @@
 import { checkUsernameReqDto } from '@/core/dtos';
 import { UserModel } from '@/core/models';
-import { connectDB, HttpStatus } from '@/lib';
+import { connectDB, getServerAuth, HttpStatus } from '@/lib';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
@@ -10,7 +10,12 @@ export async function POST(req: NextRequest) {
         const unparsedBody = await req.json();
         const { username } = checkUsernameReqDto.parse(unparsedBody);
 
-        const foundUser = await UserModel.findOne({ username }).lean();
+        const session = await getServerAuth();
+
+        const foundUser = await UserModel.findOne({
+            username,
+            ...(session ? { _id: { $ne: session.user.id } } : {}),
+        }).lean();
 
         if (foundUser) {
             return NextResponse.json(

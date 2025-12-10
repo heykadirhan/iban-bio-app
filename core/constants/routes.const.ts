@@ -4,4 +4,5 @@ export const Routes = {
     ONBOARDING: '/onboarding',
     USER: '/:username',
     DASHBOARD: '/dashboard',
+    SETTINGS: '/settings',
 };

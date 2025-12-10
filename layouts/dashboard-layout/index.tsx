@@ -10,17 +10,17 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Routes } from '@/core/constants';
-import { CreditCard, LogOut, Settings, User } from 'lucide-react';
+import { LogOut, Settings, User } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, ReactNode } from 'react';
 
 export function DashboardLayout({
     children,
     title,
-}: PropsWithChildren<{ title?: string }>) {
+}: PropsWithChildren<{ title?: string | ReactNode }>) {
     const session = useSession();
     const router = useRouter();
 
@@ -36,31 +36,36 @@ export function DashboardLayout({
                     <div className="container">
                         <div className="flex justify-between items-center">
                             {title ? (
-                                <h1 className="text-2xl font-bold">{title}</h1>
+                                <h1 className="text-2xl font-bold flex items-center gap-2.5">
+                                    {title}
+                                </h1>
                             ) : (
                                 <br />
                             )}
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                    <button className="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center border border-zinc-700">
-                                        {session.data?.user.avatarUrl ? (
-                                            <Image
-                                                src={
-                                                    session.data?.user.avatarUrl
-                                                }
-                                                alt="Avatar"
-                                                width={40}
-                                                height={40}
-                                                className="w-10 h-10 rounded-full"
-                                            />
-                                        ) : (
-                                            <span className="font-bold text-sm">
-                                                {session.data?.user.displayName
-                                                    ?.charAt(0)
-                                                    .toLocaleUpperCase()}
-                                            </span>
-                                        )}
-                                    </button>
+                                    {session.status === 'authenticated' && (
+                                        <button className="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center border border-zinc-700">
+                                            {session.data?.user.avatarUrl ? (
+                                                <Image
+                                                    src={
+                                                        session.data?.user
+                                                            .avatarUrl
+                                                    }
+                                                    alt="Avatar"
+                                                    width={40}
+                                                    height={40}
+                                                    className="w-10 h-10 rounded-full"
+                                                />
+                                            ) : (
+                                                <span className="font-bold text-sm">
+                                                    {session.data?.user.displayName
+                                                        ?.charAt(0)
+                                                        .toLocaleUpperCase()}
+                                                </span>
+                                            )}
+                                        </button>
+                                    )}
                                 </DropdownMenuTrigger>
 
                                 <DropdownMenuContent align="end">
@@ -86,7 +91,10 @@ export function DashboardLayout({
                                             ⇧⌘P
                                         </DropdownMenuShortcut>
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem>
+                                    <DropdownMenuItem
+                                        onClick={() =>
+                                            router.push(Routes.SETTINGS)
+                                        }>
                                         <Settings className="mr-2 h-4 w-4" />
                                         <span>Settings</span>
                                     </DropdownMenuItem>

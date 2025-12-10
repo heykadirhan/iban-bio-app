@@ -1,11 +1,14 @@
 import { DefaultSession, DefaultUser } from 'next-auth';
 import { DefaultJWT } from 'next-auth/jwt';
+import { ProfileVisibility } from '../enums';
 
 interface CustomUser {
     displayName: string;
     phoneNumber: string;
     username: string;
     avatarUrl: string;
+    bio: string;
+    visibility: ProfileVisibility;
 }
 
 declare module 'next-auth/jwt' {

@@ -1,13 +1,15 @@
+import { AUTH_CONFIG } from '@/core/config';
 import { updateProfileReqDto } from '@/core/dtos/update-profile-req.dto';
 import { UserModel } from '@/core/models';
 import { connectDB, getServerAuth, HttpStatus } from '@/lib';
+import { getServerSession } from 'next-auth';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function PATCH(req: NextRequest) {
     try {
         await connectDB();
 
-        const session = await getServerAuth();
+        const session = await getServerSession(AUTH_CONFIG);
         if (!session)
             return NextResponse.json(
                 { error: 'Unauthorized' },
@@ -35,6 +37,8 @@ export async function PATCH(req: NextRequest) {
                 displayName: body.displayName,
                 username: body.username,
                 persona: body.persona,
+                visibility: body.visibility,
+                bio: body.bio,
             },
         );
 

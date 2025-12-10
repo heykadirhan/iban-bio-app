@@ -20,7 +20,6 @@ const UserSchema = new mongoose.Schema(
         bio: { type: String, maxlength: 160 },
         avatarUrl: { type: String },
         persona: { type: String },
-        allowSearchByPhone: { type: Boolean, default: true },
         viewCount: { type: Number, default: 0 },
         visibility: {
             type: String,

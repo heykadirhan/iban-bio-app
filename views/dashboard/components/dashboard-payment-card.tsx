@@ -6,12 +6,16 @@ import { HttpService } from '@/core/services';
 import { cn } from '@/lib/utils';
 import {
     Check,
+    ChevronLeft,
+    ChevronRight,
     Copy,
     Edit2,
     Loader2,
     Power,
+    Settings2,
     Trash2,
     Wallet2Icon,
+    XIcon,
 } from 'lucide-react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
@@ -32,6 +36,7 @@ export function DashboardPaymentCard({
 }) {
     const [isLoading, setIsLoading] = useState(false);
     const [copied, setCopied] = useState(false);
+    const [isActionsOpen, setIsActionsOpen] = useState(false);
 
     const handleEdit = (id: string) => {};
 
@@ -136,46 +141,67 @@ export function DashboardPaymentCard({
                             }
                         </h3>
                         <p className="text-xs text-zinc-500">
-                            {item.decryptedValue.length < 25
+                            {item.decryptedValue.length < 35
                                 ? item.decryptedValue
                                 : `${item.decryptedValue.slice(
                                       0,
-                                      10,
-                                  )}...${item.decryptedValue.slice(-10)}`}
+                                      15,
+                                  )}...${item.decryptedValue.slice(-15)}`}
                         </p>
                     </div>
                 </div>
 
-                <div className="absolute right-4 flex items-center gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity bg-background/50 rounded-full p-0.5">
+                <div
+                    className={cn(
+                        'absolute right-4 flex items-center opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity bg-background rounded-full p-0.5',
+                        isActionsOpen && '!opacity-100',
+                    )}>
+                    <div
+                        className={cn(
+                            'flex items-center gap-1 transition-all overflow-hidden',
+                            isActionsOpen
+                                ? 'max-w-[1000px] opacity-100 pr-1'
+                                : 'max-w-0 opacity-0',
+                        )}>
+                        <button
+                            onClick={() => handleToggleStatus(item._id)}
+                            className={`p-2 rounded-full ${
+                                item.isActive
+                                    ? 'text-green-500 hover:bg-green-500/10'
+                                    : 'text-zinc-600 hover:bg-zinc-800'
+                            }`}
+                            title="Active / Deactivate">
+                            <Power size={16} />
+                        </button>
+                        <button
+                            onClick={() => handleCopy(item.decryptedValue)}
+                            className={`p-2 rounded-full ${
+                                copied
+                                    ? 'text-green-500'
+                                    : 'text-zinc-400 hover:bg-zinc-700'
+                            }`}
+                            title="Copy">
+                            {copied ? <Check size={16} /> : <Copy size={16} />}
+                        </button>
+                        <button
+                            onClick={() => handleEdit(item._id)}
+                            className="p-2 text-zinc-400 hover:text-white hover:bg-zinc-700 rounded-full">
+                            <Edit2 size={16} />
+                        </button>
+                        <button
+                            onClick={() => handleDelete(item._id)}
+                            className="p-2 text-zinc-400 hover:text-red-500 hover:bg-red-500/10 rounded-full">
+                            <Trash2 size={16} />
+                        </button>
+                    </div>
                     <button
-                        onClick={() => handleToggleStatus(item._id)}
-                        className={`p-2 rounded-full ${
-                            item.isActive
-                                ? 'text-green-500 hover:bg-green-500/10'
-                                : 'text-zinc-600 hover:bg-zinc-800'
-                        }`}
-                        title="Active / Deactivate">
-                        <Power size={16} />
-                    </button>
-                    <button
-                        onClick={() => handleCopy(item.decryptedValue)}
-                        className={`p-2 rounded-full ${
-                            copied
-                                ? 'text-green-500'
-                                : 'text-zinc-400 hover:bg-zinc-700'
-                        }`}
-                        title="Copy">
-                        {copied ? <Check size={16} /> : <Copy size={16} />}
-                    </button>
-                    <button
-                        onClick={() => handleEdit(item._id)}
+                        onClick={() => setIsActionsOpen(!isActionsOpen)}
                         className="p-2 text-zinc-400 hover:text-white hover:bg-zinc-700 rounded-full">
-                        <Edit2 size={16} />
-                    </button>
-                    <button
-                        onClick={() => handleDelete(item._id)}
-                        className="p-2 text-zinc-400 hover:text-red-500 hover:bg-red-500/10 rounded-full">
-                        <Trash2 size={16} />
+                        {isActionsOpen ? (
+                            <XIcon size={16} />
+                        ) : (
+                            <Settings2 size={16} />
+                        )}
                     </button>
                 </div>
             </div>

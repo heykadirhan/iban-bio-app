@@ -21,21 +21,12 @@ export async function GET(
             );
         }
 
-        console.log(session);
-
         const user = await UserModel.findOne({
             username,
             // ...(session?.user.username !== username && {
             //     visibility: ProfileVisibility.PUBLIC,
             // }),
-        }).select([
-            'username',
-            'displayName',
-            'title',
-            'bio',
-            'avatarUrl',
-            'allowSearchByPhone',
-        ]);
+        }).select(['username', 'displayName', 'title', 'bio', 'avatarUrl']);
 
         if (!user) {
             return NextResponse.json(
