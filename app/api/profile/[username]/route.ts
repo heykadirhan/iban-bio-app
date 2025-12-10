@@ -1,20 +1,41 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { connectDB, decrypt, HttpStatus } from '@/lib';
+import { connectDB, getServerAuth, HttpStatus } from '@/lib';
 import { PaymentMethodModel, UserModel } from '@/core/models';
-import { PaymentMethodVisibility } from '@/core/enums';
+import { ProfileVisibility } from '@/core/enums';
 
 export async function GET(
     request: NextRequest,
-    { params }: { params: { username: string } },
+    { params }: { params: Promise<{ username: string }> },
 ) {
-    const { username } = params;
+    const { username } = await params;
 
     try {
         await connectDB();
 
-        const user = await UserModel.findOne({ username }).select(
-            'displayName title bio avatarUrl allowSearchByPhone',
-        );
+        const session = await getServerAuth();
+
+        if (!username) {
+            return NextResponse.json(
+                { error: 'Username is required' },
+                { status: HttpStatus.BAD_REQUEST },
+            );
+        }
+
+        console.log(session);
+
+        const user = await UserModel.findOne({
+            username,
+            // ...(session?.user.username !== username && {
+            //     visibility: ProfileVisibility.PUBLIC,
+            // }),
+        }).select([
+            'username',
+            'displayName',
+            'title',
+            'bio',
+            'avatarUrl',
+            'allowSearchByPhone',
+        ]);
 
         if (!user) {
             return NextResponse.json(
@@ -25,15 +46,17 @@ export async function GET(
 
         const paymentMethods = await PaymentMethodModel.find({
             user: user._id,
-            visibility: PaymentMethodVisibility.PUBLIC,
+            isActive: true,
         })
             .lean()
             .sort({ order: 1 });
 
-        await UserModel.updateOne(
-            { _id: user._id },
-            { $inc: { viewCount: 1 } },
-        );
+        if (session?.user.id !== user._id) {
+            await UserModel.updateOne(
+                { _id: user._id },
+                { $inc: { viewCount: 1 } },
+            );
+        }
 
         return NextResponse.json({
             profile: user,

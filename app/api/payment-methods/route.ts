@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { encrypt, decrypt, connectDB, getServerAuth, HttpStatus } from '@/lib';
 import { PaymentMethodModel } from '@/core/models';
+import { paymentMethodBaseReqDto, paymentMethodReqDto } from '@/core/dtos';
+import { PaymentMethodType } from '@/core/enums';
 
 export async function GET() {
     try {
@@ -16,7 +18,9 @@ export async function GET() {
 
         const methods = await PaymentMethodModel.find({
             userId: session.user.id,
-        }).sort({ order: 1 });
+        })
+            .sort({ order: 1 })
+            .select('+iv');
 
         const decryptedMethods = methods.map((m) => ({
             ...m.toObject(),
@@ -45,28 +49,38 @@ export async function POST(req: NextRequest) {
                 { status: HttpStatus.UNAUTHORIZED },
             );
 
-        const body = await req.json();
-        const { type, provider, value, title, visibility } = body;
+        const unparsedBody = await req.json();
+        const body = paymentMethodReqDto.parse(unparsedBody);
 
-        const encryptedData = encrypt(value);
+        const value = {
+            [PaymentMethodType.IBAN]: body.meta.ibanNumber,
+            [PaymentMethodType.CRYPTO]: body.meta.address,
+            [PaymentMethodType.DIGITAL_WALLET]: body.meta.number,
+            [PaymentMethodType.LINK]: body.meta.linkUrl,
+        }[body.type];
+
+        const encryptedData = encrypt(value || '');
 
         const newMethod = await PaymentMethodModel.create({
             user: session.user.id,
-            type,
-            provider,
+            type: body.type,
             encryptedValue: encryptedData.content,
             iv: encryptedData.iv,
-            title,
-            visibility,
+            title: body.title,
+            appearance: body.appearance,
+            meta: body.meta,
             order: await PaymentMethodModel.countDocuments({
                 user: session.user.id,
             }),
         });
 
-        return NextResponse.json({ success: true, id: newMethod._id });
+        return NextResponse.json(
+            { success: true, id: newMethod._id },
+            { status: HttpStatus.CREATED },
+        );
     } catch (error: any) {
         return NextResponse.json(
-            { error: error.message },
+            { success: false, error: error.message },
             { status: HttpStatus.BAD_REQUEST },
         );
     }
@@ -83,26 +97,44 @@ export async function PATCH(req: NextRequest) {
                 { status: HttpStatus.UNAUTHORIZED },
             );
 
-        const { id, ...body } = await req.json();
-        const encryptedValue = encrypt(body.value);
+        const unparsedBody = await req.json();
+        let body;
+        if (!!unparsedBody.type) {
+            body = paymentMethodReqDto.parse(unparsedBody);
+        } else {
+            body = paymentMethodBaseReqDto.partial().parse(unparsedBody);
+        }
+
+        const value = {
+            [PaymentMethodType.IBAN]: body.meta?.ibanNumber,
+            [PaymentMethodType.CRYPTO]: body.meta?.address,
+            [PaymentMethodType.DIGITAL_WALLET]: body.meta?.number,
+            [PaymentMethodType.LINK]: body.meta?.linkUrl,
+        }[body.type];
+
+        let encryptedData;
+        if (value) {
+            encryptedData = encrypt(value || '');
+        }
 
         await PaymentMethodModel.findOneAndUpdate(
-            { _id: id, user: session.user.id },
+            { _id: body.id, user: session.user.id },
             {
-                encryptedValue: encryptedValue.content,
-                iv: encryptedValue.iv,
+                type: body.type,
+                encryptedValue: encryptedData?.content,
+                iv: encryptedData?.iv,
                 title: body.title,
-                description: body.description,
-                visibility: body.visibility,
-                isActive: body.isActive,
+                appearance: body.appearance,
+                meta: body.meta,
                 order: body.order,
+                isActive: body.isActive,
             },
         );
 
-        return NextResponse.json({ success: true, id });
+        return NextResponse.json({ success: true, id: body.id });
     } catch (error: any) {
         return NextResponse.json(
-            { error: error.message },
+            { success: false, error: error.message },
             { status: HttpStatus.BAD_REQUEST },
         );
     }
@@ -129,7 +161,7 @@ export async function DELETE(req: NextRequest) {
         return NextResponse.json({ success: true });
     } catch (error: any) {
         return NextResponse.json(
-            { error: error.message },
+            { success: false, error: error.message },
             { status: HttpStatus.BAD_REQUEST },
         );
     }

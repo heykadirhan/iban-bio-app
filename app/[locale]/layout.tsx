@@ -9,6 +9,7 @@ import { PropsWithChildren } from 'react';
 import { getTranslations } from 'next-intl/server';
 import { MetaFuncProps } from '@/core/interfaces';
 import { TOAST_CONFIG } from '@/core/config';
+import { AuthWrapper } from '@/components/auth-wrapper';
 
 const fontFamily = Gabarito({
     subsets: ['latin'],
@@ -90,7 +91,7 @@ export default async function RootLayout({
                         toastOptions={TOAST_CONFIG}
                     />
 
-                    {children}
+                    <AuthWrapper>{children}</AuthWrapper>
                 </NextIntlClientProvider>
             </body>
         </html>

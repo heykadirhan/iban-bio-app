@@ -1,4 +1,5 @@
 import { PropsWithParams } from '@/core/interfaces';
+import { DashboardLayout } from '@/layouts/dashboard-layout';
 import { UserPage } from '@/views/user';
 import { notFound } from 'next/navigation';
 
@@ -16,5 +17,9 @@ export default async function Page({
         return notFound();
     }
 
-    return <UserPage user={user} />;
+    return (
+        <DashboardLayout>
+            <UserPage user={user} />
+        </DashboardLayout>
+    );
 }

@@ -1,5 +1,13 @@
+import { Routes } from '@/core/constants';
+import { getServerAuth } from '@/lib';
 import { GetStartedPage } from '@/views/get-started';
+import { redirect } from 'next/navigation';
 
-export default function Page() {
+export default async function Page() {
+    const session = await getServerAuth();
+
+    if (session?.user) {
+        redirect(Routes.DASHBOARD);
+    }
     return <GetStartedPage />;
 }

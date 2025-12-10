@@ -1,5 +1,5 @@
 import { PaymentMethodModel } from '@/core/models';
-import { connectDB, HttpStatus } from '@/lib';
+import { connectDB, decrypt, HttpStatus } from '@/lib';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
@@ -15,7 +15,9 @@ export async function POST(req: NextRequest) {
             },
         );
 
-        return NextResponse.json({ success: true, data: paymentMethod });
+        const decryptedValue = decrypt(paymentMethod!.encryptedValue);
+
+        return NextResponse.json({ success: true, data: decryptedValue });
     } catch {
         return NextResponse.json(
             { error: 'Copy error' },

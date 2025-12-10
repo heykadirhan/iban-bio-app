@@ -12,6 +12,9 @@ import {
     Camera,
     Loader2,
     XIcon,
+    LinkIcon,
+    Globe,
+    Lock,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -37,6 +40,32 @@ import { cn } from '@/lib/utils';
 import toast from 'react-hot-toast';
 import debounce from 'lodash.debounce';
 import { HttpService } from '@/core/services';
+import { ProfileVisibility } from '@/core/enums';
+import { Label } from '@/components/ui/label';
+
+const VISIBILITY_OPTIONS = [
+    {
+        id: 'public',
+        label: 'Public & Phone',
+        desc: 'Everyone who knows your username, link, or phone number',
+        icon: Globe,
+        color: 'bg-green-500/10 text-green-500 border-green-500/20',
+    },
+    {
+        id: 'link_only',
+        label: 'Expirable Links',
+        desc: 'Generate private & secure link that expires',
+        icon: LinkIcon,
+        color: 'bg-amber-500/10 text-amber-500 border-amber-500/20',
+    },
+    {
+        id: 'private',
+        label: 'Private',
+        desc: 'Only you can access your profile',
+        icon: Lock,
+        color: 'bg-red-500/10 text-red-500 border-red-500/20',
+    },
+];
 
 const PERSONAS = [
     {
@@ -74,10 +103,15 @@ export default function OnboardingPage() {
 
     const formSchema = z.object({
         avatarUrl: z.string().optional(),
-        displayName: z.string().nonempty({ message: 'Full name is required' }),
+        displayName: z
+            .string()
+            .nonempty({ message: 'Please enter your full name' }),
+        visibility: z.enum(ProfileVisibility, {
+            error: 'Please select a visibility option',
+        }),
         username: z
             .string()
-            .nonempty({ message: 'Username is required' })
+            .nonempty({ message: 'Please enter a username' })
             .regex(RegexPatterns.USERNAME, {
                 message:
                     'Username can only contain lowercase letters, numbers, and hyphens',
@@ -100,6 +134,10 @@ export default function OnboardingPage() {
     const username = useWatch({
         control: form.control,
         name: 'username',
+    });
+    const visibility = useWatch({
+        control: form.control,
+        name: 'visibility',
     });
     const persona = useWatch({
         control: form.control,
@@ -233,10 +271,7 @@ export default function OnboardingPage() {
 
                             <div className="space-y-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-zinc-400 mb-2">
-                                        Full Name
-                                    </label>
-
+                                    <Label>Full Name</Label>
                                     <FormField
                                         control={form.control}
                                         name="displayName"
@@ -255,9 +290,8 @@ export default function OnboardingPage() {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-zinc-400 mb-2">
-                                        Username
-                                    </label>
+                                    <Label>Username</Label>
+
                                     <FormField
                                         control={form.control}
                                         name="username"
@@ -302,15 +336,71 @@ export default function OnboardingPage() {
                                                         </InputGroupAddon>
                                                     </InputGroup>
                                                 </FormControl>
+                                                <p className="text-xs text-zinc-500">
+                                                    This will be your unique
+                                                    profile link.
+                                                </p>
                                                 <FormMessage />
                                             </FormItem>
                                         )}
                                     />
-
-                                    <p className="text-xs text-zinc-500 mt-2 pl-1">
-                                        This will be your unique profile link.
-                                    </p>
                                 </div>
+                            </div>
+
+                            <div>
+                                <Label>Profile Visibility</Label>
+                                <FormField
+                                    control={form.control}
+                                    name="visibility"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <div className="grid grid-cols-3 gap-2 mb-2">
+                                                {VISIBILITY_OPTIONS.map(
+                                                    (option) => (
+                                                        <button
+                                                            key={option.id}
+                                                            onClick={() =>
+                                                                field.onChange(
+                                                                    option.id,
+                                                                )
+                                                            }
+                                                            type="button"
+                                                            className={`
+                            relative flex flex-col items-center justify-center gap-2 p-3 rounded-xl border transition-all duration-200
+                            ${
+                                visibility === option.id
+                                    ? `${option.color} bg-opacity-10 border-opacity-50 shadow-sm ring-1 ring-inset ring-white/10`
+                                    : 'bg-zinc-900 border-zinc-800 text-zinc-500 hover:bg-zinc-800 hover:text-zinc-300'
+                            }
+                          `}>
+                                                            <option.icon
+                                                                size={20}
+                                                            />
+                                                            <div className="text-center">
+                                                                <p className="text-xs font-bold">
+                                                                    {
+                                                                        option.label
+                                                                    }
+                                                                </p>
+                                                                <p className="text-[10px] opacity-70 hidden sm:block mt-0.5">
+                                                                    {
+                                                                        option.desc
+                                                                    }
+                                                                </p>
+                                                            </div>
+
+                                                            {visibility ===
+                                                                option.id && (
+                                                                <div className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-current shadow-[0_0_5px_currentColor]"></div>
+                                                            )}
+                                                        </button>
+                                                    ),
+                                                )}
+                                            </div>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
                             </div>
 
                             <Button
@@ -405,7 +495,7 @@ export default function OnboardingPage() {
                             <p className="text-xs text-zinc-500 uppercase mb-1 tracking-widest">
                                 Your Link
                             </p>
-                            <p className="text-indigo-400 font-mono font-medium">
+                            <p className="text-indigo-400 font-medium">
                                 iban.bio/{username}
                             </p>
                         </div>

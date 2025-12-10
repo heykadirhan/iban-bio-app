@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { ProfileVisibility } from '@core/enums';
 
 const UserSchema = new mongoose.Schema(
     {
@@ -21,6 +22,12 @@ const UserSchema = new mongoose.Schema(
         persona: { type: String },
         allowSearchByPhone: { type: Boolean, default: true },
         viewCount: { type: Number, default: 0 },
+        visibility: {
+            type: String,
+            required: true,
+            enum: Object.values(ProfileVisibility),
+            default: ProfileVisibility.LINK_ONLY,
+        },
         lastLogin: { type: Date },
     },
     { timestamps: true },

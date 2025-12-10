@@ -166,7 +166,7 @@ export function GetStartedPage() {
                                                 <FormItem>
                                                     <FormControl>
                                                         <div className="mt-2.5 text-lg flex items-center gap-3 bg-zinc-900/50 border border-zinc-800 rounded-lg focus-within:border-blue-500/50 focus-within:ring-4 focus-within:ring-blue-500/10 transition-all duration-300">
-                                                            <span className="pl-6 text-zinc-500 font-mono">
+                                                            <span className="pl-6 text-zinc-500">
                                                                 +90
                                                             </span>
                                                             <input

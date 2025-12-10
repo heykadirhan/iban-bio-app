@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { PaymentMethodType, PaymentMethodVisibility } from '../enums';
+import { PaymentMethodType } from '../enums';
 
 const PaymentMethodSchema = new mongoose.Schema(
     {
@@ -14,30 +14,24 @@ const PaymentMethodSchema = new mongoose.Schema(
             required: true,
             enum: Object.values(PaymentMethodType),
         },
-        provider: {
-            type: String,
-            required: true,
-        },
+        title: { type: String },
+        appearance: { type: String },
 
         encryptedValue: {
             type: String,
             required: true,
         },
-        iv: { type: String, required: true },
+        iv: { type: String, required: true, select: false },
 
         meta: {
+            accountHolderName: String,
+            currency: String,
+            coin: String,
             network: String,
-            branchCode: String,
-            currency: { type: String, default: 'TRY' },
-            accountHolder: String,
+            appName: String,
+            linkName: String,
         },
-        title: { type: String },
-        description: { type: String },
-        visibility: {
-            type: String,
-            enum: Object.values(PaymentMethodVisibility),
-            default: PaymentMethodVisibility.PUBLIC,
-        },
+
         order: { type: Number, default: 0 },
         copyCount: { type: Number, default: 0 },
         isActive: { type: Boolean, default: true },

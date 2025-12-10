@@ -1,4 +1,5 @@
 import { Routes } from '@/core/constants';
+import { DashboardLayout } from '@/layouts/dashboard-layout';
 import { getServerAuth } from '@/lib';
 import { DashboardPage } from '@/views/dashboard';
 import { redirect } from 'next/navigation';
@@ -12,5 +13,9 @@ export default async function Page() {
     if (session.user && !session.user.username) {
         redirect(Routes.ONBOARDING);
     }
-    return <DashboardPage />;
+    return (
+        <DashboardLayout title="Dashboard">
+            <DashboardPage />
+        </DashboardLayout>
+    );
 }
