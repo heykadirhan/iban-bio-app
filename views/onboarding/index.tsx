@@ -374,7 +374,7 @@ export default function OnboardingPage() {
                             <p className="text-xs text-zinc-500 uppercase mb-1 tracking-widest">
                                 Your Link
                             </p>
-                            <p className="text-indigo-400 font-medium">
+                            <p className="text-indigo-400 font-mono font-medium">
                                 iban.bio/{username}
                             </p>
                         </div>

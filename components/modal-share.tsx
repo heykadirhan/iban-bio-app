@@ -27,7 +27,7 @@ export function ModalShare({
         <Dialog
             open={isOpen}
             onOpenChange={onClose}>
-            <DialogContent className="">
+            <DialogContent>
                 <DialogTitle>Share your IBAN Bio Profile</DialogTitle>
 
                 <div className="relative group mt-3 mb-6">

@@ -23,18 +23,24 @@ import {
 } from '@/components/ui/form';
 import z from 'zod';
 import { ProfileVisibility } from '@/core/enums/profile-visibility.enum';
-import { PROFILE_VISIBILITY_OPTIONS, RegexPatterns } from '@/core/constants';
+import {
+    PROFILE_VISIBILITY_OPTIONS,
+    RegexPatterns,
+    Routes,
+} from '@/core/constants';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Textarea } from '@/components/ui/textarea';
 import { InputUsername } from '@/components/input-username';
 import { ProfileVisibilityOption } from '@/components/profile-visibility-option';
-import { signOut, useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 import { HttpService } from '@/core/services';
 import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
 export function SettingsPage() {
+    const router = useRouter();
     const session = useSession();
     const [usernameAvailable, setUsernameAvailable] = useState<boolean>(false);
     const [isSaving, setIsSaving] = useState(false);
@@ -82,6 +88,13 @@ export function SettingsPage() {
     }, [session.data, form]);
 
     const handleSave = async (values: IFormSchema) => {
+        if (!usernameAvailable) {
+            toast.error(
+                'Username is not available. Please choose another one.',
+            );
+            return;
+        }
+
         try {
             setIsSaving(true);
 
@@ -100,6 +113,7 @@ export function SettingsPage() {
                 },
             });
 
+            router.push(Routes.DASHBOARD);
             toast.success('Profile updated successfully!');
         } finally {
             setIsSaving(false);

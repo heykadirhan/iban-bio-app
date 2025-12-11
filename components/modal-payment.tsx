@@ -1,7 +1,6 @@
 'use client';
-import { useState, useEffect, act } from 'react';
-import { Globe, LinkIcon, Lock, Sparkles } from 'lucide-react';
-import { currencies } from 'country-data-list';
+import { useState, useEffect } from 'react';
+import { Sparkles } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger } from './ui/tabs';
 import { Label } from './ui/label';
 import { Input } from './ui/input';
@@ -25,25 +24,11 @@ import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormMessage } from './ui/form';
 import { cn } from '@/lib/utils';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from './ui/select';
 import { paymentMethodReqDto } from '@/core/dtos';
 import { HttpService } from '@/core/services';
-import { Endpoints } from '@/core/constants';
+import { APPERANCE_OPTIONS, Endpoints } from '@/core/constants';
 import toast from 'react-hot-toast';
-
-const GRADIENTS = [
-    { id: 'dark', class: 'from-zinc-800 to-zinc-950', name: 'Midnight' },
-    { id: 'blue', class: 'from-blue-600 to-indigo-700', name: 'Ocean' },
-    { id: 'purple', class: 'from-purple-600 to-pink-600', name: 'Neon' },
-    { id: 'amber', class: 'from-amber-500 to-orange-600', name: 'Gold' },
-    { id: 'emerald', class: 'from-emerald-600 to-teal-600', name: 'Forest' },
-];
+import PaymentCard from './payment-card';
 
 export default function ModalPayment({
     isOpen,
@@ -62,11 +47,10 @@ export default function ModalPayment({
         resolver: zodResolver(formSchema),
         defaultValues: {
             type: PaymentMethodType.IBAN,
-            appearance: GRADIENTS[0].id,
+            appearance: APPERANCE_OPTIONS[0].id,
             title: '',
             meta: {
                 accountHolderName: '',
-                currency: '',
                 ibanNumber: '',
                 address: '',
                 coin: '',
@@ -77,6 +61,9 @@ export default function ModalPayment({
                 linkUrl: '',
             },
         },
+    });
+    const formValue = useWatch({
+        control: form.control,
     });
     const type = useWatch({
         control: form.control,
@@ -90,15 +77,14 @@ export default function ModalPayment({
     useEffect(() => {
         if (isOpen) {
             form.reset();
+            form.resetField('meta');
 
             if (!initialData) return;
-
-            console.log(initialData);
 
             form.setValue('type', initialData.type);
             form.setValue(
                 'appearance',
-                initialData.appearance || GRADIENTS[0].id,
+                initialData.appearance || APPERANCE_OPTIONS[0].id,
             );
             form.setValue('title', initialData.title || '');
 
@@ -136,7 +122,7 @@ export default function ModalPayment({
         <Dialog
             open={isOpen}
             onOpenChange={onClose}>
-            <DialogContent className="min-w-[80vw] bg-[#0a0a0a] border-zinc-800 p-0 flex flex-col md:flex-row">
+            <DialogContent className="min-w-[80vw] p-0 flex flex-col md:flex-row">
                 <div className="p-6 md:w-3/5 flex flex-col">
                     <DialogHeader className="mb-6">
                         <div className="flex items-center gap-2 text-blue-500 mb-2">
@@ -188,7 +174,7 @@ export default function ModalPayment({
                                                                                 'IBAN',
                                                                             [PaymentMethodType.CRYPTO]:
                                                                                 'Crypto',
-                                                                            [PaymentMethodType.DIGITAL_WALLET]:
+                                                                            [PaymentMethodType.APP]:
                                                                                 'Wallet',
                                                                             [PaymentMethodType.LINK]:
                                                                                 'Link',
@@ -208,20 +194,20 @@ export default function ModalPayment({
                                 <div className="col-12 mb-4">
                                     <Label>Card Appearance</Label>
                                     <div className="flex gap-3">
-                                        {GRADIENTS.map((grad) => (
+                                        {APPERANCE_OPTIONS.map((item) => (
                                             <button
-                                                key={grad.id}
+                                                key={item.id}
                                                 onClick={() =>
                                                     form.setValue(
                                                         'appearance',
-                                                        grad.id,
+                                                        item.id,
                                                     )
                                                 }
                                                 type="button"
                                                 className={`w-8 h-8 rounded-full bg-gradient-to-br ${
-                                                    grad.class
+                                                    item.class
                                                 } ring-2 ring-offset-2 ring-offset-[#0a0a0a] transition-all hover:scale-110 ${
-                                                    appearance === grad.id
+                                                    item.id === appearance
                                                         ? 'ring-white'
                                                         : 'ring-transparent opacity-50 hover:opacity-100'
                                                 }`}
@@ -230,7 +216,7 @@ export default function ModalPayment({
                                     </div>
                                 </div>
 
-                                <div className="col-12 mb-4">
+                                {/* <div className="col-12 mb-4">
                                     <Label>Title (Optional)</Label>
                                     <FormField
                                         control={form.control}
@@ -247,7 +233,7 @@ export default function ModalPayment({
                                             </FormItem>
                                         )}
                                     />
-                                </div>
+                                </div> */}
 
                                 {/* START: IBAN */}
 
@@ -266,50 +252,6 @@ export default function ModalPayment({
                                                         {...field}
                                                         placeholder="e.g. Joe Doe"
                                                     />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                </div>
-
-                                <div
-                                    className={cn('col-12 mb-4', {
-                                        hidden: type !== PaymentMethodType.IBAN,
-                                    })}>
-                                    <Label>Currency</Label>
-                                    <FormField
-                                        control={form.control}
-                                        name="meta.currency"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormControl>
-                                                    <Select {...field}>
-                                                        <SelectTrigger>
-                                                            <SelectValue placeholder="Select a currency" />
-                                                        </SelectTrigger>
-                                                        <SelectContent className="max-w-sm">
-                                                            {currencies.all.map(
-                                                                (cur) => (
-                                                                    <SelectItem
-                                                                        key={
-                                                                            cur.code
-                                                                        }
-                                                                        value={
-                                                                            cur.code
-                                                                        }>
-                                                                        {
-                                                                            cur.code
-                                                                        }{' '}
-                                                                        -{' '}
-                                                                        {
-                                                                            cur.name
-                                                                        }
-                                                                    </SelectItem>
-                                                                ),
-                                                            )}
-                                                        </SelectContent>
-                                                    </Select>
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
@@ -425,7 +367,7 @@ export default function ModalPayment({
                                     </>
                                 )}
 
-                                {type === PaymentMethodType.DIGITAL_WALLET && (
+                                {type === PaymentMethodType.APP && (
                                     <>
                                         <div className="col-12 mb-4">
                                             <Label>App Name</Label>
@@ -552,7 +494,24 @@ export default function ModalPayment({
                         </div>
 
                         <div className="transform md:scale-100 scale-90 transition-all hover:scale-[1.02] cursor-default">
-                            PREVIEW
+                            <PaymentCard
+                                isPreview
+                                paymentData={{
+                                    ...formValue,
+                                    copyCount: 0,
+                                    isActive: true,
+                                    decryptedValue: {
+                                        [PaymentMethodType.IBAN]:
+                                            formValue?.meta?.ibanNumber,
+                                        [PaymentMethodType.CRYPTO]:
+                                            formValue?.meta?.address,
+                                        [PaymentMethodType.APP]:
+                                            formValue?.meta?.number,
+                                        [PaymentMethodType.LINK]:
+                                            formValue?.meta?.linkUrl,
+                                    }[formValue.type as PaymentMethodType],
+                                }}
+                            />
                         </div>
                     </div>
                 </div>

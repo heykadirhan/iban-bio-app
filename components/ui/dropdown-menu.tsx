@@ -75,10 +75,14 @@ export function DropdownMenuItem({
     onClick,
     className = '',
     classNameIntent = 'default',
+}: {
+    children: React.ReactNode;
+    onClick?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+    className?: string;
+    classNameIntent?: 'default' | 'danger';
 }) {
     const { setOpen } = useContext(DropdownContext);
 
-    // Intent: 'danger' ise kırmızı, değilse normal hover
     const hoverClass =
         classNameIntent === 'danger'
             ? 'focus:bg-red-500/10 focus:text-red-500 hover:bg-red-500/10 hover:text-red-500'

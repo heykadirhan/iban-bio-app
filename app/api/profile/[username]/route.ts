@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { connectDB, getServerAuth, HttpStatus } from '@/lib';
+import { connectDB, decrypt, getServerAuth, HttpStatus } from '@/lib';
 import { PaymentMethodModel, UserModel } from '@/core/models';
 import { ProfileVisibility } from '@/core/enums';
 
@@ -26,7 +26,14 @@ export async function GET(
             ...(session?.user.username !== username && {
                 visibility: ProfileVisibility.PUBLIC,
             }),
-        }).select(['username', 'displayName', 'title', 'bio', 'avatarUrl']);
+        }).select([
+            'username',
+            'displayName',
+            'title',
+            'bio',
+            'avatarUrl',
+            'visibility',
+        ]);
 
         if (!user) {
             return NextResponse.json(
@@ -40,9 +47,10 @@ export async function GET(
             isActive: true,
         })
             .lean()
-            .sort({ order: 1 });
+            .sort({ order: 1 })
+            .select('+iv');
 
-        if (session?.user.id !== user._id) {
+        if (session?.user.id.toString() !== user._id.toString()) {
             await UserModel.updateOne(
                 { _id: user._id },
                 { $inc: { viewCount: 1 } },
@@ -51,7 +59,15 @@ export async function GET(
 
         return NextResponse.json({
             profile: user,
-            paymentMethods,
+            paymentMethods: paymentMethods.map((pm) => ({
+                ...pm,
+                encryptedValue: undefined,
+                iv: undefined,
+                decryptedValue: decrypt({
+                    content: pm.encryptedValue,
+                    iv: pm.iv,
+                }),
+            })),
         });
     } catch (error: any) {
         return NextResponse.json(

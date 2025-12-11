@@ -25,6 +25,8 @@ const PaymentMethodSchema = new mongoose.Schema(
 
         meta: {
             accountHolderName: String,
+            bankName: String,
+            bankBic: String,
             currency: String,
             coin: String,
             network: String,

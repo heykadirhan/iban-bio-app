@@ -1,5 +1,6 @@
 'use client';
 
+import { PropsWithChildren, ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
@@ -7,16 +8,13 @@ import {
     DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuSeparator,
-    DropdownMenuShortcut,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Routes } from '@/core/constants';
-import { ArrowLeft, ChevronLeft, LogOut, Settings, User } from 'lucide-react';
+import { ArrowLeft, LogOut, Settings, User } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { PropsWithChildren, ReactNode } from 'react';
 
 export function DashboardLayout({
     children,
@@ -24,8 +22,6 @@ export function DashboardLayout({
     backHref,
 }: PropsWithChildren<{ title?: string | ReactNode; backHref?: string }>) {
     const session = useSession();
-    const router = useRouter();
-
     return (
         <div className="min-h-screen bg-background text-white relative">
             <div className="fixed inset-0 pointer-events-none">
@@ -33,10 +29,10 @@ export function DashboardLayout({
                 <div className="absolute top-[20%] left-[-10%] w-[300px] h-[300px] bg-blue-900/10 rounded-full blur-[80px]" />
             </div>
 
-            <div className="py-6 pt-8 max-w-md mx-auto relative z-10">
+            <div className="py-6 pt-8 max-w-lg mx-auto relative z-10">
                 <header>
                     <div className="container">
-                        <div className="flex justify-between items-center">
+                        <div className="flex justify-between items-center h-10">
                             <div className="flex items-center gap-2">
                                 {backHref && (
                                     <Link href={backHref}>
@@ -53,9 +49,9 @@ export function DashboardLayout({
                                     </h1>
                                 )}
                             </div>
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    {session.status === 'authenticated' && (
+                            {session.status === 'authenticated' && (
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
                                         <button className="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center border border-zinc-700">
                                             {session.data?.user.avatarUrl ? (
                                                 <Image
@@ -76,49 +72,50 @@ export function DashboardLayout({
                                                 </span>
                                             )}
                                         </button>
-                                    )}
-                                </DropdownMenuTrigger>
+                                    </DropdownMenuTrigger>
 
-                                <DropdownMenuContent align="end">
-                                    <DropdownMenuLabel>
-                                        <div className="flex flex-col space-y-1">
-                                            <p className="text-sm font-medium leading-none">
-                                                {session.data?.user.displayName}
-                                            </p>
-                                            <p className="text-xs leading-none text-zinc-500 font-normal">
-                                                +90
-                                                {session.data?.user.phoneNumber}
-                                            </p>
-                                        </div>
-                                    </DropdownMenuLabel>
-                                    <DropdownMenuSeparator />
-                                    <DropdownMenuItem
-                                        onClick={() =>
-                                            router.push(Routes.DASHBOARD)
-                                        }>
-                                        <User className="mr-2 h-4 w-4" />
-                                        <span>Dashboard</span>
-                                        <DropdownMenuShortcut>
-                                            ⇧⌘P
-                                        </DropdownMenuShortcut>
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem
-                                        onClick={() =>
-                                            router.push(Routes.SETTINGS)
-                                        }>
-                                        <Settings className="mr-2 h-4 w-4" />
-                                        <span>Settings</span>
-                                    </DropdownMenuItem>
-                                    <DropdownMenuSeparator />
-                                    <DropdownMenuItem onClick={() => signOut()}>
-                                        <LogOut className="mr-2 h-4 w-4" />
-                                        <span>Logout</span>
-                                        <DropdownMenuShortcut>
-                                            ⇧⌘Q
-                                        </DropdownMenuShortcut>
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
+                                    <DropdownMenuContent align="end">
+                                        <DropdownMenuLabel>
+                                            <div className="flex flex-col space-y-1">
+                                                <p className="text-sm font-medium leading-none">
+                                                    {
+                                                        session.data?.user
+                                                            .displayName
+                                                    }
+                                                </p>
+                                                <p className="text-xs leading-none text-zinc-500 font-normal">
+                                                    +90
+                                                    {
+                                                        session.data?.user
+                                                            .phoneNumber
+                                                    }
+                                                </p>
+                                            </div>
+                                        </DropdownMenuLabel>
+                                        <DropdownMenuSeparator />
+                                        <Link href={Routes.DASHBOARD}>
+                                            <DropdownMenuItem>
+                                                <User className="mr-2 h-4 w-4" />
+                                                <span>Dashboard</span>
+                                            </DropdownMenuItem>
+                                        </Link>
+                                        <Link href={Routes.SETTINGS}>
+                                            <DropdownMenuItem>
+                                                <Settings className="mr-2 h-4 w-4" />
+                                                <span>Settings</span>
+                                            </DropdownMenuItem>
+                                        </Link>
+                                        <DropdownMenuSeparator />
+                                        <DropdownMenuItem
+                                            onClick={() => signOut()}
+                                            className="text-red-500"
+                                            classNameIntent="danger">
+                                            <LogOut className="mr-2 h-4 w-4" />
+                                            <span>Logout</span>
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            )}
                         </div>
                     </div>
                 </header>

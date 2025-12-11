@@ -1,18 +1,14 @@
-import { CookieStorageKey } from '@/core/enums';
 import { PropsWithParams } from '@/core/interfaces';
 import { DashboardLayout } from '@/layouts/dashboard-layout';
 import { UserPage } from '@/views/user';
 import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 
-export default async function Page({
-    params,
-}: PropsWithParams<{ locale: string; username: string }>) {
-    const { username } = await params;
+export const getUser = async (username: string) => {
     const headersList = await headers();
     const cookieHeader = headersList.get('cookie');
 
-    const profileRes = await fetch(
+    const res = await fetch(
         `${process.env.NEXT_PUBLIC_APP_URL}/api/profile/${username}`,
         {
             headers: {
@@ -20,7 +16,22 @@ export default async function Page({
             },
         },
     );
-    const user = await profileRes.json();
+
+    const user = await res.json();
+
+    if (!res.ok || (!user?.profile && !user?.paymentMethods)) {
+        return null;
+    }
+
+    return user;
+};
+
+export default async function Page({
+    params,
+}: PropsWithParams<{ locale: string; username: string }>) {
+    const { username } = await params;
+
+    const user = await getUser(username);
 
     if (!user?.profile && !user?.paymentMethods) {
         return notFound();
@@ -32,3 +43,20 @@ export default async function Page({
         </DashboardLayout>
     );
 }
+
+export const generateMetadata = async ({
+    params,
+}: PropsWithParams<{ locale: string; username: string }>) => {
+    const { username } = await params;
+
+    const user = await getUser(username);
+
+    if (!user?.profile && !user?.paymentMethods) {
+        return {};
+    }
+
+    return {
+        title: `${user.profile.displayName} (@${user.profile.username}) - iban.bio`,
+        description: '',
+    };
+};

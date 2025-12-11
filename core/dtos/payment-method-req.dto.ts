@@ -19,9 +19,6 @@ export const paymentMethodReqDto = z.discriminatedUnion('type', [
             accountHolderName: z
                 .string()
                 .nonempty({ message: 'Please enter the account holder name' }),
-            currency: z
-                .string()
-                .nonempty({ message: 'Please select a currency' }),
             ibanNumber: z
                 .string()
                 .nonempty({ message: 'Please enter the IBAN' }),
@@ -45,7 +42,6 @@ export const paymentMethodReqDto = z.discriminatedUnion('type', [
                 .string()
                 .nonempty({ message: 'Please enter the address' }),
             accountHolderName: z.string().optional(),
-            currency: z.string().optional(),
             ibanNumber: z.string().optional(),
             appName: z.string().optional(),
             number: z.string().optional(),
@@ -54,7 +50,7 @@ export const paymentMethodReqDto = z.discriminatedUnion('type', [
         }),
     }),
     paymentMethodBaseReqDto.extend({
-        type: z.literal(PaymentMethodType.DIGITAL_WALLET),
+        type: z.literal(PaymentMethodType.APP),
         meta: z.object({
             appName: z
                 .string()
@@ -63,7 +59,6 @@ export const paymentMethodReqDto = z.discriminatedUnion('type', [
                 .string()
                 .nonempty({ message: 'Please enter the number/ID' }),
             accountHolderName: z.string().optional(),
-            currency: z.string().optional(),
             ibanNumber: z.string().optional(),
             coin: z.string().optional(),
             network: z.string().optional(),
@@ -80,7 +75,6 @@ export const paymentMethodReqDto = z.discriminatedUnion('type', [
                 .nonempty({ message: 'Please enter the link name' }),
             linkUrl: z.url({ error: 'Please enter a valid URL' }),
             accountHolderName: z.string().optional(),
-            currency: z.string().optional(),
             ibanNumber: z.string().optional(),
             coin: z.string().optional(),
             network: z.string().optional(),

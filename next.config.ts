@@ -12,6 +12,9 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
     reactStrictMode: false,
+    images: {
+        domains: ['t2.gstatic.com', 'assets.coincap.io'],
+    },
     async headers() {
         return [
             {

@@ -22,6 +22,7 @@ const buttonVariants = cva(
                     'bg-secondary text-secondary-foreground hover:bg-secondary/80',
                 ghost: 'hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent',
                 link: 'text-primary underline-offset-4 hover:underline',
+                dashed: 'border border-dashed border-zinc-700 text-zinc-500 hover:bg-zinc-900/50 hover:border-zinc-500 hover:text-zinc-300',
             },
             size: {
                 default: 'h-9 px-4 py-2 has-[>svg]:px-3',

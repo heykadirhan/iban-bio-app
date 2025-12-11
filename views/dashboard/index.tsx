@@ -18,7 +18,9 @@ import ModalPayment from '@/components/modal-payment';
 import Link from 'next/link';
 import { createRoute } from '@/core/utils';
 import { ModalShare } from '@/components/modal-share';
-import { DashboardPaymentCard } from './components';
+import { PaymentMethodType } from '@/core/enums';
+import PaymentCard from '@/components/payment-card';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export function DashboardPage() {
     const session = useSession();
@@ -26,6 +28,7 @@ export function DashboardPage() {
         isOpen: boolean;
         initialData?: any;
     }>({ isOpen: false });
+    const [isLoading, setIsLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('active');
     const [isShareModalOpen, setIsShareModalOpen] = useState(false);
     const [dashboard, setDashboard] = useState({
@@ -35,10 +38,13 @@ export function DashboardPage() {
 
     const fetchDashboard = async () => {
         try {
+            setIsLoading(true);
             const res = await HttpService.request(Endpoints.DASHBOARD);
             setDashboard(res.data);
         } catch (error) {
             console.error('Error fetching dashboard data:', error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -55,9 +61,13 @@ export function DashboardPage() {
                             <p className="text-xs text-zinc-400 mb-1">
                                 Your Link
                             </p>
-                            <p className="text-sm text-primary font-medium">
-                                iban.bio/{session.data?.user.username}
-                            </p>
+                            {!isLoading ? (
+                                <p className="text-sm text-primary font-medium font-mono">
+                                    iban.bio/{session.data?.user.username}
+                                </p>
+                            ) : (
+                                <Skeleton className="w-32 h-5 rounded-md bg-background" />
+                            )}
                         </div>
                         <div className="flex gap-2">
                             <Link href={Routes.SETTINGS}>
@@ -99,9 +109,13 @@ export function DashboardPage() {
                                 Page Views
                             </span>
                         </div>
-                        <p className="text-2xl font-bold">
-                            {dashboard.stats.totalViews.toLocaleString()}
-                        </p>
+                        {!isLoading ? (
+                            <p className="text-2xl font-bold">
+                                {dashboard.stats.totalViews.toLocaleString()}
+                            </p>
+                        ) : (
+                            <Skeleton className="w-full h-8" />
+                        )}
                         <p className="text-xs text-zinc-500 mt-1">
                             Total views
                         </p>
@@ -113,9 +127,13 @@ export function DashboardPage() {
                                 Copies
                             </span>
                         </div>
-                        <p className="text-2xl font-bold">
-                            {dashboard.stats.totalCopies.toLocaleString()}
-                        </p>
+                        {!isLoading ? (
+                            <p className="text-2xl font-bold">
+                                {dashboard.stats.totalCopies.toLocaleString()}
+                            </p>
+                        ) : (
+                            <Skeleton className="w-full h-8" />
+                        )}
                         <p className="text-xs text-zinc-500 mt-1">
                             Total copies made
                         </p>
@@ -155,33 +173,49 @@ export function DashboardPage() {
                                     : !m.isActive,
                             )
                             .map((item) => (
-                                <DashboardPaymentCard
+                                <PaymentCard
                                     key={item._id}
-                                    item={item}
-                                    refetchList={fetchDashboard}
-                                    handleEdit={() =>
+                                    paymentData={item}
+                                    isDashboard={true}
+                                    onEdit={() =>
                                         setPaymentModal({
                                             isOpen: true,
                                             initialData: {
                                                 ...item,
                                                 meta: {
                                                     ...item.meta,
-                                                    ibanNumber:
-                                                        item.decryptedValue,
-                                                    address:
-                                                        item.decryptedValue,
-                                                    number: item.decryptedValue,
-                                                    linkUrl:
-                                                        item.decryptedValue,
+                                                    [`${
+                                                        {
+                                                            [PaymentMethodType.IBAN]:
+                                                                'ibanNumber',
+                                                            [PaymentMethodType.CRYPTO]:
+                                                                'address',
+                                                            [PaymentMethodType.APP]:
+                                                                'number',
+                                                            [PaymentMethodType.LINK]:
+                                                                'linkUrl',
+                                                        }[
+                                                            item.type as PaymentMethodType
+                                                        ]
+                                                    }`]: item.decryptedValue,
                                                 },
                                             },
                                         })
                                     }
+                                    onRefetch={fetchDashboard}
+                                />
+                            ))}
+
+                        {isLoading &&
+                            [1, 2, 3].map((i) => (
+                                <Skeleton
+                                    key={i}
+                                    className="w-full h-[170px] rounded-2xl"
                                 />
                             ))}
                     </div>
 
-                    {dashboard.paymentMethods.length === 0 && (
+                    {!dashboard.paymentMethods.length && !isLoading && (
                         <div className="flex flex-col items-center justify-center h-full flex-1 text-center pt-10 pb-16">
                             <Wallet
                                 size={48}

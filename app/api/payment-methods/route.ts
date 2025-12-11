@@ -55,11 +55,34 @@ export async function POST(req: NextRequest) {
         const value = {
             [PaymentMethodType.IBAN]: body.meta.ibanNumber,
             [PaymentMethodType.CRYPTO]: body.meta.address,
-            [PaymentMethodType.DIGITAL_WALLET]: body.meta.number,
+            [PaymentMethodType.APP]: body.meta.number,
             [PaymentMethodType.LINK]: body.meta.linkUrl,
         }[body.type];
 
         const encryptedData = encrypt(value || '');
+
+        let currency: string | undefined;
+        let bankName: string | undefined;
+        let bankBic: string | undefined;
+
+        if (body.type === PaymentMethodType.IBAN) {
+            const ibanRes = await fetch(
+                `https://api.ibanapi.com/v1/validate/${body.meta.ibanNumber.replace(
+                    /\s+/g,
+                    '',
+                )}?api_key=${process.env.IBAN_API_KEY}`,
+            );
+            const ibanData = await ibanRes.json();
+            if (ibanData.result !== 200) {
+                return NextResponse.json(
+                    { success: false, message: 'Invalid IBAN number' },
+                    { status: HttpStatus.BAD_REQUEST },
+                );
+            }
+            currency = ibanData.data?.currency_code;
+            bankName = ibanData.data?.bank?.bank_name;
+            bankBic = ibanData.data?.bank?.bic;
+        }
 
         const newMethod = await PaymentMethodModel.create({
             user: session.user.id,
@@ -68,7 +91,12 @@ export async function POST(req: NextRequest) {
             iv: encryptedData.iv,
             title: body.title,
             appearance: body.appearance,
-            meta: body.meta,
+            meta: {
+                ...body.meta,
+                currency,
+                bankName,
+                bankBic,
+            },
             order: await PaymentMethodModel.countDocuments({
                 user: session.user.id,
             }),
@@ -105,16 +133,58 @@ export async function PATCH(req: NextRequest) {
             body = paymentMethodBaseReqDto.partial().parse(unparsedBody);
         }
 
+        const methodBeforeUpdated = await PaymentMethodModel.findOne({
+            _id: body.id,
+            user: session.user.id,
+        }).select('+iv');
+
+        if (!methodBeforeUpdated) {
+            return NextResponse.json(
+                { success: false, message: 'Payment method not found' },
+                { status: HttpStatus.NOT_FOUND },
+            );
+        }
+
         const value = {
             [PaymentMethodType.IBAN]: body.meta?.ibanNumber,
             [PaymentMethodType.CRYPTO]: body.meta?.address,
-            [PaymentMethodType.DIGITAL_WALLET]: body.meta?.number,
+            [PaymentMethodType.APP]: body.meta?.number,
             [PaymentMethodType.LINK]: body.meta?.linkUrl,
-        }[body.type];
+        }[body.type as PaymentMethodType];
 
         let encryptedData;
-        if (value) {
+        let currency = methodBeforeUpdated.meta.currency;
+        let bankName = methodBeforeUpdated.meta.bankName;
+        let bankBic = methodBeforeUpdated.meta.bankBic;
+
+        if (
+            value &&
+            value !==
+                decrypt({
+                    iv: methodBeforeUpdated.iv,
+                    content: methodBeforeUpdated.encryptedValue,
+                })
+        ) {
             encryptedData = encrypt(value || '');
+
+            if (body.type === PaymentMethodType.IBAN) {
+                const ibanRes = await fetch(
+                    `https://api.ibanapi.com/v1/validate/${value.replace(
+                        /\s+/g,
+                        '',
+                    )}?api_key=${process.env.IBAN_API_KEY}`,
+                );
+                const ibanData = await ibanRes.json();
+                if (ibanData.result !== 200) {
+                    return NextResponse.json(
+                        { success: false, message: 'Invalid IBAN number' },
+                        { status: HttpStatus.BAD_REQUEST },
+                    );
+                }
+                currency = ibanData.data?.currency_code;
+                bankName = ibanData.data?.bank?.bank_name;
+                bankBic = ibanData.data?.bank?.bic;
+            }
         }
 
         await PaymentMethodModel.findOneAndUpdate(
@@ -125,7 +195,13 @@ export async function PATCH(req: NextRequest) {
                 iv: encryptedData?.iv,
                 title: body.title,
                 appearance: body.appearance,
-                meta: body.meta,
+                meta: {
+                    ...methodBeforeUpdated.meta,
+                    ...body.meta,
+                    currency,
+                    bankName,
+                    bankBic,
+                },
                 order: body.order,
                 isActive: body.isActive,
             },
