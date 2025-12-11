@@ -1,15 +1,24 @@
+import { CookieStorageKey } from '@/core/enums';
 import { PropsWithParams } from '@/core/interfaces';
 import { DashboardLayout } from '@/layouts/dashboard-layout';
 import { UserPage } from '@/views/user';
+import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 
 export default async function Page({
     params,
 }: PropsWithParams<{ locale: string; username: string }>) {
     const { username } = await params;
+    const headersList = await headers();
+    const cookieHeader = headersList.get('cookie');
 
     const profileRes = await fetch(
         `${process.env.NEXT_PUBLIC_APP_URL}/api/profile/${username}`,
+        {
+            headers: {
+                Cookie: cookieHeader || '',
+            },
+        },
     );
     const user = await profileRes.json();
 

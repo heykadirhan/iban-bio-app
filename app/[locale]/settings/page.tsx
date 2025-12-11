@@ -2,7 +2,6 @@ import { Routes } from '@/core/constants';
 import { DashboardLayout } from '@/layouts/dashboard-layout';
 import { getServerAuth } from '@/lib';
 import { SettingsPage } from '@/views/settings';
-import { Settings } from 'lucide-react';
 import { redirect } from 'next/navigation';
 
 export default async function Page() {
@@ -15,7 +14,9 @@ export default async function Page() {
         redirect(Routes.ONBOARDING);
     }
     return (
-        <DashboardLayout title="Settings">
+        <DashboardLayout
+            title="Settings"
+            backHref={Routes.DASHBOARD}>
             <SettingsPage />
         </DashboardLayout>
     );

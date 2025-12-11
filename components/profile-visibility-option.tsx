@@ -14,7 +14,7 @@ export function ProfileVisibilityOption({
     return (
         <div
             className={`
-                            relative h-full flex flex-col items-center justify-center gap-2 p-3 rounded-xl border transition-all duration-200
+                            relative h-full flex flex-col items-center justify-center gap-2 py-3 px-2 sm:p-3 rounded-xl border transition-all duration-200
                             ${
                                 value === option.id
                                     ? `${option.color} bg-opacity-10 border-opacity-50 shadow-sm ring-1 ring-inset ring-white/10`
@@ -24,9 +24,7 @@ export function ProfileVisibilityOption({
             <option.icon size={20} />
             <div className="text-center">
                 <p className="text-xs font-bold">{option.label}</p>
-                <p className="text-[10px] opacity-70 hidden sm:block mt-0.5">
-                    {option.desc}
-                </p>
+                <p className="text-[10px] opacity-70 mt-0.5">{option.desc}</p>
             </div>
 
             {value === option.id && (

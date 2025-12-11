@@ -47,9 +47,11 @@ const GRADIENTS = [
 
 export default function ModalPayment({
     isOpen,
+    initialData,
     onClose,
 }: {
     isOpen: boolean;
+    initialData?: any;
     onClose: () => void;
 }) {
     const [isLoading, setIsLoading] = useState(false);
@@ -86,19 +88,44 @@ export default function ModalPayment({
     });
 
     useEffect(() => {
-        if (isOpen) form.reset();
+        if (isOpen) {
+            form.reset();
+
+            if (!initialData) return;
+
+            console.log(initialData);
+
+            form.setValue('type', initialData.type);
+            form.setValue(
+                'appearance',
+                initialData.appearance || GRADIENTS[0].id,
+            );
+            form.setValue('title', initialData.title || '');
+
+            for (const key in initialData.meta) {
+                form.setValue(`meta.${key}` as any, initialData.meta[key]);
+            }
+        }
     }, [isOpen, form]);
 
     const submitForm = async (values: IFormSchema) => {
+        if (initialData) {
+            values['id'] = initialData._id;
+        }
+
         try {
             setIsLoading(true);
 
             await HttpService.request(Endpoints.PAYMENT_METHODS, {
-                method: 'POST',
+                method: initialData ? 'PATCH' : 'POST',
                 body: JSON.stringify(values),
             });
 
-            toast.success('Payment method added to your profile!');
+            toast.success(
+                initialData
+                    ? 'Payment method updated successfully!'
+                    : 'Payment method added to your profile!',
+            );
             onClose();
         } finally {
             setIsLoading(false);
@@ -118,10 +145,15 @@ export default function ModalPayment({
                                 Create New
                             </span>
                         </div>
-                        <DialogTitle>Add payment method</DialogTitle>
+                        <DialogTitle>
+                            {initialData
+                                ? 'Edit Payment Method'
+                                : 'Add Payment Method'}
+                        </DialogTitle>
                         <DialogDescription>
-                            Fill in the details below to add a new payment
-                            method to your profile.
+                            {initialData
+                                ? 'Modify your existing payment method details.'
+                                : 'Add a new payment method to your profile by filling out the form below.'}
                         </DialogDescription>
                     </DialogHeader>
 
@@ -296,12 +328,18 @@ export default function ModalPayment({
                                         render={({ field }) => (
                                             <FormItem>
                                                 <FormControl>
-                                                    <InputGroup {...field}>
+                                                    <InputGroup>
                                                         <InputGroupInput
+                                                            {...field}
                                                             placeholder="TR00 0000 0000 0000 0000 0000 00"
                                                             onChange={(e) =>
-                                                                (e.target.value =
-                                                                    e.target.value.toUpperCase())
+                                                                field.onChange({
+                                                                    ...e,
+                                                                    target: {
+                                                                        ...e.target,
+                                                                        value: e.target.value.toUpperCase(),
+                                                                    },
+                                                                })
                                                             }
                                                         />
                                                         <InputGroupAddon>
@@ -367,9 +405,11 @@ export default function ModalPayment({
                                                 render={({ field }) => (
                                                     <FormItem>
                                                         <FormControl>
-                                                            <InputGroup
-                                                                {...field}>
-                                                                <InputGroupInput placeholder="0x0000...0000" />
+                                                            <InputGroup>
+                                                                <InputGroupInput
+                                                                    {...field}
+                                                                    placeholder="0x0000...0000"
+                                                                />
                                                                 <InputGroupAddon>
                                                                     <InputGroupText className="pr-1">
                                                                         Ξ
@@ -414,9 +454,11 @@ export default function ModalPayment({
                                                 render={({ field }) => (
                                                     <FormItem>
                                                         <FormControl>
-                                                            <InputGroup
-                                                                {...field}>
-                                                                <InputGroupInput placeholder="user123" />
+                                                            <InputGroup>
+                                                                <InputGroupInput
+                                                                    {...field}
+                                                                    placeholder="user123"
+                                                                />
                                                                 <InputGroupAddon>
                                                                     <InputGroupText className="pr-1">
                                                                         @
@@ -478,6 +520,7 @@ export default function ModalPayment({
                             <div className="mt-8 pb-6 flex justify-end gap-3 sticky bottom-0 bg-[#0a0a0a] border-t border-zinc-800 pt-4">
                                 <Button
                                     variant="ghost"
+                                    type="button"
                                     onClick={onClose}>
                                     Cancel
                                 </Button>
@@ -485,7 +528,9 @@ export default function ModalPayment({
                                     disabled={isLoading}
                                     variant="primary"
                                     type="submit">
-                                    Add to Profile
+                                    {initialData
+                                        ? 'Save Changes'
+                                        : 'Add Payment Method'}
                                 </Button>
                             </div>
                         </form>

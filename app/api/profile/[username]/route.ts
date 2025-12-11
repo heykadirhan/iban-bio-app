@@ -23,9 +23,9 @@ export async function GET(
 
         const user = await UserModel.findOne({
             username,
-            // ...(session?.user.username !== username && {
-            //     visibility: ProfileVisibility.PUBLIC,
-            // }),
+            ...(session?.user.username !== username && {
+                visibility: ProfileVisibility.PUBLIC,
+            }),
         }).select(['username', 'displayName', 'title', 'bio', 'avatarUrl']);
 
         if (!user) {

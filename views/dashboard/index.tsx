@@ -22,7 +22,10 @@ import { DashboardPaymentCard } from './components';
 
 export function DashboardPage() {
     const session = useSession();
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [paymentModal, setPaymentModal] = useState<{
+        isOpen: boolean;
+        initialData?: any;
+    }>({ isOpen: false });
     const [activeTab, setActiveTab] = useState('active');
     const [isShareModalOpen, setIsShareModalOpen] = useState(false);
     const [dashboard, setDashboard] = useState({
@@ -156,6 +159,24 @@ export function DashboardPage() {
                                     key={item._id}
                                     item={item}
                                     refetchList={fetchDashboard}
+                                    handleEdit={() =>
+                                        setPaymentModal({
+                                            isOpen: true,
+                                            initialData: {
+                                                ...item,
+                                                meta: {
+                                                    ...item.meta,
+                                                    ibanNumber:
+                                                        item.decryptedValue,
+                                                    address:
+                                                        item.decryptedValue,
+                                                    number: item.decryptedValue,
+                                                    linkUrl:
+                                                        item.decryptedValue,
+                                                },
+                                            },
+                                        })
+                                    }
                                 />
                             ))}
                     </div>
@@ -174,7 +195,9 @@ export function DashboardPage() {
                                 your financial bio link.
                             </p>
                             <Button
-                                onClick={() => setIsModalOpen(true)}
+                                onClick={() =>
+                                    setPaymentModal({ isOpen: true })
+                                }
                                 className="mt-4"
                                 variant="primary">
                                 <PlusCircle />
@@ -187,16 +210,19 @@ export function DashboardPage() {
 
             <div className="fixed bottom-6 right-6 z-50">
                 <button
-                    onClick={() => setIsModalOpen(true)}
+                    onClick={() => setPaymentModal({ isOpen: true })}
                     className="w-14 h-14 bg-indigo-600 hover:bg-indigo-500 text-white rounded-full shadow-[0_0_20px_rgba(37,99,235,0.5)] flex items-center justify-center transition-transform hover:scale-105 active:scale-95">
                     <Plus size={28} />
                 </button>
             </div>
 
             <ModalPayment
-                isOpen={isModalOpen}
+                isOpen={paymentModal.isOpen}
+                initialData={paymentModal.initialData}
                 onClose={() => {
-                    setIsModalOpen(false);
+                    setPaymentModal({
+                        isOpen: false,
+                    });
                     fetchDashboard();
                 }}
             />

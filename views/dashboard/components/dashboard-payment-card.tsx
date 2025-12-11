@@ -6,8 +6,6 @@ import { HttpService } from '@/core/services';
 import { cn } from '@/lib/utils';
 import {
     Check,
-    ChevronLeft,
-    ChevronRight,
     Copy,
     Edit2,
     Loader2,
@@ -23,6 +21,7 @@ import toast from 'react-hot-toast';
 export function DashboardPaymentCard({
     item,
     refetchList,
+    handleEdit,
 }: {
     item: {
         _id: string;
@@ -33,12 +32,11 @@ export function DashboardPaymentCard({
         decryptedValue: string;
     };
     refetchList(): Promise<void>;
+    handleEdit(): void;
 }) {
     const [isLoading, setIsLoading] = useState(false);
     const [copied, setCopied] = useState(false);
     const [isActionsOpen, setIsActionsOpen] = useState(false);
-
-    const handleEdit = (id: string) => {};
 
     const handleCopy = (value: string) => {
         setCopied(true);
@@ -133,8 +131,8 @@ export function DashboardPaymentCard({
                             }`}>
                             {
                                 {
-                                    [PaymentMethodType.IBAN]: `Bank (${item.meta.currency})`,
-                                    [PaymentMethodType.CRYPTO]: `${item.meta.coin} (${item.meta.network})`,
+                                    [PaymentMethodType.IBAN]: `Bank (${item.meta.currency.toUpperCase()})`,
+                                    [PaymentMethodType.CRYPTO]: `${item.meta.coin} • ${item.meta.network} Network`,
                                     [PaymentMethodType.DIGITAL_WALLET]: `${item.meta.appName}`,
                                     [PaymentMethodType.LINK]: `${item.meta.linkName}`,
                                 }[item.type as PaymentMethodType]
@@ -154,7 +152,7 @@ export function DashboardPaymentCard({
                 <div
                     className={cn(
                         'absolute right-4 flex items-center opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity bg-background rounded-full p-0.5',
-                        isActionsOpen && '!opacity-100',
+                        isActionsOpen && '!opacity-100 py-0.5 px-2',
                     )}>
                     <div
                         className={cn(
@@ -184,7 +182,7 @@ export function DashboardPaymentCard({
                             {copied ? <Check size={16} /> : <Copy size={16} />}
                         </button>
                         <button
-                            onClick={() => handleEdit(item._id)}
+                            onClick={() => handleEdit()}
                             className="p-2 text-zinc-400 hover:text-white hover:bg-zinc-700 rounded-full">
                             <Edit2 size={16} />
                         </button>

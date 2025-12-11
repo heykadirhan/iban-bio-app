@@ -246,16 +246,7 @@ export function SettingsPage() {
                             </div>
                         </section>
 
-                        <div className="pt-10 border-t border-zinc-800">
-                            <Button
-                                type="button"
-                                onClick={() => signOut()}
-                                size="lg"
-                                variant="destructiveOutline"
-                                className="w-full">
-                                <LogOut size={18} /> Log Out
-                            </Button>
-
+                        <div className="pt-6 border-t border-zinc-800">
                             <Button
                                 size="lg"
                                 type="submit"

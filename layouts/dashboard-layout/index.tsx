@@ -1,5 +1,6 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -10,7 +11,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Routes } from '@/core/constants';
-import { LogOut, Settings, User } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, LogOut, Settings, User } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -20,7 +21,8 @@ import { PropsWithChildren, ReactNode } from 'react';
 export function DashboardLayout({
     children,
     title,
-}: PropsWithChildren<{ title?: string | ReactNode }>) {
+    backHref,
+}: PropsWithChildren<{ title?: string | ReactNode; backHref?: string }>) {
     const session = useSession();
     const router = useRouter();
 
@@ -35,13 +37,22 @@ export function DashboardLayout({
                 <header>
                     <div className="container">
                         <div className="flex justify-between items-center">
-                            {title ? (
-                                <h1 className="text-2xl font-bold flex items-center gap-2.5">
-                                    {title}
-                                </h1>
-                            ) : (
-                                <br />
-                            )}
+                            <div className="flex items-center gap-2">
+                                {backHref && (
+                                    <Link href={backHref}>
+                                        <Button
+                                            variant="ghost"
+                                            size="icon-lg">
+                                            <ArrowLeft className="size-5" />
+                                        </Button>
+                                    </Link>
+                                )}
+                                {title && (
+                                    <h1 className="text-2xl font-bold flex items-center gap-2.5">
+                                        {title}
+                                    </h1>
+                                )}
+                            </div>
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
                                     {session.status === 'authenticated' && (
