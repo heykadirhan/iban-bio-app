@@ -1,3 +1,10 @@
+import { HomeLayout } from '@/layouts/home-layout';
+import { HomePage } from '@/views/home';
+
 export default function Page() {
-    return <>Hey</>;
+    return (
+        <HomeLayout>
+            <HomePage />
+        </HomeLayout>
+    );
 }
