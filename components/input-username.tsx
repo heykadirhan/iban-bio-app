@@ -51,7 +51,7 @@ export function InputUsername({
     );
 
     useEffect(() => {
-        debouncedCheckUsernameAvailability(field.value);
+        debouncedCheckUsernameAvailability(field.value as string);
     }, [field.value]);
 
     return (

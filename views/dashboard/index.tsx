@@ -72,7 +72,7 @@ export function DashboardPage() {
         try {
             setIsLoading(true);
             const res = await HttpService.request(Endpoints.DASHBOARD);
-            setDashboard(res.data);
+            setDashboard(res?.data);
         } catch (error) {
             console.error('Error fetching dashboard data:', error);
         } finally {

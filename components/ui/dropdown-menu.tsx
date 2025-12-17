@@ -17,7 +17,7 @@ export function DropdownMenu({ children }: PropsWithChildren) {
     const contentRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        function handleClickOutside(event: MouseEvent) {
+        function handleClickOutside(event: any) {
             if (
                 contentRef.current &&
                 !contentRef.current.contains(event.target) &&
@@ -57,8 +57,14 @@ export function DropdownMenuTrigger({
     );
 }
 
-export function DropdownMenuContent({ children, align = 'end' }) {
-    const { open, contentRef } = useContext(DropdownContext);
+export function DropdownMenuContent({
+    children,
+    align = 'end',
+}: {
+    children: React.ReactNode;
+    align?: 'start' | 'end';
+}) {
+    const { open, contentRef }: any = useContext(DropdownContext);
 
     if (!open) return null;
 
@@ -84,7 +90,7 @@ export function DropdownMenuItem({
     className?: string;
     classNameIntent?: 'default' | 'danger';
 }) {
-    const { setOpen } = useContext(DropdownContext);
+    const { setOpen }: any = useContext(DropdownContext);
 
     const hoverClass =
         classNameIntent === 'danger'
@@ -103,7 +109,7 @@ export function DropdownMenuItem({
     );
 }
 
-export function DropdownMenuLabel({ children }) {
+export function DropdownMenuLabel({ children }: PropsWithChildren) {
     return (
         <div className="px-2 py-1.5 text-sm font-semibold text-white">
             {children}
@@ -115,7 +121,7 @@ export function DropdownMenuSeparator() {
     return <div className="-mx-1 my-1 h-px bg-zinc-800" />;
 }
 
-export function DropdownMenuShortcut({ children }) {
+export function DropdownMenuShortcut({ children }: PropsWithChildren) {
     return (
         <span className="ml-auto text-xs tracking-widest text-zinc-500">
             {children}

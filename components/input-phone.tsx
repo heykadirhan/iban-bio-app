@@ -36,7 +36,7 @@ export default function InputPhone({
     }, [selectedCountry]);
 
     useEffect(() => {
-        function handleClickOutside(event: MouseEvent) {
+        function handleClickOutside(event: any) {
             if (
                 dropdownRef.current &&
                 !dropdownRef.current.contains(event.target)
