@@ -13,6 +13,11 @@ declare global {
             GA_ID: string;
             IBAN_API_KEY: string;
             NEXT_PUBLIC_CRYPTO_API_KEY: string;
+            AWS_REGION: string;
+            AWS_ACCESS_KEY_ID: string;
+            AWS_SECRET_ACCESS_KEY: string;
+            AWS_BUCKET_NAME: string;
+            AWS_BUCKET_URL: string;
         }
     }
 }

@@ -38,6 +38,7 @@ import { Button } from '@/components/ui/button';
 import { HttpService } from '@/core/services';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import { AvatarUpload } from '@/components/avatar-upload';
 
 export function SettingsPage() {
     const router = useRouter();
@@ -134,24 +135,12 @@ export function SettingsPage() {
                             />
 
                             <div className="flex items-center gap-6 mb-8">
-                                <div className="relative w-20 h-20 rounded-full bg-zinc-900 border-2 border-dashed border-zinc-700 flex items-center justify-center cursor-pointer hover:border-zinc-500 hover:bg-zinc-800 transition group overflow-hidden">
-                                    <input
-                                        type="file"
-                                        className="z-10 opacity-0 absolute top-0 left-0 right-0 bottom-0 rounded-full cursor-pointer"
-                                    />
-                                    {displayName ? (
-                                        <span className="text-2xl font-bold text-zinc-300">
-                                            {displayName
-                                                .charAt(0)
-                                                .toLocaleUpperCase()}
-                                        </span>
-                                    ) : (
-                                        <Camera className="text-zinc-600 group-hover:text-zinc-400" />
-                                    )}
-                                    <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition text-xs font-medium">
-                                        Change
-                                    </div>
-                                </div>
+                                <AvatarUpload
+                                    displayName={displayName}
+                                    onUploadSuccess={(fileUrl) =>
+                                        form.setValue('avatarUrl', fileUrl)
+                                    }
+                                />
 
                                 <div className="flex-1">
                                     <Label>Full Name</Label>

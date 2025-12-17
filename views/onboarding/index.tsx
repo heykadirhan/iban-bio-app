@@ -37,6 +37,7 @@ import { Label } from '@/components/ui/label';
 import { InputUsername } from '@/components/input-username';
 import { ProfileVisibilityOption } from '@/components/profile-visibility-option';
 import { useSession } from 'next-auth/react';
+import { AvatarUpload } from '@/components/avatar-upload';
 
 const PERSONAS = [
     {
@@ -199,20 +200,12 @@ export default function OnboardingPage() {
                             </div>
 
                             <div className="flex justify-center mb-8">
-                                <div className="w-24 h-24 rounded-full bg-zinc-900 border-2 border-dashed border-zinc-700 flex items-center justify-center cursor-pointer hover:border-zinc-500 hover:bg-zinc-800 transition group relative overflow-hidden">
-                                    {displayName ? (
-                                        <span className="text-2xl font-bold text-zinc-300">
-                                            {displayName
-                                                .charAt(0)
-                                                .toLocaleUpperCase()}
-                                        </span>
-                                    ) : (
-                                        <Camera className="text-zinc-600 group-hover:text-zinc-400" />
-                                    )}
-                                    <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition text-xs font-medium">
-                                        Change
-                                    </div>
-                                </div>
+                                <AvatarUpload
+                                    displayName={displayName}
+                                    onUploadSuccess={(url) =>
+                                        form.setValue('avatarUrl', url)
+                                    }
+                                />
                             </div>
 
                             <div className="space-y-4">
