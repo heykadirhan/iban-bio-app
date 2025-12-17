@@ -6,19 +6,18 @@ import React, {
     useEffect,
     createContext,
     useContext,
+    PropsWithChildren,
 } from 'react';
 
-// Context: Açık/Kapalı durumunu yönetmek için
-const DropdownContext = createContext();
+const DropdownContext = createContext({});
 
-export function DropdownMenu({ children }) {
+export function DropdownMenu({ children }: PropsWithChildren) {
     const [open, setOpen] = useState(false);
-    const triggerRef = useRef(null);
-    const contentRef = useRef(null);
+    const triggerRef = useRef<HTMLDivElement>(null);
+    const contentRef = useRef<HTMLDivElement>(null);
 
-    // Dışarı tıklandığında kapatma
     useEffect(() => {
-        function handleClickOutside(event) {
+        function handleClickOutside(event: MouseEvent) {
             if (
                 contentRef.current &&
                 !contentRef.current.contains(event.target) &&
@@ -41,8 +40,12 @@ export function DropdownMenu({ children }) {
     );
 }
 
-export function DropdownMenuTrigger({ children, asChild }) {
-    const { open, setOpen, triggerRef } = useContext(DropdownContext);
+export function DropdownMenuTrigger({
+    children,
+}: {
+    children: React.ReactNode;
+}) {
+    const { open, setOpen, triggerRef }: any = useContext(DropdownContext);
 
     return (
         <div

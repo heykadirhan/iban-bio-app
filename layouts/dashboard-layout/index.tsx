@@ -52,7 +52,7 @@ export function DashboardLayout({
                             </div>
                             {session.status === 'authenticated' && (
                                 <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
+                                    <DropdownMenuTrigger>
                                         <button className="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center border border-zinc-700">
                                             {session.data?.user.avatarUrl ? (
                                                 <Image

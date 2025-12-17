@@ -4,7 +4,6 @@ import { connectDB } from '@/lib/db';
 import { Routes } from '@core/constants';
 import { AuthOptions } from 'next-auth';
 import { OTPModel, UserModel } from '@core/models';
-import { ProfileVisibility } from '../enums';
 
 export const AUTH_CONFIG: AuthOptions = {
     providers: [
@@ -94,16 +93,7 @@ export const AUTH_CONFIG: AuthOptions = {
 
         async jwt({ token, user, trigger, session }) {
             if (user) {
-                token.id = user.id;
-                token.phone = (user as any).phone;
-                token.country = (user as any).country;
-                token.username = (user as any).username;
-                token.displayName =
-                    (user as any).name || (user as any).displayName;
-                token.avatarUrl =
-                    (user as any).image || (user as any).avatarUrl;
-                token.bio = (user as any).bio;
-                token.visibility = (user as any).visibility;
+                token = user as any;
             }
 
             if (trigger === 'update' && session) {
@@ -115,14 +105,7 @@ export const AUTH_CONFIG: AuthOptions = {
 
         async session({ session, token }) {
             if (token && session.user) {
-                session.user.id = token.id as string;
-                session.user.phone = token.phone as string;
-                session.user.country = token.country as string;
-                session.user.displayName = token.displayName as string;
-                session.user.username = token.username as string;
-                session.user.avatarUrl = token.avatarUrl as string;
-                session.user.bio = token.bio as string;
-                session.user.visibility = token.visibility as ProfileVisibility;
+                session.user = token;
             }
             return session;
         },

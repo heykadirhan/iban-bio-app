@@ -73,10 +73,6 @@ export default function ModalPayment({
         control: form.control,
         name: 'appearance',
     });
-    const coin = useWatch({
-        control: form.control,
-        name: 'meta.coin',
-    });
 
     useEffect(() => {
         if (isOpen) {
@@ -96,7 +92,7 @@ export default function ModalPayment({
                 form.setValue(`meta.${key}` as any, initialData.meta[key]);
             }
         }
-    }, [isOpen, form]);
+    }, [isOpen, form, initialData]);
 
     const submitForm = async (values: IFormSchema) => {
         if (initialData) {

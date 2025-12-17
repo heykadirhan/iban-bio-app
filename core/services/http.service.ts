@@ -2,7 +2,6 @@ import toast from 'react-hot-toast';
 import { getBearerToken } from '@core/utils';
 import { CookieStorageService } from '@core/services';
 
-// eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace HttpService {
     export async function fetchWithRetry(
         url: string,

@@ -45,6 +45,7 @@ export function InputUsername({
     };
 
     const debouncedCheckUsernameAvailability = useCallback(
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         debounce(checkUsernameAvailability, 300),
         [],
     );

@@ -10,7 +10,6 @@ import {
     Globe,
     LinkIcon,
     Link,
-    Banknote,
     Edit2,
     Trash2,
     Power,

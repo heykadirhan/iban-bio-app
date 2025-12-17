@@ -17,13 +17,26 @@ import { Endpoints, Routes } from '@/core/constants';
 import InputPhone from '@/components/input-phone';
 import { HttpService } from '@/core/services';
 import { createRoute } from '@/core/utils';
+import { ProfileVisibility } from '@/core/enums/profile-visibility.enum';
+import Image from 'next/image';
 
 export function SearchPage() {
     const searchParams = useSearchParams();
     const [country, setCountry] = useState(searchParams.get('country') || '');
     const [phone, setPhone] = useState('');
     const [loading, setLoading] = useState(false);
-    const [foundUser, setFoundUser] = useState<any>(undefined);
+    const [foundUser, setFoundUser] = useState<
+        | {
+              avatarUrl?: string;
+              displayName: string;
+              username: string;
+              title?: string;
+              bio?: string;
+              visibility: ProfileVisibility;
+          }
+        | null
+        | undefined
+    >(undefined);
 
     useEffect(() => {
         setPhone(searchParams.get('phone') || '');
@@ -107,9 +120,12 @@ export function SearchPage() {
                                 className="bg-zinc-900/50 border border-white/10 hover:border-primary/30 rounded-2xl p-4 flex items-center gap-4 cursor-pointer hover:bg-zinc-900 transition-all animate-in slide-in-from-bottom-4 group">
                                 <div className="relative">
                                     {foundUser.avatarUrl ? (
-                                        <img
-                                            src={foundUser.avatar}
-                                            className="w-16 h-16 rounded-full object-cover border-2 border-zinc-800"
+                                        <Image
+                                            src={foundUser.avatarUrl}
+                                            alt={foundUser.displayName}
+                                            className="rounded-full object-cover border-2 border-zinc-800"
+                                            width={64}
+                                            height={64}
                                         />
                                     ) : (
                                         <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center border-2 border-zinc-800 text-zinc-500">

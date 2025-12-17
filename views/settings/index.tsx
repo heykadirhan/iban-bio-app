@@ -1,15 +1,6 @@
 'use client';
 
-import {
-    Edit2,
-    LinkIcon,
-    Loader2,
-    LogOut,
-    Save,
-    User,
-    Lock,
-    Camera,
-} from 'lucide-react';
+import { Loader2, Save, User, Lock } from 'lucide-react';
 import { SectionHeader } from './components/section-header';
 import { Input } from '@/components/ui/input';
 import { useEffect, useState } from 'react';

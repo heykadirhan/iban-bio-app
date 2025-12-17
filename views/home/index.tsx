@@ -19,9 +19,11 @@ import {
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Routes } from '@/core/constants';
-import { withMask } from 'use-mask-input';
 import { createRoute } from '@/core/utils';
 import InputPhone from '@/components/input-phone';
+import Image from 'next/image';
+
+type UseCaseType = 'freelancer' | 'trader' | 'creator';
 
 const DemoCard = ({
     title,
@@ -124,10 +126,12 @@ const HeroVisual = () => {
                 {/* Top Notch Effect */}
                 <div className="flex justify-between items-center mb-6">
                     <div className="w-12 h-12 rounded-full p-[2px] bg-gradient-to-tr from-indigo-500 to-purple-500">
-                        <img
-                            src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200"
+                        <Image
+                            src="/img/user.jpg"
                             className="w-full h-full rounded-full border-2 border-[#0a0a0a] object-cover"
                             alt="Avatar"
+                            width={128}
+                            height={128}
                         />
                     </div>
                     <div className="bg-green-500/10 text-green-500 px-3 py-1 rounded-full text-xs font-bold border border-green-500/20 flex items-center gap-1">
@@ -239,13 +243,12 @@ export function HomePage() {
     const [typedName, setTypedName] = useState('');
     const targetName = 'alex';
 
-    const [activeUseCase, setActiveUseCase] = useState<
-        'freelancer' | 'trader' | 'creator'
-    >('freelancer');
+    const [activeUseCase, setActiveUseCase] =
+        useState<UseCaseType>('freelancer');
 
     useEffect(() => {
         let i = 0;
-        let interval: any;
+        let interval: ReturnType<typeof setInterval>;
 
         const startTyping = () => {
             interval = setInterval(() => {
@@ -558,7 +561,9 @@ export function HomePage() {
                             {['freelancer', 'trader', 'creator'].map((tab) => (
                                 <button
                                     key={tab}
-                                    onClick={() => setActiveUseCase(tab)}
+                                    onClick={() =>
+                                        setActiveUseCase(tab as UseCaseType)
+                                    }
                                     className={`px-6 py-2.5 rounded-lg text-sm font-bold capitalize transition-all ${
                                         activeUseCase === tab
                                             ? 'bg-zinc-800 text-white shadow-sm'

@@ -1,5 +1,5 @@
 import createMiddleware from 'next-intl/middleware';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { Locale } from '@core/enums';
 
 const rateLimit = new Map();
@@ -29,7 +29,7 @@ function rateLimiter(req: any) {
     return true;
 }
 
-export default async function middleware(request: any) {
+export default async function middleware(request: NextRequest) {
     if (!rateLimiter(request) && request.method !== 'GET') {
         return NextResponse.json(
             { message: 'Too many requests' },

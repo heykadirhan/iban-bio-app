@@ -126,7 +126,7 @@ export async function PATCH(req: NextRequest) {
             );
 
         const unparsedBody = await req.json();
-        let body;
+        let body: any;
         if (!!unparsedBody.type) {
             body = paymentMethodReqDto.parse(unparsedBody);
         } else {

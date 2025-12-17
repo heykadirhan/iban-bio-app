@@ -1,7 +1,7 @@
 interface Options {
     path: string;
     pathParams?: Record<string, string>;
-    searchParams?: Record<any, any>;
+    searchParams?: Record<string, string>;
 }
 
 export function createRoute(opts: Options): string {

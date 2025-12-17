@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
     Share,
     ArrowRight,
@@ -27,22 +27,36 @@ import { PaymentMethodType, ProfileVisibility } from '@/core/enums';
 export function UserPage({
     user: { profile, paymentMethods },
 }: {
-    user: { profile: any; paymentMethods: any[] };
+    user: {
+        profile: {
+            avatarUrl?: string;
+            displayName: string;
+            username: string;
+            title?: string;
+            bio?: string;
+            visibility: ProfileVisibility;
+        };
+        paymentMethods: Array<{
+            _id: string;
+            type: PaymentMethodType;
+            title: string;
+            details: Record<string, any>;
+            createdAt: string;
+            updatedAt: string;
+        }>;
+    };
 }) {
     const session = useSession();
+    const tabs = [
+        'ALL',
+        ...Object.values(PaymentMethodType).filter((type) =>
+            paymentMethods.some((method) => method.type === type),
+        ),
+    ];
     const [isShareModalOpen, setIsShareModalOpen] = useState(false);
-    const [tabs, setTabs] = useState<(PaymentMethodType | 'ALL')[]>(['ALL']);
     const [activeTab, setActiveTab] = useState<PaymentMethodType | 'ALL'>(
         'ALL',
     );
-
-    useEffect(() => {
-        const existingTabs = Object.values(PaymentMethodType).filter((type) =>
-            paymentMethods.some((method) => method.type === type),
-        );
-
-        setTabs(['ALL', ...existingTabs]);
-    }, [paymentMethods]);
 
     return (
         <>

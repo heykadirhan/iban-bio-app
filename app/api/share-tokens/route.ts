@@ -1,11 +1,11 @@
 import crypto from 'crypto';
 import { ShareTokenModel } from '@/core/models/share-token.model';
 import { connectDB, getServerAuth, HttpStatus } from '@/lib';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
 const durationMinutes = 60; // Token validity duration in minutes
 
-export async function POST(req: NextRequest) {
+export async function POST() {
     try {
         await connectDB();
 

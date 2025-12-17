@@ -31,7 +31,7 @@ export function DashboardPage() {
     const session = useSession();
     const [paymentModal, setPaymentModal] = useState<{
         isOpen: boolean;
-        initialData?: any;
+        initialData?: Record<string, unknown>;
     }>({ isOpen: false });
     const [isLoading, setIsLoading] = useState(true);
     const [isGeneratingShareToken, setIsGeneratingShareToken] = useState(false);
@@ -209,8 +209,9 @@ export function DashboardPage() {
 
                         {visibility === ProfileVisibility.EXPIRABLE && (
                             <p className="mt-3 pl-1 text-[10px] font-medium text-amber-500/60 flex items-center gap-1 animate-pulse">
-                                * Your profile is hidden in the list. Use the
-                                "Generate Link" button to share.
+                                {
+                                    '* Your profile is hidden in the list. Use the "Generate Link" button to share.'
+                                }
                             </p>
                         )}
                     </div>

@@ -6,7 +6,6 @@ import { GoogleAnalytics } from '@next/third-parties/google';
 import Script from 'next/script';
 import { NextIntlClientProvider } from 'next-intl';
 import { PropsWithChildren } from 'react';
-import { getTranslations } from 'next-intl/server';
 import { MetaFuncProps } from '@/core/interfaces';
 import { TOAST_CONFIG } from '@/core/config';
 import { AuthWrapper } from '@/components/auth-wrapper';
@@ -15,12 +14,9 @@ const fontFamily = Gabarito({
     subsets: ['latin'],
 });
 
-export default async function RootLayout({
-    children,
-    locale,
-}: PropsWithChildren<{ locale: string }>) {
+export default async function RootLayout({ children }: PropsWithChildren) {
     return (
-        <html lang={locale}>
+        <html lang="en">
             <head>
                 <link
                     rel="apple-touch-icon"
@@ -102,36 +98,34 @@ export async function generateMetadata({
     params,
 }: MetaFuncProps): Promise<Metadata> {
     const { locale } = await params;
-    const t = await getTranslations({ locale, namespace: 'METADATA.ROOT' });
-
     return {
-        title: t('TITLE'),
-        description: t('DESCRIPTION'),
+        title: '',
+        description: '',
         keywords: ['iban'],
         authors: [{ name: 'Kadir Yılmaz', url: 'https://kadirhan.dev' }],
         creator: 'Kadir Yılmaz',
         metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL),
         openGraph: {
-            title: t('OG_TITLE'),
-            description: t('OG_DESCRIPTION'),
+            title: '',
+            description: '',
             url: process.env.NEXT_PUBLIC_APP_URL,
-            siteName: t('OG_TITLE'),
+            siteName: '',
             images: [
                 {
                     url: `/og-${locale}.png`,
                     width: 1200,
                     height: 630,
-                    alt: t('OG_IMAGE_ALT'),
+                    alt: '',
                 },
             ],
-            locale: locale === 'tr' ? 'tr_TR' : 'en_US',
+            locale: 'en_US',
             type: 'website',
         },
         twitter: {
             card: 'summary_large_image',
-            title: t('OG_TITLE'),
-            description: t('OG_DESCRIPTION'),
-            images: [`/og-${locale}.png`],
+            title: '',
+            description: '',
+            images: [`/og-image.png`],
         },
     };
 }

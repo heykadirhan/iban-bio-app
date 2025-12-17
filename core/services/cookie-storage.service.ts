@@ -3,7 +3,6 @@ import { CookieStorageKey } from '@core/enums';
 
 type StorageKeyProp = keyof typeof CookieStorageKey;
 
-// eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace CookieStorageService {
     export function save(key: StorageKeyProp, item: string) {
         if (!key) return;

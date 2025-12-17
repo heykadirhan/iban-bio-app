@@ -2,10 +2,7 @@ import { PaymentMethodModel, UserModel } from '@/core/models';
 import { connectDB, decrypt, getServerAuth, HttpStatus } from '@/lib';
 import { NextResponse } from 'next/server';
 
-export async function GET(
-    request: NextRequest,
-    { params }: { params: { username: string } },
-) {
+export async function GET() {
     try {
         await connectDB();
 
@@ -17,7 +14,7 @@ export async function GET(
             );
         }
 
-        const user = await UserModel.findById(session.user.id).lean();
+        const user: any = await UserModel.findById(session.user.id).lean();
         if (!user)
             return NextResponse.json(
                 { error: 'User not found' },
