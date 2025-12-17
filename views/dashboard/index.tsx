@@ -7,8 +7,13 @@ import {
     Wallet,
     ArrowUpRight,
     PlusCircle,
-    Share,
     Settings,
+    Globe,
+    LinkIcon,
+    Lock,
+    Timer,
+    Share2,
+    Check,
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { HttpService } from '@/core/services';
@@ -18,7 +23,7 @@ import ModalPayment from '@/components/modal-payment';
 import Link from 'next/link';
 import { createRoute } from '@/core/utils';
 import { ModalShare } from '@/components/modal-share';
-import { PaymentMethodType } from '@/core/enums';
+import { PaymentMethodType, ProfileVisibility } from '@/core/enums';
 import PaymentCard from '@/components/payment-card';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -29,12 +34,39 @@ export function DashboardPage() {
         initialData?: any;
     }>({ isOpen: false });
     const [isLoading, setIsLoading] = useState(true);
+    const [isGeneratingShareToken, setIsGeneratingShareToken] = useState(false);
     const [activeTab, setActiveTab] = useState('active');
     const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+    const [shareToken, setShareToken] = useState('');
+    const [isCopied, setIsCopied] = useState(false);
     const [dashboard, setDashboard] = useState({
         stats: { totalViews: 0, totalCopies: 0 },
         paymentMethods: [] as any[],
     });
+
+    const visibility: ProfileVisibility =
+        session.data?.user?.visibility || ProfileVisibility.PUBLIC;
+
+    const statusConfig = {
+        [ProfileVisibility.PUBLIC]: {
+            label: 'Public',
+            icon: Globe,
+            color: 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20',
+            glow: 'from-emerald-500/20',
+        },
+        [ProfileVisibility.EXPIRABLE]: {
+            label: 'Expirable Link',
+            icon: LinkIcon,
+            color: 'text-amber-400 bg-amber-400/10 border-amber-400/20',
+            glow: 'from-amber-500/20',
+        },
+        [ProfileVisibility.PRIVATE]: {
+            label: 'Private',
+            icon: Lock,
+            color: 'text-red-400 bg-red-400/10 border-red-400/20',
+            glow: 'from-red-500/20',
+        },
+    }[visibility];
 
     const fetchDashboard = async () => {
         try {
@@ -52,52 +84,135 @@ export function DashboardPage() {
         fetchDashboard();
     }, []);
 
+    const generateShareToken = async () => {
+        try {
+            setIsGeneratingShareToken(true);
+
+            const res = await HttpService.request(Endpoints.SHARE_TOKENS, {
+                method: 'POST',
+            });
+
+            setShareToken(res?.data?.token);
+            setIsShareModalOpen(true);
+        } finally {
+            setIsGeneratingShareToken(false);
+        }
+    };
+
     return (
         <>
             <div className="container">
                 <div className="py-6 pt-8">
-                    <div className="bg-gradient-to-br from-zinc-800 to-zinc-900 border border-white/10 rounded-2xl p-4 flex items-center justify-between shadow-xl">
-                        <div>
-                            <p className="text-xs text-zinc-400 mb-1">
-                                Your Link
-                            </p>
-                            {!isLoading ? (
-                                <p className="text-sm text-primary font-medium font-mono">
-                                    iban.bio/{session.data?.user.username}
+                    <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-zinc-900/50 p-4 shadow-2xl backdrop-blur-xl">
+                        <div
+                            className={`absolute -left-10 -top-10 h-40 w-40 rounded-full bg-gradient-to-br ${statusConfig.glow} to-transparent blur-3xl pointer-events-none transition-colors duration-500`}
+                        />
+
+                        <div className="relative z-10 mb-3 flex items-start justify-between">
+                            <div>
+                                <p className="mb-1.5 text-[10px] font-bold uppercase tracking-widest text-zinc-500">
+                                    Profile Status
                                 </p>
-                            ) : (
-                                <Skeleton className="w-32 h-5 rounded-md bg-background" />
-                            )}
-                        </div>
-                        <div className="flex gap-2">
+                                <div
+                                    className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-bold transition-colors ${statusConfig.color}`}>
+                                    <statusConfig.icon size={12} />
+                                    {statusConfig.label}
+                                </div>
+                            </div>
+
                             <Link href={Routes.SETTINGS}>
                                 <button
-                                    className="p-2 bg-white/5 hover:bg-white/10 rounded-lg transition-colors"
+                                    className="rounded-full p-2 text-zinc-500 transition-colors hover:bg-white/5 hover:text-white"
                                     title="Settings">
-                                    <Settings size={16} />
-                                </button>
-                            </Link>
-                            <button
-                                onClick={() => setIsShareModalOpen(true)}
-                                className="p-2 bg-white/5 hover:bg-white/10 rounded-lg transition-colors"
-                                title="Share">
-                                <Share size={16} />
-                            </button>
-                            <Link
-                                href={createRoute({
-                                    path: Routes.USER,
-                                    pathParams: {
-                                        username:
-                                            session.data?.user.username || '',
-                                    },
-                                })}>
-                                <button
-                                    className="p-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg transition-colors text-white"
-                                    title="Preview">
-                                    <ArrowUpRight size={16} />
+                                    <Settings size={18} />
                                 </button>
                             </Link>
                         </div>
+
+                        <div className="relative z-10 flex items-center gap-3">
+                            <div
+                                onClick={() => {
+                                    if (!isLoading) {
+                                        navigator.clipboard.writeText(
+                                            `iban.bio/${session.data?.user.username}`,
+                                        );
+                                        setIsCopied(true);
+                                        setTimeout(
+                                            () => setIsCopied(false),
+                                            2000,
+                                        );
+                                    }
+                                }}
+                                className="group flex h-12 flex-1 cursor-pointer items-center justify-between rounded-xl outline outline-white/5 bg-black/20 px-4 transition-all hover:border-white/10 hover:bg-black/40 active:scale-[0.99]">
+                                {!isLoading ? (
+                                    <span className="font-mono text-sm text-zinc-400 truncate">
+                                        iban.bio/
+                                        <span className="text-white font-semibold">
+                                            {session.data?.user.username}
+                                        </span>
+                                    </span>
+                                ) : (
+                                    <Skeleton className="h-5 w-24 rounded bg-white/5" />
+                                )}
+                                {isCopied ? (
+                                    <Check
+                                        size={14}
+                                        className="text-green-500 transition-colors group-hover:text-green-600"
+                                    />
+                                ) : (
+                                    <Copy
+                                        size={14}
+                                        className="text-zinc-600 transition-colors group-hover:text-white"
+                                    />
+                                )}
+                            </div>
+
+                            {visibility === ProfileVisibility.PUBLIC ? (
+                                <>
+                                    <Link
+                                        href={createRoute({
+                                            path: Routes.USER,
+                                            pathParams: {
+                                                username:
+                                                    session.data?.user
+                                                        .username || '',
+                                            },
+                                        })}>
+                                        <Button
+                                            className="h-12 w-12 rounded-xl"
+                                            variant="secondary">
+                                            <ArrowUpRight size={20} />
+                                        </Button>
+                                    </Link>
+                                    <Button
+                                        onClick={() =>
+                                            setIsShareModalOpen(true)
+                                        }
+                                        className="h-12 w-12 rounded-xl"
+                                        variant="primary">
+                                        <Share2 size={20} />
+                                    </Button>
+                                </>
+                            ) : (
+                                visibility === ProfileVisibility.EXPIRABLE && (
+                                    <Button
+                                        onClick={generateShareToken}
+                                        disabled={isGeneratingShareToken}
+                                        className="h-12 rounded-xl"
+                                        variant="primary">
+                                        <Timer size={20} />
+                                        Generate Link
+                                    </Button>
+                                )
+                            )}
+                        </div>
+
+                        {visibility === ProfileVisibility.EXPIRABLE && (
+                            <p className="mt-3 pl-1 text-[10px] font-medium text-amber-500/60 flex items-center gap-1 animate-pulse">
+                                * Your profile is hidden in the list. Use the
+                                "Generate Link" button to share.
+                            </p>
+                        )}
                     </div>
                 </div>
 
@@ -264,6 +379,7 @@ export function DashboardPage() {
                 isOpen={isShareModalOpen}
                 onClose={() => setIsShareModalOpen(false)}
                 username={session.data?.user.username || ''}
+                shareToken={shareToken}
             />
         </>
     );

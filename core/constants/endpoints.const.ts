@@ -5,4 +5,5 @@ export const Endpoints = {
     PROFILE_COPY: '/profile/copy',
     DASHBOARD: '/dashboard',
     PAYMENT_METHODS: '/payment-methods',
+    SHARE_TOKENS: '/share-tokens',
 };

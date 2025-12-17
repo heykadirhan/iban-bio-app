@@ -4,12 +4,18 @@ import { UserPage } from '@/views/user';
 import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 
-export const getUser = async (username: string) => {
+type Props = PropsWithParams<{ locale: string; username: string }> & {
+    searchParams: Promise<{ shareToken?: string }>;
+};
+
+export const getUser = async (username: string, shareToken?: string) => {
     const headersList = await headers();
     const cookieHeader = headersList.get('cookie');
 
     const res = await fetch(
-        `${process.env.NEXT_PUBLIC_APP_URL}/api/profile/${username}`,
+        `${
+            process.env.NEXT_PUBLIC_APP_URL
+        }/api/profile/${username}?shareToken=${shareToken || ''}`,
         {
             headers: {
                 Cookie: cookieHeader || '',
@@ -26,12 +32,11 @@ export const getUser = async (username: string) => {
     return user;
 };
 
-export default async function Page({
-    params,
-}: PropsWithParams<{ locale: string; username: string }>) {
+export default async function Page({ params, searchParams }: Props) {
     const { username } = await params;
+    const { shareToken } = await searchParams;
 
-    const user = await getUser(username);
+    const user = await getUser(username, shareToken as string);
 
     if (!user?.profile && !user?.paymentMethods) {
         return notFound();
@@ -44,12 +49,11 @@ export default async function Page({
     );
 }
 
-export const generateMetadata = async ({
-    params,
-}: PropsWithParams<{ locale: string; username: string }>) => {
+export const generateMetadata = async ({ params, searchParams }: Props) => {
     const { username } = await params;
+    const { shareToken } = await searchParams;
 
-    const user = await getUser(username);
+    const user = await getUser(username, shareToken);
 
     if (!user?.profile && !user?.paymentMethods) {
         return {};

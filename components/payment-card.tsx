@@ -14,6 +14,7 @@ import {
     Edit2,
     Trash2,
     Power,
+    User,
 } from 'lucide-react';
 import { HttpService } from '@/core/services';
 import { APPERANCE_OPTIONS, Endpoints } from '@/core/constants';
@@ -256,9 +257,18 @@ export default function PaymentCard({
                                 {title || visuals.providerText}
                             </span>
                         </span>
-                        <span className="truncate text-xs text-zinc-400">
-                            {meta.accountHolderName}
-                        </span>
+                        {type === PaymentMethodType.IBAN && (
+                            <span className="flex items-center gap-1 truncate text-xs text-zinc-400">
+                                <User size={10} />
+                                {meta.accountHolderName}
+                            </span>
+                        )}
+                        {type === PaymentMethodType.CRYPTO && (
+                            <span className="flex items-center gap-1 truncate text-zinc-400 text-xs">
+                                <Globe size={10} />
+                                Network: {meta.network}
+                            </span>
+                        )}
 
                         <div className="mt-1.5 flex w-fit items-center gap-1.5 rounded-md bg-black/40 px-2 py-1 border border-white/5">
                             <span

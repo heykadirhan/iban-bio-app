@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { connectDB, decrypt, getServerAuth, HttpStatus } from '@/lib';
 import { PaymentMethodModel, UserModel } from '@/core/models';
 import { ProfileVisibility } from '@/core/enums';
+import { ShareTokenModel } from '@/core/models/share-token.model';
 
 export async function GET(
     request: NextRequest,
@@ -24,7 +25,7 @@ export async function GET(
         const user = await UserModel.findOne({
             username,
             ...(session?.user.username !== username && {
-                visibility: ProfileVisibility.PUBLIC,
+                visibility: { $ne: ProfileVisibility.PRIVATE },
             }),
         }).select([
             'username',
@@ -40,6 +41,24 @@ export async function GET(
                 { error: 'User not found' },
                 { status: HttpStatus.NOT_FOUND },
             );
+        }
+
+        if (
+            user.visibility === ProfileVisibility.EXPIRABLE &&
+            session?.user.id !== user._id.toString()
+        ) {
+            const token = await ShareTokenModel.findOne({
+                token: request.nextUrl.searchParams.get('shareToken'),
+                user: user._id,
+                expiresAt: { $gt: new Date() },
+            });
+
+            if (!token) {
+                return NextResponse.json(
+                    { error: 'User not found or link expired' },
+                    { status: HttpStatus.NOT_FOUND },
+                );
+            }
         }
 
         const paymentMethods = await PaymentMethodModel.find({

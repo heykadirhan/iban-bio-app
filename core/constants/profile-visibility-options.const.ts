@@ -9,7 +9,7 @@ export const PROFILE_VISIBILITY_OPTIONS = [
         color: 'bg-green-500/10 text-green-500 border-green-500/20',
     },
     {
-        id: 'link_only',
+        id: 'expirable',
         label: 'Expirable Links',
         desc: 'Generate private & secure link that expires',
         icon: LinkIcon,

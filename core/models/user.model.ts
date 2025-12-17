@@ -25,7 +25,7 @@ const UserSchema = new mongoose.Schema(
             type: String,
             required: true,
             enum: Object.values(ProfileVisibility),
-            default: ProfileVisibility.LINK_ONLY,
+            default: ProfileVisibility.EXPIRABLE,
         },
         lastLogin: { type: Date },
     },
