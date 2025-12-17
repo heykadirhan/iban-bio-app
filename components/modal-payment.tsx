@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { Sparkles } from 'lucide-react';
+import { AlertTriangle, Sparkles } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger } from './ui/tabs';
 import { Label } from './ui/label';
 import { Input } from './ui/input';
@@ -72,6 +72,10 @@ export default function ModalPayment({
     const appearance = useWatch({
         control: form.control,
         name: 'appearance',
+    });
+    const coin = useWatch({
+        control: form.control,
+        name: 'meta.coin',
     });
 
     useEffect(() => {
@@ -311,7 +315,7 @@ export default function ModalPayment({
                                                         <FormControl>
                                                             <Input
                                                                 {...field}
-                                                                placeholder="e.g. USDT"
+                                                                placeholder="e.g. BTC"
                                                             />
                                                         </FormControl>
                                                         <FormMessage />
@@ -330,7 +334,7 @@ export default function ModalPayment({
                                                         <FormControl>
                                                             <Input
                                                                 {...field}
-                                                                placeholder="e.g. TRC20"
+                                                                placeholder="e.g. BEP20"
                                                             />
                                                         </FormControl>
                                                         <FormMessage />
@@ -363,6 +367,21 @@ export default function ModalPayment({
                                                     </FormItem>
                                                 )}
                                             />
+                                        </div>
+
+                                        <div className="col-12 mt-2">
+                                            <div className="p-2.5 bg-amber-500/10 border border-amber-500/20 flex items-start gap-2 rounded-md">
+                                                <AlertTriangle
+                                                    size={14}
+                                                    className="text-amber-500 shrink-0 mt-0.5"
+                                                />
+                                                <p className="text-sm text-amber-200/80">
+                                                    Make sure you have selected
+                                                    the correct network. Assets
+                                                    sent to unsupported networks
+                                                    may be lost.
+                                                </p>
+                                            </div>
                                         </div>
                                     </>
                                 )}

@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Routes } from '@/core/constants';
 import { cn } from '@/lib/utils';
-import { Sparkles } from 'lucide-react';
+import { Search, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
@@ -27,44 +27,51 @@ export function HomeLayout({ children }: { children: React.ReactNode }) {
                 )}>
                 <div className="container">
                     <div className="h-20 flex items-center justify-between">
-                        <div
-                            className="flex items-center gap-2 cursor-pointer"
-                            onClick={() => window.scrollTo(0, 0)}>
+                        <Link
+                            href={Routes.ROOT}
+                            className="flex items-center gap-2 cursor-pointer">
                             <div className="w-8 h-8 bg-gradient-to-tr from-indigo-600 to-violet-600 rounded-lg flex items-center justify-center shadow-lg shadow-indigo-500/20">
                                 <Sparkles
                                     size={16}
                                     className="text-white"
                                 />
                             </div>
-                            <span className="font-bold text-xl tracking-tight">
+                            <span className="hidden sm:inline font-bold text-xl tracking-tight">
                                 iban.bio
                             </span>
-                        </div>
+                        </Link>
 
                         <div className="hidden md:flex gap-8 text-sm font-medium text-zinc-400">
-                            <a
-                                href="#features"
+                            <Link
+                                href={Routes.ROOT + '#search-pay'}
+                                className="hover:text-white transition-colors">
+                                Search & Pay
+                            </Link>
+                            <Link
+                                href={Routes.ROOT + '#features'}
                                 className="hover:text-white transition-colors">
                                 Features
-                            </a>
-                            <a
-                                href="#how-it-works"
-                                className="hover:text-white transition-colors">
-                                How it Works
-                            </a>
-                            <a
-                                href="#faq"
+                            </Link>
+                            <Link
+                                href={Routes.ROOT + '#faq'}
                                 className="hover:text-white transition-colors">
                                 FAQ
-                            </a>
+                            </Link>
                         </div>
 
                         <div className="flex gap-4">
-                            <Link href={Routes.GET_STARTED}>
-                                <Button variant="ghost">Sign in</Button>
+                            <Link href={Routes.SEARCH}>
+                                <Button
+                                    variant="secondary"
+                                    className="rounded-full font-bold">
+                                    <Search size={14} />
+                                    Find User
+                                </Button>
                             </Link>
                             <Link href={Routes.GET_STARTED}>
-                                <Button variant="primary">Get Started</Button>
+                                <Button className="rounded-full font-bold">
+                                    Get Started
+                                </Button>
                             </Link>
                         </div>
                     </div>

@@ -13,7 +13,6 @@ import Link from 'next/link';
 import { signIn } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { withMask } from 'use-mask-input';
 import { Endpoints, Routes } from '@/core/constants';
 import {
     Form,
@@ -32,6 +31,8 @@ import { Button } from '@/components/ui/button';
 import { HttpService } from '@/core/services';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import InputPhone from '@/components/input-phone';
+import { isoToCode } from '@/core/utils';
 
 export function GetStartedPage() {
     const router = useRouter();
@@ -40,15 +41,15 @@ export function GetStartedPage() {
     const [remainingSeconds, setRemainingSeconds] = useState(60);
 
     const formStepOneSchema = z.object({
-        phoneNumber: z
-            .string()
-            .nonempty({ message: 'Phone number is required' }),
+        country: z.string().nonempty({ message: 'Country is required' }),
+        phone: z.string().nonempty({ message: 'Phone number is required' }),
     });
     type IFormStepOneSchema = z.infer<typeof formStepOneSchema>;
     const formStepOne = useForm<IFormStepOneSchema>({
         resolver: zodResolver(formStepOneSchema),
         defaultValues: {
-            phoneNumber: '',
+            country: '',
+            phone: '',
         },
     });
 
@@ -84,7 +85,8 @@ export function GetStartedPage() {
             const res = await HttpService.request(Endpoints.AUTH_SEND_OTP, {
                 method: 'POST',
                 body: JSON.stringify({
-                    phoneNumber: values.phoneNumber.replaceAll(' ', ''),
+                    phone: values.phone.replaceAll(' ', ''),
+                    country: values.country,
                 }),
             });
 
@@ -102,9 +104,8 @@ export function GetStartedPage() {
         setIsLoading(true);
 
         const res = await signIn('credentials', {
-            phoneNumber: formStepOne
-                .getValues()
-                .phoneNumber.replaceAll(' ', ''),
+            country: formStepOne.getValues().country,
+            phone: formStepOne.getValues().phone.replaceAll(' ', ''),
             otp: formStepTwo.getValues().otp,
             redirect: false,
         });
@@ -161,22 +162,25 @@ export function GetStartedPage() {
 
                                         <FormField
                                             control={formStepOne.control}
-                                            name="phoneNumber"
+                                            name="phone"
                                             render={({ field }) => (
                                                 <FormItem>
                                                     <FormControl>
-                                                        <div className="mt-2.5 text-lg flex items-center gap-3 bg-zinc-900/50 border border-zinc-800 rounded-lg focus-within:border-blue-500/50 focus-within:ring-4 focus-within:ring-blue-500/10 transition-all duration-300">
-                                                            <span className="pl-6 text-zinc-500">
-                                                                +90
-                                                            </span>
-                                                            <input
-                                                                {...field}
-                                                                ref={withMask(
-                                                                    '999 999 99 99',
-                                                                )}
-                                                                className="w-full bg-transparent py-2.5 pr-4 font-medium outline-none placeholder:text-zinc-700 text-white"
-                                                            />
-                                                        </div>
+                                                        <InputPhone
+                                                            {...field}
+                                                            className="mt-2"
+                                                            onPhoneChange={
+                                                                field.onChange
+                                                            }
+                                                            onCountryChange={(
+                                                                val,
+                                                            ) =>
+                                                                formStepOne.setValue(
+                                                                    'country',
+                                                                    val,
+                                                                )
+                                                            }
+                                                        />
                                                     </FormControl>
                                                     <FormMessage />
                                                 </FormItem>
@@ -215,11 +219,13 @@ export function GetStartedPage() {
                                         <p className="text-zinc-500 text-sm mt-2">
                                             Enter the 6-digit code sent to{' '}
                                             <span className="text-zinc-400">
-                                                +90{' '}
-                                                {
+                                                {`${isoToCode(
                                                     formStepOne.getValues()
-                                                        .phoneNumber
-                                                }
+                                                        .country,
+                                                )} ${
+                                                    formStepOne.getValues()
+                                                        .phone
+                                                }`}
                                             </span>
                                         </p>
                                     </div>

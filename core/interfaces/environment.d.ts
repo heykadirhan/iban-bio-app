@@ -12,6 +12,7 @@ declare global {
             GOOGLE_CLIENT_SECRET: string;
             GA_ID: string;
             IBAN_API_KEY: string;
+            NEXT_PUBLIC_CRYPTO_API_KEY: string;
         }
     }
 }

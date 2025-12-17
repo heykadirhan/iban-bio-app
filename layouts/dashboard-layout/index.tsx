@@ -15,6 +15,7 @@ import { ArrowLeft, LogOut, Settings, User } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { isoToCode } from '@/core/utils';
 
 export function DashboardLayout({
     children,
@@ -84,11 +85,11 @@ export function DashboardLayout({
                                                     }
                                                 </p>
                                                 <p className="text-xs leading-none text-zinc-500 font-normal">
-                                                    +90
-                                                    {
+                                                    {isoToCode(
                                                         session.data?.user
-                                                            .phoneNumber
-                                                    }
+                                                            .country || '',
+                                                    )}{' '}
+                                                    {session.data?.user.phone}
                                                 </p>
                                             </div>
                                         </DropdownMenuLabel>

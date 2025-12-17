@@ -129,7 +129,7 @@ export function DashboardPage() {
                             </Link>
                         </div>
 
-                        <div className="relative z-10 flex items-center gap-3">
+                        <div className="relative z-10 flex flex-wrap items-center gap-3">
                             <div
                                 onClick={() => {
                                     if (!isLoading) {
@@ -169,6 +169,14 @@ export function DashboardPage() {
 
                             {visibility === ProfileVisibility.PUBLIC ? (
                                 <>
+                                    <Button
+                                        onClick={() =>
+                                            setIsShareModalOpen(true)
+                                        }
+                                        className="h-12 w-12 rounded-xl"
+                                        variant="primary">
+                                        <Share2 size={20} />
+                                    </Button>
                                     <Link
                                         href={createRoute({
                                             path: Routes.USER,
@@ -184,22 +192,14 @@ export function DashboardPage() {
                                             <ArrowUpRight size={20} />
                                         </Button>
                                     </Link>
-                                    <Button
-                                        onClick={() =>
-                                            setIsShareModalOpen(true)
-                                        }
-                                        className="h-12 w-12 rounded-xl"
-                                        variant="primary">
-                                        <Share2 size={20} />
-                                    </Button>
                                 </>
                             ) : (
                                 visibility === ProfileVisibility.EXPIRABLE && (
                                     <Button
                                         onClick={generateShareToken}
                                         disabled={isGeneratingShareToken}
-                                        className="h-12 rounded-xl"
-                                        variant="primary">
+                                        className="w-full h-12 rounded-xl"
+                                        variant="secondary">
                                         <Timer size={20} />
                                         Generate Link
                                     </Button>
@@ -331,7 +331,7 @@ export function DashboardPage() {
                     </div>
 
                     {!dashboard.paymentMethods.length && !isLoading && (
-                        <div className="flex flex-col items-center justify-center h-full flex-1 text-center pt-10 pb-16">
+                        <div className="flex flex-col items-center justify-center h-full flex-1 text-center pt-10 pb-16 opacity-75">
                             <Wallet
                                 size={48}
                                 className="mx-auto mb-3 text-zinc-600"

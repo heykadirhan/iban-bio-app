@@ -8,15 +8,15 @@ export async function POST(req: NextRequest) {
         await connectDB();
 
         const unparsedBody = await req.json();
-        const { phoneNumber } = sendOtpReqDto.parse(unparsedBody);
+        const { phone } = sendOtpReqDto.parse(unparsedBody);
 
         const generatedOtp = Math.floor(
             100000 + Math.random() * 900000,
         ).toString();
 
-        await OTPModel.findOneAndDelete({ phoneNumber });
+        await OTPModel.findOneAndDelete({ phone });
 
-        await OTPModel.create({ phoneNumber, otp: generatedOtp });
+        await OTPModel.create({ phone, otp: generatedOtp });
 
         if (process.env.NODE_ENV !== 'development') {
             // TODO: Send OTP via phone number

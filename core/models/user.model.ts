@@ -3,7 +3,11 @@ import { ProfileVisibility } from '@core/enums';
 
 const UserSchema = new mongoose.Schema(
     {
-        phoneNumber: {
+        country: {
+            type: String, // ISO
+            required: true,
+        },
+        phone: {
             type: String,
             required: true,
             unique: true,

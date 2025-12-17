@@ -2,7 +2,7 @@ import z from 'zod';
 import { RegexPatterns } from '@core/constants';
 
 export const sendOtpReqDto = z.object({
-    phoneNumber: z
+    phone: z
         .string()
         .nonempty()
         .regex(RegexPatterns.PHONE_NUMBER, 'Invalid phone number format'),

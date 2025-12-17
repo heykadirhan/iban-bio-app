@@ -15,30 +15,31 @@ export const AUTH_CONFIG: AuthOptions = {
         CredentialsProvider({
             name: 'Credentials',
             credentials: {
-                phoneNumber: { label: 'Phone Number', type: 'text' },
+                country: { label: 'Country', type: 'text' },
+                phone: { label: 'Phone Number', type: 'text' },
                 otp: { label: 'OTP Code', type: 'text' },
             },
-            async authorize(credentials) {
+            async authorize({ phone, country, otp }: any) {
                 await connectDB();
 
-                const phoneNumber = credentials?.phoneNumber;
-                const otp = credentials?.otp;
-
-                if (!phoneNumber || !otp) {
-                    throw new Error('Phone number and OTP are required');
+                if (!phone || !otp || !country) {
+                    throw new Error(
+                        'Phone number, country, and OTP are required',
+                    );
                 }
 
-                const otpRecord = await OTPModel.findOne({ phoneNumber, otp });
+                const otpRecord = await OTPModel.findOne({ phone, otp });
 
                 if (!otpRecord) {
                     throw new Error('Invalid OTP code');
                 }
 
-                let user = await UserModel.findOne({ phoneNumber });
+                let user = await UserModel.findOne({ phone, country });
 
                 if (!user) {
                     user = await UserModel.create({
-                        phoneNumber,
+                        phone,
+                        country,
                     });
                 }
 
@@ -47,7 +48,8 @@ export const AUTH_CONFIG: AuthOptions = {
                 return {
                     id: user._id.toString(),
                     _id: user._id.toString(),
-                    phoneNumber: user.phoneNumber,
+                    phone: user.phone,
+                    country: user.country,
                     displayName: user.displayName,
                     username: user.username,
                     avatarUrl: user.avatarUrl,
@@ -79,13 +81,13 @@ export const AUTH_CONFIG: AuthOptions = {
                         googleId: googleId,
                         displayName: user.name,
                         avatarUrl: user.image,
-                        phoneNumber: null,
+                        phone: null,
                     });
                 }
 
                 user.id = existingUser._id.toString();
                 (user as any).username = existingUser.username;
-                (user as any).phoneNumber = existingUser.phoneNumber;
+                (user as any).phone = existingUser.phone;
             }
             return true;
         },
@@ -93,7 +95,8 @@ export const AUTH_CONFIG: AuthOptions = {
         async jwt({ token, user, trigger, session }) {
             if (user) {
                 token.id = user.id;
-                token.phoneNumber = (user as any).phoneNumber;
+                token.phone = (user as any).phone;
+                token.country = (user as any).country;
                 token.username = (user as any).username;
                 token.displayName =
                     (user as any).name || (user as any).displayName;
@@ -113,7 +116,8 @@ export const AUTH_CONFIG: AuthOptions = {
         async session({ session, token }) {
             if (token && session.user) {
                 session.user.id = token.id as string;
-                session.user.phoneNumber = token.phoneNumber as string;
+                session.user.phone = token.phone as string;
+                session.user.country = token.country as string;
                 session.user.displayName = token.displayName as string;
                 session.user.username = token.username as string;
                 session.user.avatarUrl = token.avatarUrl as string;

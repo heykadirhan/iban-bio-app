@@ -4,7 +4,8 @@ import { ProfileVisibility } from '../enums';
 
 interface CustomUser {
     displayName: string;
-    phoneNumber: string;
+    phone: string;
+    country: string;
     username: string;
     avatarUrl: string;
     bio: string;

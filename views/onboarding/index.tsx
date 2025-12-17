@@ -36,6 +36,7 @@ import { ProfileVisibility } from '@/core/enums';
 import { Label } from '@/components/ui/label';
 import { InputUsername } from '@/components/input-username';
 import { ProfileVisibilityOption } from '@/components/profile-visibility-option';
+import { useSession } from 'next-auth/react';
 
 const PERSONAS = [
     {
@@ -65,6 +66,7 @@ const PERSONAS = [
 ];
 
 export default function OnboardingPage() {
+    const session = useSession();
     const [isLoading, setIsLoading] = useState(false);
     const [step, setStep] = useState(1);
     const [usernameAvailable, setUsernameAvailable] = useState<boolean>(false);
@@ -93,6 +95,7 @@ export default function OnboardingPage() {
             avatarUrl: '',
             displayName: '',
             username: '',
+            visibility: ProfileVisibility.PUBLIC,
         },
     });
     const displayName = useWatch({
@@ -132,6 +135,16 @@ export default function OnboardingPage() {
                     persona: form.getValues('persona'),
                     avatarUrl: form.getValues('avatarUrl'),
                 }),
+            });
+
+            await session.update({
+                user: {
+                    ...session.data?.user,
+                    displayName: form.getValues('displayName'),
+                    username: form.getValues('username'),
+                    persona: form.getValues('persona'),
+                    avatarUrl: form.getValues('avatarUrl'),
+                },
             });
 
             setStep(3);
@@ -261,6 +274,7 @@ export default function OnboardingPage() {
                                                     (option) => (
                                                         <button
                                                             key={option.id}
+                                                            type="button"
                                                             onClick={() =>
                                                                 field.onChange(
                                                                     option.id,

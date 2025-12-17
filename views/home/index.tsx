@@ -14,10 +14,14 @@ import {
     Wallet,
     CreditCard,
     Bitcoin,
+    Search,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Routes } from '@/core/constants';
+import { withMask } from 'use-mask-input';
+import { createRoute } from '@/core/utils';
+import InputPhone from '@/components/input-phone';
 
 const DemoCard = ({
     title,
@@ -230,6 +234,8 @@ const FaqItem = ({
 };
 
 export function HomePage() {
+    const [phoneSearch, setPhoneSearch] = useState('');
+    const [phoneSearchCountry, setPhoneSearchCountry] = useState('');
     const [typedName, setTypedName] = useState('');
     const targetName = 'alex';
 
@@ -239,18 +245,29 @@ export function HomePage() {
 
     useEffect(() => {
         let i = 0;
-        const interval = setInterval(() => {
-            setTypedName(targetName.slice(0, i + 1));
-            i++;
-            if (i > targetName.length) {
-                setTimeout(() => {
-                    i = 0;
-                    setTypedName('');
-                }, 2000);
-            }
-        }, 300);
+        let interval: any;
+
+        const startTyping = () => {
+            interval = setInterval(() => {
+                i++;
+                setTypedName(targetName.slice(0, i));
+
+                if (i === targetName.length) {
+                    clearInterval(interval);
+
+                    setTimeout(() => {
+                        i = 0;
+                        setTypedName('');
+                        startTyping();
+                    }, 2000);
+                }
+            }, 300);
+        };
+
+        startTyping();
+
         return () => clearInterval(interval);
-    }, []);
+    }, [targetName]);
 
     return (
         <>
@@ -269,7 +286,7 @@ export function HomePage() {
                                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
                                     <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
                                 </span>
-                                The New Standard for Payments
+                                The New Standard for Sharing Payment Info
                             </div>
 
                             <h1 className="text-5xl lg:text-7xl font-bold tracking-tight leading-[1.1] mb-6">
@@ -279,19 +296,18 @@ export function HomePage() {
                                 </span>
                             </h1>
 
-                            <p className="text-lg text-zinc-400 mb-10 max-w-lg text-center lg:text-left leading-relaxed">
+                            <p className="text-lg text-zinc-400 mb-10 max-w-lg text-center lg:text-left leading-relaxed mx-auto lg:!mx-0">
                                 Stop sharing raw IBANs and scattered wallet
                                 addresses. Consolidate your banking, crypto, and
                                 payment apps into one professional, secure
                                 profile.
                             </p>
 
-                            {/* URL Input */}
-                            <div className="glass-card rounded-2xl p-2 flex items-center gap-2 max-w-md text-center lg:text-left mb-10 shadow-2xl shadow-indigo-900/20">
+                            <div className="mx-auto lg:!mx-0 glass-card rounded-2xl p-2 flex items-center gap-2 max-w-md text-center lg:text-left mb-10 shadow-2xl shadow-indigo-900/20">
                                 <span className="pl-4 text-zinc-500 font-mono text-base">
                                     iban.bio/
                                 </span>
-                                <span className="text-white font-mono font-bold text-lg min-w-[50px] relative">
+                                <span className="text-white text-left font-mono font-bold text-lg relative">
                                     {typedName}
                                     <span className="absolute -right-1 top-0 h-full w-0.5 bg-indigo-500 animate-blink"></span>
                                 </span>
@@ -304,7 +320,7 @@ export function HomePage() {
                                 </Link>
                             </div>
 
-                            <div className="flex items-center justify-center lg:justify-start gap-8 text-sm font-medium text-zinc-500">
+                            <div className="flex items-center justify-center flex-wrap lg:justify-start gap-8 text-sm font-medium text-zinc-500">
                                 <div className="flex items-center gap-2">
                                     <CheckCircle2
                                         size={16}
@@ -336,7 +352,6 @@ export function HomePage() {
                 </div>
             </section>
 
-            {/* --- LOGO MARQUEE --- */}
             <div className="py-12 border-y border-white/5 bg-white/[0.02] overflow-hidden relative">
                 <div className="absolute inset-y-0 left-0 w-40 bg-gradient-to-r from-[#050505] to-transparent z-10"></div>
                 <div className="absolute inset-y-0 right-0 w-40 bg-gradient-to-l from-[#050505] to-transparent z-10"></div>
@@ -380,6 +395,97 @@ export function HomePage() {
                     ))}
                 </div>
             </div>
+
+            <section
+                id="search-pay"
+                className="relative py-24">
+                {/* Decorative Glow */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-blue-900/10 rounded-full blur-[100px] -z-10"></div>
+
+                <div className="container">
+                    <div className="glass-card rounded-[3rem] p-12 lg:p-20 flex flex-col md:flex-row items-center gap-16 border border-white/10 relative">
+                        {/* Text Side */}
+                        <div className="flex-1 text-center md:text-left">
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-900/30 border border-blue-500/30 text-blue-400 text-xs font-bold mb-6">
+                                <Smartphone size={12} /> Search & Pay
+                            </div>
+                            <h2 className="text-4xl lg:text-5xl font-bold mb-6 text-white">
+                                No Username?
+                                <br />
+                                Just use their{' '}
+                                <span className="text-blue-500">Number.</span>
+                            </h2>
+                            <p className="text-lg text-zinc-400 mb-8 max-w-md">
+                                Need to send money to a friend or freelancer?
+                                Just enter their phone number to find their
+                                iban.bio profile and payment details instantly.
+                            </p>
+                            <Link href={Routes.SEARCH}>
+                                <button className="inline-flex items-center gap-2 text-white font-bold border-b-2 border-blue-500 pb-1 hover:text-blue-400 transition-colors">
+                                    Try searching now <ArrowRight size={16} />
+                                </button>
+                            </Link>
+                        </div>
+
+                        {/* Interactive Component Side */}
+                        <div className="flex-1 w-full max-w-md">
+                            <div className="bg-[#0a0a0a] border border-zinc-800 rounded-3xl p-6 shadow-2xl relative group">
+                                <div className="absolute -top-10 -right-10 w-32 h-32 bg-blue-500/20 rounded-full blur-2xl pointer-events-none group-hover:bg-blue-500/30 transition-colors"></div>
+
+                                <div className="mb-6">
+                                    <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2 block">
+                                        Find Profile
+                                    </label>
+                                    <InputPhone
+                                        onPhoneChange={(val) =>
+                                            setPhoneSearch(val)
+                                        }
+                                        onCountryChange={(val) =>
+                                            setPhoneSearchCountry(val)
+                                        }
+                                        value={phoneSearch}
+                                        suffix={
+                                            <Link
+                                                href={createRoute({
+                                                    path: Routes.SEARCH,
+                                                    searchParams: {
+                                                        phone: phoneSearch.replaceAll(
+                                                            ' ',
+                                                            '',
+                                                        ),
+                                                        country:
+                                                            phoneSearchCountry,
+                                                    },
+                                                })}>
+                                                <Button
+                                                    type="submit"
+                                                    size="icon"
+                                                    variant="primary">
+                                                    <Search size={16} />
+                                                </Button>
+                                            </Link>
+                                        }
+                                    />
+                                </div>
+
+                                {/* Mock Result Animation */}
+                                <div className="bg-zinc-900/50 rounded-xl p-4 flex items-center gap-4 opacity-60 group-hover:opacity-100 transition-opacity">
+                                    <div className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center">
+                                        <Smartphone
+                                            size={20}
+                                            className="text-zinc-500"
+                                        />
+                                    </div>
+                                    <div className="flex-1">
+                                        <div className="h-3 w-24 bg-zinc-800 rounded mb-2"></div>
+                                        <div className="h-2 w-16 bg-zinc-800/50 rounded"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
             {/* --- HOW IT WORKS (STEPS) --- */}
             <section

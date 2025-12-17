@@ -253,17 +253,16 @@ export default function PaymentCard({
 
                     <div className="flex flex-col min-w-0">
                         <span className="truncate text-base font-bold text-white group-hover:text-white transition-colors">
-                            <span className={isActive ? '' : 'line-through'}>
-                                {title || visuals.providerText}
-                            </span>
+                            <span>{title || visuals.providerText}</span>
                         </span>
-                        {type === PaymentMethodType.IBAN && (
-                            <span className="flex items-center gap-1 truncate text-xs text-zinc-400">
-                                <User size={10} />
-                                {meta.accountHolderName}
-                            </span>
-                        )}
-                        {type === PaymentMethodType.CRYPTO && (
+                        {type === PaymentMethodType.IBAN &&
+                            meta.accountHolderName && (
+                                <span className="flex items-center gap-1 truncate text-xs text-zinc-400">
+                                    <User size={10} />
+                                    {meta.accountHolderName}
+                                </span>
+                            )}
+                        {type === PaymentMethodType.CRYPTO && meta.network && (
                             <span className="flex items-center gap-1 truncate text-zinc-400 text-xs">
                                 <Globe size={10} />
                                 Network: {meta.network}
@@ -275,6 +274,7 @@ export default function PaymentCard({
                                 className={cn(
                                     'truncate font-mono text-[10px] sm:text-xs text-zinc-300 group-hover:text-white transition-colors tracking-tight',
                                     { italic: !value },
+                                    { 'line-through': !isActive },
                                 )}>
                                 {value
                                     ? maskValue(value, type)
@@ -284,7 +284,6 @@ export default function PaymentCard({
                     </div>
                 </div>
 
-                {/* Right Side Icon (Copy/Link) - Dashboard'da hala hızlı kopyalama için kalabilir */}
                 <div className="flex flex-col items-end gap-1">
                     <div
                         className={`
@@ -307,7 +306,6 @@ export default function PaymentCard({
                 </div>
             </div>
 
-            {/* Footer Area: Stats or Dashboard Actions */}
             <div className="mt-3 pt-3 border-t border-white/5 flex items-center justify-between gap-2 text-xs text-zinc-500">
                 {/* Sol Taraf: İstatistikler (Dashboardda da görünebilir, opsiyonel) */}
                 <div className="flex items-center gap-2 overflow-hidden">
@@ -322,30 +320,6 @@ export default function PaymentCard({
                             </>
                         )}
                     </span>
-                    {!isDashboard && (
-                        <>
-                            {type === PaymentMethodType.IBAN && (
-                                <>
-                                    <span>•</span>
-                                    <span className="flex items-center gap-1 truncate">
-                                        <Banknote size={10} />
-                                        <b>{meta.currency}</b>
-                                    </span>
-                                </>
-                            )}
-                            {type === PaymentMethodType.CRYPTO && (
-                                <>
-                                    <span>•</span>
-                                    <span className="flex items-center gap-1 truncate">
-                                        <Globe size={10} />
-                                        <b className="truncate">
-                                            {meta.network}
-                                        </b>
-                                    </span>
-                                </>
-                            )}
-                        </>
-                    )}
                 </div>
 
                 {isDashboard && (

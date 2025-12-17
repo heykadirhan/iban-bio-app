@@ -50,13 +50,21 @@ export function UserPage({
                 <div className="px-6 pb-8 text-center z-10">
                     <div className="relative inline-block">
                         <div className="w-24 h-24 rounded-full p-[2px] bg-gradient-to-tr from-purple-500 via-blue-500 to-transparent">
-                            <Image
-                                src={profile.avatarUrl}
-                                alt={`${profile.displayName}'s avatar`}
-                                width={96}
-                                height={96}
-                                className="w-full h-full rounded-full object-cover border-4 border-background"
-                            />
+                            {profile.avatarUrl ? (
+                                <Image
+                                    src={profile.avatarUrl}
+                                    alt={`${profile.displayName}'s avatar`}
+                                    width={96}
+                                    height={96}
+                                    className="w-full h-full rounded-full object-cover border-4 border-background"
+                                />
+                            ) : (
+                                <div className="w-full h-full rounded-full bg-zinc-800 flex items-center justify-center border-4 border-background text-3xl font-bold">
+                                    {profile.displayName
+                                        .charAt(0)
+                                        .toUpperCase()}
+                                </div>
+                            )}
                         </div>
                         {/* TODO: Add icon based on user's persona */}
                         {/* <div className="absolute bottom-0 right-0 bg-blue-500 text-white p-1 rounded-full border-4 border-[#050505]">
@@ -214,14 +222,18 @@ export function UserPage({
                                 ))
                         ) : (
                             <div className="text-center py-12 opacity-70 flex flex-col items-center animate-in zoom-in duration-300">
-                                <div className="w-16 h-16 bg-zinc-800/50 rounded-full flex items-center justify-center mb-4">
+                                <div className="w-16 h-16 bg-zinc-800/50 rounded-full flex items-center justify-center mb-3">
                                     <LinkIcon
                                         size={32}
                                         className="text-zinc-600"
                                     />
                                 </div>
-                                <p className="text-zinc-400">
-                                    Bu kategoride ödeme yöntemi yok.
+                                <h3 className="text-lg font-semibold">
+                                    Nothing to Show 🙁
+                                </h3>
+                                <p className="text-zinc-400 max-w-60 mt-1.5 text-sm">
+                                    Looks like there are no payment methods to
+                                    show.
                                 </p>
                             </div>
                         )}
