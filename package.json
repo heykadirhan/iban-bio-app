@@ -50,6 +50,7 @@
     "shadcn": "^3.5.0",
     "tailwind-merge": "^3.4.0",
     "tailwindcss": "^4.1.16",
+    "twilio": "^5.11.1",
     "typescript-cookie": "^1.0.6",
     "use-mask-input": "^3.5.2",
     "web-push": "^3.6.7",

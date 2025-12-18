@@ -18,6 +18,10 @@ declare global {
             AWS_SECRET_ACCESS_KEY: string;
             AWS_BUCKET_NAME: string;
             AWS_BUCKET_URL: string;
+            TWILIO_ACCOUNT_SID: string;
+            TWILIO_AUTH_TOKEN: string;
+            TWILIO_SERVICE_SID: string;
+            TWILIO_PHONE_NUMBER: string;
         }
     }
 }

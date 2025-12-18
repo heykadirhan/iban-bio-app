@@ -3,7 +3,8 @@ import GoogleProvider from 'next-auth/providers/google';
 import { connectDB } from '@/lib/db';
 import { Routes } from '@core/constants';
 import { AuthOptions } from 'next-auth';
-import { OTPModel, UserModel } from '@core/models';
+import { UserModel } from '@core/models';
+import { checkVerificationCode } from '@/lib';
 
 export const AUTH_CONFIG: AuthOptions = {
     providers: [
@@ -27,9 +28,11 @@ export const AUTH_CONFIG: AuthOptions = {
                     );
                 }
 
-                const otpRecord = await OTPModel.findOne({ phone, otp });
-
-                if (!otpRecord) {
+                const otpResult = await checkVerificationCode(phone, otp);
+                if (
+                    !otpResult.valid
+                    // && process.env.NODE_ENV === 'production'
+                ) {
                     throw new Error('Invalid OTP code');
                 }
 
@@ -41,8 +44,6 @@ export const AUTH_CONFIG: AuthOptions = {
                         country,
                     });
                 }
-
-                await OTPModel.deleteOne({ _id: otpRecord._id });
 
                 return {
                     id: user._id.toString(),

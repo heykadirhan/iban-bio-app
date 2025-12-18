@@ -85,10 +85,6 @@ export function DashboardLayout({
                                                     }
                                                 </p>
                                                 <p className="text-xs leading-none text-zinc-500 font-normal">
-                                                    {isoToCode(
-                                                        session.data?.user
-                                                            .country || '',
-                                                    )}{' '}
                                                     {session.data?.user.phone}
                                                 </p>
                                             </div>

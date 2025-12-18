@@ -1,6 +1,5 @@
 import { sendOtpReqDto } from '@/core/dtos';
-import { OTPModel } from '@/core/models';
-import { connectDB, HttpStatus } from '@/lib';
+import { connectDB, HttpStatus, sendVerficationCode } from '@/lib';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
@@ -10,27 +9,20 @@ export async function POST(req: NextRequest) {
         const unparsedBody = await req.json();
         const { phone } = sendOtpReqDto.parse(unparsedBody);
 
-        const generatedOtp = Math.floor(
-            100000 + Math.random() * 900000,
-        ).toString();
+        // if (process.env.NODE_ENV !== 'development') {
+        const result = await sendVerficationCode(phone);
 
-        await OTPModel.findOneAndDelete({ phone });
-
-        await OTPModel.create({ phone, otp: generatedOtp });
-
-        if (process.env.NODE_ENV !== 'development') {
-            // TODO: Send OTP via phone number
+        if (!result.success) {
+            return NextResponse.json(
+                { message: result.message },
+                { status: HttpStatus.INTERNAL_SERVER_ERROR },
+            );
         }
+        // }
 
         return NextResponse.json(
             {
                 success: true,
-                data: {
-                    otp:
-                        process.env.NODE_ENV === 'development'
-                            ? generatedOtp
-                            : undefined,
-                },
             },
             { status: HttpStatus.OK },
         );

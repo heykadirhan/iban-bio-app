@@ -85,8 +85,9 @@ export function GetStartedPage() {
             const res = await HttpService.request(Endpoints.AUTH_SEND_OTP, {
                 method: 'POST',
                 body: JSON.stringify({
-                    phone: values.phone.replaceAll(' ', ''),
-                    country: values.country,
+                    phone:
+                        isoToCode(values.country) +
+                        values.phone.replaceAll(' ', ''),
                 }),
             });
 
@@ -105,7 +106,9 @@ export function GetStartedPage() {
 
         const res = await signIn('credentials', {
             country: formStepOne.getValues().country,
-            phone: formStepOne.getValues().phone.replaceAll(' ', ''),
+            phone:
+                isoToCode(formStepOne.getValues().country) +
+                formStepOne.getValues().phone.replaceAll(' ', ''),
             otp: formStepTwo.getValues().otp,
             redirect: false,
         });

@@ -55,6 +55,7 @@ export function SearchPage() {
                 }),
                 {
                     method: 'GET',
+                    noToastError: true,
                 },
             );
 

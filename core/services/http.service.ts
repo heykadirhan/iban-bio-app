@@ -21,7 +21,7 @@ export namespace HttpService {
 
     export async function request(
         route: string,
-        options: Exclude<RequestInit, 'body'> = {
+        options: Exclude<RequestInit, 'body'> & { noToastError?: boolean } = {
             cache: 'no-cache',
         },
     ) {
@@ -45,7 +45,7 @@ export namespace HttpService {
                 const errMessage = Array.isArray(parsedErr)
                     ? parsedErr[0]?.message || parsedErr[0]
                     : parsedErr?.message || parsedErr || 'Something went wrong';
-                toast.error(errMessage);
+                if (!options.noToastError) toast.error(errMessage);
             }
             return Promise.reject(err);
         });
