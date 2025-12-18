@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
         });
     } catch (error: any) {
         return NextResponse.json(
-            { message: error.message },
+            { success: false, message: error.message },
             { status: HttpStatus.BAD_REQUEST },
         );
     }

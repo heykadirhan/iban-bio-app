@@ -13,11 +13,19 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
     reactStrictMode: false,
     images: {
-        domains: [
-            process.env.AWS_BUCKET_URL,
-            't2.gstatic.com',
-            'assets.coincap.io',
-            'api.qrserver.com',
+        remotePatterns: [
+            {
+                hostname: process.env.AWS_BUCKET_URL,
+            },
+            {
+                hostname: 't2.gstatic.com',
+            },
+            {
+                hostname: 'assets.coincap.io',
+            },
+            {
+                hostname: 'api.qrserver.com',
+            },
         ],
     },
     async headers() {

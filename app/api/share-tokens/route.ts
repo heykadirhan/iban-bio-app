@@ -12,7 +12,7 @@ export async function POST() {
         const session = await getServerAuth();
         if (!session)
             return NextResponse.json(
-                { error: 'Unauthorized' },
+                { success: false, message: 'Unauthorized' },
                 { status: HttpStatus.UNAUTHORIZED },
             );
 

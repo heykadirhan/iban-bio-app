@@ -12,7 +12,7 @@ export async function GET() {
 
         if (!session)
             return NextResponse.json(
-                { error: 'Unauthorized' },
+                { success: false, message: 'Unauthorized' },
                 { status: HttpStatus.UNAUTHORIZED },
             );
 
@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
         const session = await getServerAuth();
         if (!session)
             return NextResponse.json(
-                { error: 'Unauthorized' },
+                { success: false, message: 'Unauthorized' },
                 { status: HttpStatus.UNAUTHORIZED },
             );
 
@@ -121,7 +121,7 @@ export async function PATCH(req: NextRequest) {
         const session = await getServerAuth();
         if (!session)
             return NextResponse.json(
-                { error: 'Unauthorized' },
+                { success: false, message: 'Unauthorized' },
                 { status: HttpStatus.UNAUTHORIZED },
             );
 
@@ -223,7 +223,7 @@ export async function DELETE(req: NextRequest) {
         const session = await getServerAuth();
         if (!session)
             return NextResponse.json(
-                { error: 'Unauthorized' },
+                { success: false, message: 'Unauthorized' },
                 { status: HttpStatus.UNAUTHORIZED },
             );
 

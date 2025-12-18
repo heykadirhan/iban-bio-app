@@ -9,7 +9,7 @@ export async function GET() {
         const session = await getServerAuth();
         if (!session?.user) {
             return NextResponse.json(
-                { error: 'Unauthorized' },
+                { success: false, message: 'Unauthorized' },
                 { status: HttpStatus.UNAUTHORIZED },
             );
         }
@@ -17,7 +17,7 @@ export async function GET() {
         const user: any = await UserModel.findById(session.user.id).lean();
         if (!user)
             return NextResponse.json(
-                { error: 'User not found' },
+                { success: false, message: 'User not found' },
                 { status: HttpStatus.NOT_FOUND },
             );
 

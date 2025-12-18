@@ -17,7 +17,7 @@ export async function GET(
 
         if (!username) {
             return NextResponse.json(
-                { error: 'Username is required' },
+                { success: false, message: 'Username is required' },
                 { status: HttpStatus.BAD_REQUEST },
             );
         }
@@ -38,7 +38,7 @@ export async function GET(
 
         if (!user) {
             return NextResponse.json(
-                { error: 'User not found' },
+                { success: false, message: 'User not found' },
                 { status: HttpStatus.NOT_FOUND },
             );
         }
@@ -55,7 +55,10 @@ export async function GET(
 
             if (!token) {
                 return NextResponse.json(
-                    { error: 'User not found or link expired' },
+                    {
+                        success: false,
+                        message: 'User not found or link expired',
+                    },
                     { status: HttpStatus.NOT_FOUND },
                 );
             }

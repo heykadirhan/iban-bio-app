@@ -12,7 +12,7 @@ export async function PATCH(req: NextRequest) {
         const session = await getServerSession(AUTH_CONFIG);
         if (!session)
             return NextResponse.json(
-                { error: 'Unauthorized' },
+                { success: false, message: 'Unauthorized' },
                 { status: HttpStatus.UNAUTHORIZED },
             );
 
@@ -25,7 +25,7 @@ export async function PATCH(req: NextRequest) {
         });
         if (usernameExists) {
             return NextResponse.json(
-                { error: 'Username already taken' },
+                { success: false, message: 'Username already taken' },
                 { status: HttpStatus.BAD_REQUEST },
             );
         }

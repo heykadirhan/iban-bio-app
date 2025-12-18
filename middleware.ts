@@ -32,7 +32,7 @@ function rateLimiter(req: any) {
 export default async function middleware(request: NextRequest) {
     if (!rateLimiter(request) && request.method !== 'GET') {
         return NextResponse.json(
-            { message: 'Too many requests' },
+            { success: false, message: 'Too many requests' },
             { status: 429 },
         );
     }

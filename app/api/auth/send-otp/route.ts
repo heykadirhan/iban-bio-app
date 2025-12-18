@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
 
             if (!result.success) {
                 return NextResponse.json(
-                    { message: result.message },
+                    { success: false, message: result.message },
                     { status: HttpStatus.INTERNAL_SERVER_ERROR },
                 );
             }
