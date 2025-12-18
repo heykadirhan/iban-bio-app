@@ -52,7 +52,7 @@
     --primary: #615fff;
     --primary-foreground: oklch(0.985 0 0);
     --secondary: #27272a;
-    --secondary-foreground: #9f9fa9;
+    --secondary-foreground: #9e9e9e;
     --muted: oklch(0.97 0 0);
     --muted-foreground: oklch(0.556 0 0);
     --accent: oklch(24.354% 0.00003 271.152);
@@ -145,4 +145,31 @@ button {
     background: rgba(255, 255, 255, 0.03);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+@media print {
+    body {
+        background-color: white !important;
+        color: black !important;
+    }
+    .no-print {
+        display: none !important;
+    }
+    .print-content {
+        color: black !important;
+        background: white !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+    }
+    .print-header {
+        color: black !important;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+    }
+    a {
+        text-decoration: none;
+        color: black !important;
+    }
 }

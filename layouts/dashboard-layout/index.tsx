@@ -46,7 +46,7 @@ export function DashboardLayout({
                                 )}
                                 {title && (
                                     <h1 className="text-2xl font-bold flex items-center gap-2.5">
-                                        {title}
+                                        <Link href={Routes.ROOT}>{title}</Link>
                                     </h1>
                                 )}
                             </div>

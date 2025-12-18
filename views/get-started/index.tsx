@@ -201,6 +201,23 @@ export function GetStartedPage() {
                                             </>
                                         )}
                                     </button>
+
+                                    <p className="text-xs text-center text-zinc-600 max-w-48 mx-auto">
+                                        By continuing, you agree to our{' '}
+                                        <Link
+                                            href={Routes.TERMS}
+                                            target="_blank"
+                                            className="border-b border-dashed border-zinc-600 hover:border-white hover:text-white transition-all">
+                                            Terms of Service
+                                        </Link>{' '}
+                                        and{' '}
+                                        <Link
+                                            href={Routes.PRIVACY}
+                                            target="_blank"
+                                            className="border-b border-dashed border-zinc-600 hover:border-white hover:text-white transition-all">
+                                            Privacy Policy
+                                        </Link>
+                                    </p>
                                 </form>
                             </Form>
                         )}

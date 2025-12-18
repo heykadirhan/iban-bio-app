@@ -22,7 +22,7 @@ export function HomeLayout({ children }: { children: React.ReactNode }) {
         <div className="min-h-screen bg-[#050505] text-white selection:bg-indigo-500/30 overflow-x-hidden">
             <nav
                 className={cn(
-                    'fixed top-0 w-full z-50 backdrop-blur-lg border-b border-white/5 transition-all',
+                    'fixed top-0 w-full z-50 backdrop-blur-lg border-b border-white/5 transition-all no-print',
                     isScrolled ? 'bg-[#050505]/80' : 'bg-transparent',
                 )}>
                 <div className="container">
@@ -88,21 +88,21 @@ export function HomeLayout({ children }: { children: React.ReactNode }) {
                     </div>
 
                     <div className="flex gap-8">
-                        <a
-                            href="#"
+                        <Link
+                            href={Routes.PRIVACY}
                             className="hover:text-white transition-colors">
-                            Privacy
-                        </a>
-                        <a
-                            href="#"
+                            Privacy Policy
+                        </Link>
+                        <Link
+                            href={Routes.TERMS}
                             className="hover:text-white transition-colors">
-                            Terms
-                        </a>
-                        <a
-                            href="#"
+                            Terms of Service
+                        </Link>
+                        <Link
+                            href="mailto:info@iban.bio"
                             className="hover:text-white transition-colors">
-                            Twitter
-                        </a>
+                            Contact Us
+                        </Link>
                     </div>
 
                     <p>© {new Date().getFullYear()} iban.bio</p>

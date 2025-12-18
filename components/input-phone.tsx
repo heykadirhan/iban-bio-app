@@ -99,7 +99,7 @@ export default function InputPhone({
                         onPhoneChange(event.target.value.replace(/\D/g, ''))
                     }
                     placeholder="Enter phone number"
-                    className="w-full bg-transparent px-4 py-3.5 text-white outline-none placeholder:text-zinc-600 font-mono text-base rounded-r-xl"
+                    className="w-full bg-transparent px-4 py-3.5 text-white outline-none placeholder:text-zinc-600 font-mono text-sm rounded-r-xl"
                 />
 
                 {suffix}

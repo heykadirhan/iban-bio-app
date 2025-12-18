@@ -1,7 +1,7 @@
 import { AUTH_CONFIG } from '@/core/config';
 import { updateProfileReqDto } from '@/core/dtos/update-profile-req.dto';
 import { UserModel } from '@/core/models';
-import { connectDB, getServerAuth, HttpStatus } from '@/lib';
+import { connectDB, HttpStatus } from '@/lib';
 import { getServerSession } from 'next-auth';
 import { NextRequest, NextResponse } from 'next/server';
 

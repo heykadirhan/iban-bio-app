@@ -131,6 +131,7 @@ export default function OnboardingPage() {
             await HttpService.request(Endpoints.PROFILE, {
                 method: 'PATCH',
                 body: JSON.stringify({
+                    visibility: form.getValues('visibility'),
                     displayName: form.getValues('displayName'),
                     username: form.getValues('username'),
                     persona: form.getValues('persona'),
@@ -141,6 +142,7 @@ export default function OnboardingPage() {
             await session.update({
                 user: {
                     ...session.data?.user,
+                    visibility: form.getValues('visibility'),
                     displayName: form.getValues('displayName'),
                     username: form.getValues('username'),
                     persona: form.getValues('persona'),

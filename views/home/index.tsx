@@ -817,8 +817,8 @@ export function HomePage() {
                                 Claim your username now.
                             </h2>
                             <p className="text-indigo-200 text-lg lg:text-xl mb-10 max-w-2xl mx-auto">
-                                Join 10,000+ professionals getting paid the
-                                smart way. <br />
+                                Join 10,000+ people getting paid the smart way.
+                                <br />
                                 No credit card required. %100 Free! Setup in 60
                                 seconds.
                             </p>

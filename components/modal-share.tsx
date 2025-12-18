@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Dialog, DialogContent, DialogTitle } from './ui/dialog';
 import {
     Check,
     Copy,
+    Loader2,
     MessageCircle,
     Smartphone,
     XCircleIcon,
@@ -26,6 +27,11 @@ export function ModalShare({
         shareToken ? `?shareToken=${shareToken}` : ''
     }`;
     const [copied, setCopied] = useState(false);
+    const [qrLoaded, setQrLoaded] = useState(false);
+
+    useEffect(() => {
+        setQrLoaded(false);
+    }, [isOpen]);
 
     const handleCopy = () => {
         navigator.clipboard.writeText(shareUrl).then(() => {
@@ -39,18 +45,25 @@ export function ModalShare({
             open={isOpen}
             onOpenChange={onClose}>
             <DialogContent>
-                <DialogTitle>Share your IBAN Bio Profile</DialogTitle>
+                <DialogTitle>Share your iban.bio profile</DialogTitle>
 
                 <div className="relative group mt-3 mb-6">
                     <div className="absolute -inset-0.5 bg-gradient-to-tr from-blue-600 to-purple-600 rounded-2xl opacity-30 blur-sm group-hover:opacity-50 transition duration-500"></div>
                     <div className="relative bg-background rounded-xl p-4 flex flex-col items-center text-center">
-                        <div className="w-48 h-48 bg-white p-2 rounded-md flex items-center justify-center overflow-hidden relative">
+                        <div className="w-48 h-48 bg-white text-black p-2 rounded-md flex items-center justify-center overflow-hidden relative">
+                            {!qrLoaded && (
+                                <Loader2
+                                    size={24}
+                                    className="animate-spin absolute"
+                                />
+                            )}
                             <Image
                                 src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${shareUrl}`}
                                 alt="QR Code"
                                 className="w-full h-full object-contain mix-blend-multiply opacity-90"
                                 width={512}
                                 height={512}
+                                onLoad={() => setQrLoaded(true)}
                             />
                         </div>
                         <p className="text-xs text-zinc-400 mt-2.5 font-medium uppercase tracking-wider">
