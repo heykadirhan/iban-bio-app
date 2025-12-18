@@ -16,7 +16,7 @@ import { Button } from '@/components/ui/button';
 import { Endpoints, Routes } from '@/core/constants';
 import InputPhone from '@/components/input-phone';
 import { HttpService } from '@/core/services';
-import { createRoute } from '@/core/utils';
+import { createRoute, isoToCode } from '@/core/utils';
 import { ProfileVisibility } from '@/core/enums/profile-visibility.enum';
 import Image from 'next/image';
 
@@ -51,7 +51,7 @@ export function SearchPage() {
             const res = await HttpService.request(
                 createRoute({
                     path: Endpoints.FIND_PROFILE_BY_PHONE,
-                    searchParams: { phone, country },
+                    searchParams: { phone: isoToCode(country) + phone },
                 }),
                 {
                     method: 'GET',

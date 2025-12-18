@@ -9,16 +9,16 @@ export async function POST(req: NextRequest) {
         const unparsedBody = await req.json();
         const { phone } = sendOtpReqDto.parse(unparsedBody);
 
-        // if (process.env.NODE_ENV !== 'development') {
-        const result = await sendVerficationCode(phone);
+        if (process.env.NODE_ENV !== 'development') {
+            const result = await sendVerficationCode(phone);
 
-        if (!result.success) {
-            return NextResponse.json(
-                { message: result.message },
-                { status: HttpStatus.INTERNAL_SERVER_ERROR },
-            );
+            if (!result.success) {
+                return NextResponse.json(
+                    { message: result.message },
+                    { status: HttpStatus.INTERNAL_SERVER_ERROR },
+                );
+            }
         }
-        // }
 
         return NextResponse.json(
             {

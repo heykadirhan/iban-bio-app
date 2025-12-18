@@ -7,11 +7,9 @@ export async function GET(request: NextRequest) {
     try {
         await connectDB();
         const phone = request.nextUrl.searchParams.get('phone');
-        const country = request.nextUrl.searchParams.get('country');
 
         const user = await UserModel.findOne({
             phone,
-            country,
             visibility: ProfileVisibility.PUBLIC,
         })
             .lean()

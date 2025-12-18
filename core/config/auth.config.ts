@@ -29,10 +29,7 @@ export const AUTH_CONFIG: AuthOptions = {
                 }
 
                 const otpResult = await checkVerificationCode(phone, otp);
-                if (
-                    !otpResult.valid
-                    // && process.env.NODE_ENV === 'production'
-                ) {
+                if (!otpResult.valid && process.env.NODE_ENV === 'production') {
                     throw new Error('Invalid OTP code');
                 }
 
