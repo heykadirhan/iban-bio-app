@@ -32,7 +32,7 @@ export async function GET() {
         return NextResponse.json({ data: decryptedMethods });
     } catch (error: any) {
         return NextResponse.json(
-            { error: error.message },
+            { success: false, message: error.message },
             { status: HttpStatus.BAD_REQUEST },
         );
     }
@@ -108,7 +108,7 @@ export async function POST(req: NextRequest) {
         );
     } catch (error: any) {
         return NextResponse.json(
-            { success: false, error: error.message },
+            { success: false, message: error.message },
             { status: HttpStatus.BAD_REQUEST },
         );
     }
@@ -210,7 +210,7 @@ export async function PATCH(req: NextRequest) {
         return NextResponse.json({ success: true, id: body.id });
     } catch (error: any) {
         return NextResponse.json(
-            { success: false, error: error.message },
+            { success: false, message: error.message },
             { status: HttpStatus.BAD_REQUEST },
         );
     }
@@ -237,7 +237,7 @@ export async function DELETE(req: NextRequest) {
         return NextResponse.json({ success: true });
     } catch (error: any) {
         return NextResponse.json(
-            { success: false, error: error.message },
+            { success: false, message: error.message },
             { status: HttpStatus.BAD_REQUEST },
         );
     }

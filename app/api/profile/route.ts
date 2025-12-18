@@ -45,7 +45,7 @@ export async function PATCH(req: NextRequest) {
         return NextResponse.json({ success: true });
     } catch (error: any) {
         return NextResponse.json(
-            { error: error.message },
+            { success: false, message: error.message },
             { status: HttpStatus.BAD_REQUEST },
         );
     }

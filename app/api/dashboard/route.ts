@@ -51,7 +51,7 @@ export async function GET() {
         });
     } catch (error: any) {
         return NextResponse.json(
-            { error: error.message },
+            { success: false, message: error.message },
             { status: HttpStatus.BAD_REQUEST },
         );
     }

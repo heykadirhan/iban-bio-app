@@ -36,8 +36,8 @@ export namespace HttpService {
         };
         return fetchWithRetry(url, requestOptions).catch((err) => {
             if (typeof window !== 'undefined') {
-                if (err.status === 401) return;
-                console.log(err);
+                console.log('Error:', err);
+                if (err?.status === 401) return;
                 const parsedErr =
                     err?.[0] === '['
                         ? JSON.parse(err.message || '')

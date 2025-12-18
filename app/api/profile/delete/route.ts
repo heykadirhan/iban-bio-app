@@ -21,7 +21,7 @@ export async function POST() {
         return NextResponse.json({ success: true }, { status: HttpStatus.OK });
     } catch (error: any) {
         return NextResponse.json(
-            { error: error.message },
+            { success: false, message: error.message },
             { status: HttpStatus.BAD_REQUEST },
         );
     }
