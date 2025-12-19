@@ -17,7 +17,11 @@ import {
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { HttpService } from '@/core/services';
-import { Endpoints, Routes } from '@/core/constants';
+import {
+    Endpoints,
+    PROFILE_VISIBILITY_OPTIONS,
+    Routes,
+} from '@/core/constants';
 import { Button } from '@/components/ui/button';
 import ModalPayment from '@/components/modal-payment';
 import Link from 'next/link';
@@ -44,29 +48,28 @@ export function DashboardPage() {
         paymentMethods: [] as any[],
     });
 
-    const visibility: ProfileVisibility =
-        session.data?.user?.visibility || ProfileVisibility.PUBLIC;
+    const visibility: ProfileVisibility | undefined =
+        session.data?.user?.visibility;
 
-    const statusConfig = {
-        [ProfileVisibility.PUBLIC]: {
-            label: 'Public',
-            icon: Globe,
-            color: 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20',
-            glow: 'from-emerald-500/20',
-        },
-        [ProfileVisibility.EXPIRABLE]: {
-            label: 'Expirable Link',
-            icon: LinkIcon,
-            color: 'text-amber-400 bg-amber-400/10 border-amber-400/20',
-            glow: 'from-amber-500/20',
-        },
-        [ProfileVisibility.PRIVATE]: {
-            label: 'Private',
-            icon: Lock,
-            color: 'text-red-400 bg-red-400/10 border-red-400/20',
-            glow: 'from-red-500/20',
-        },
-    }[visibility];
+    const statusConfig = visibility
+        ? {
+              [ProfileVisibility.PUBLIC]: {
+                  icon: Globe,
+                  color: 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20',
+                  glow: 'from-emerald-500/20',
+              },
+              [ProfileVisibility.EXPIRABLE]: {
+                  icon: LinkIcon,
+                  color: 'text-amber-400 bg-amber-400/10 border-amber-400/20',
+                  glow: 'from-amber-500/20',
+              },
+              [ProfileVisibility.PRIVATE]: {
+                  icon: Lock,
+                  color: 'text-red-400 bg-red-400/10 border-red-400/20',
+                  glow: 'from-red-500/20',
+              },
+          }[visibility]
+        : null;
 
     const fetchDashboard = async () => {
         try {
@@ -105,7 +108,7 @@ export function DashboardPage() {
                 <div className="py-6 pt-8">
                     <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-zinc-900/50 p-4 shadow-2xl backdrop-blur-xl">
                         <div
-                            className={`absolute -left-10 -top-10 h-40 w-40 rounded-full bg-gradient-to-br ${statusConfig.glow} to-transparent blur-3xl pointer-events-none transition-colors duration-500`}
+                            className={`absolute -left-10 -top-10 h-40 w-40 rounded-full bg-gradient-to-br ${statusConfig?.glow} to-transparent blur-3xl pointer-events-none transition-colors duration-500`}
                         />
 
                         <div className="relative z-10 mb-3 flex items-start justify-between">
@@ -113,11 +116,22 @@ export function DashboardPage() {
                                 <p className="mb-1.5 text-[10px] font-bold uppercase tracking-widest text-zinc-500">
                                     Profile Status
                                 </p>
-                                <div
-                                    className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-bold transition-colors ${statusConfig.color}`}>
-                                    <statusConfig.icon size={12} />
-                                    {statusConfig.label}
-                                </div>
+                                {visibility ? (
+                                    <div
+                                        className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-bold transition-colors ${statusConfig?.color}`}>
+                                        {statusConfig?.icon && (
+                                            <statusConfig.icon size={12} />
+                                        )}
+                                        {
+                                            PROFILE_VISIBILITY_OPTIONS.find(
+                                                (option) =>
+                                                    option.id === visibility,
+                                            )?.label
+                                        }
+                                    </div>
+                                ) : (
+                                    <Skeleton className="h-[26px] w-32" />
+                                )}
                             </div>
 
                             <Link href={Routes.SETTINGS}>

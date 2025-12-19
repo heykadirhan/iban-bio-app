@@ -110,13 +110,17 @@ export default function PaymentCard({
         let copyText = value;
 
         if (!isPreview && !isDashboard) {
+            setIsLoading(true);
+
             const res = await HttpService.request(Endpoints.PROFILE_COPY, {
                 method: 'POST',
                 body: JSON.stringify({
                     id: paymentData._id,
                 }),
             });
+
             if (res?.data) copyText = res.data;
+            setIsLoading(false);
         }
 
         if (type === PaymentMethodType.LINK) {
