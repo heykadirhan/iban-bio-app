@@ -20,7 +20,7 @@ jobs:
                   key: ${{ secrets.SSH_KEY }}
                   port: 22
                   script: |
-                      cd /iban-bio-app
+                      cd /home/ubuntu/iban-bio-app
 
                       git pull origin main
 
