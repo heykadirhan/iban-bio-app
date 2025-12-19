@@ -120,6 +120,7 @@ export default function PaymentCard({
             });
 
             if (res?.data) copyText = res.data;
+
             setIsLoading(false);
         }
 
