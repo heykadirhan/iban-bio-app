@@ -28,4 +28,4 @@ jobs:
 
                       yarn build
 
-                      pm2 restart pm1
+                      pm2 restart 1
