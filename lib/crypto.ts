@@ -1,14 +1,18 @@
 import crypto from 'crypto';
 
-const ENCRYPTION_KEY =
-    process.env.ENCRYPTION_KEY || '12345678901234567890123456789012';
+const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY;
+if (!ENCRYPTION_KEY || ENCRYPTION_KEY.length !== 64) {
+    throw new Error(
+        'ENCRYPTION_KEY must be defined in environment variables and be 64 characters long',
+    );
+}
 const ALGORITHM = 'aes-256-cbc';
 
 export function encrypt(text: string) {
     const iv = crypto.randomBytes(16);
     const cipher = crypto.createCipheriv(
         ALGORITHM,
-        Buffer.from(ENCRYPTION_KEY),
+        Buffer.from(ENCRYPTION_KEY, 'hex'),
         iv,
     );
     let encrypted = cipher.update(text);
@@ -24,7 +28,7 @@ export function decrypt(hash: { iv: string; content: string }) {
     const encryptedText = Buffer.from(hash.content, 'hex');
     const decipher = crypto.createDecipheriv(
         ALGORITHM,
-        Buffer.from(ENCRYPTION_KEY),
+        Buffer.from(ENCRYPTION_KEY, 'hex'),
         iv,
     );
     let decrypted = decipher.update(encryptedText);

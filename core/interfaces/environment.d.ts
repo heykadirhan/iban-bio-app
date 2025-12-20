@@ -6,6 +6,7 @@ declare global {
             NEXT_PUBLIC_APP_URL: string;
             NEXTAUTH_URL: string;
             NEXTAUTH_SECRET: string;
+            ENCRYPTION_KEY: string;
             MONGODB_URI: string;
             MONGODB_NAME: string;
             GOOGLE_CLIENT_ID: string;
