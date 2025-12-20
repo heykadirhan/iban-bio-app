@@ -16,6 +16,9 @@ const nextConfig: NextConfig = {
         remotePatterns: [
             {
                 hostname: process.env.AWS_STORAGE_URL,
+                protocol: 'https',
+                port: '',
+                pathname: '/**',
             },
             {
                 hostname: 't2.gstatic.com',

@@ -6,14 +6,16 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 
 export function AvatarUpload({
+    initialAvatarUrl,
     displayName,
     onUploadSuccess,
 }: {
+    initialAvatarUrl?: string;
     displayName?: string;
     onUploadSuccess?: (fileUrl: string) => void;
 }) {
     const [uploading, setUploading] = useState(false);
-    const [avatarUrl, setAvatarUrl] = useState('');
+    const [avatarUrl, setAvatarUrl] = useState(initialAvatarUrl || '');
 
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
