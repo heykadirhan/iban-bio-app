@@ -10,6 +10,7 @@ declare global {
             MONGODB_NAME: string;
             GOOGLE_CLIENT_ID: string;
             GOOGLE_CLIENT_SECRET: string;
+            HOTJAR_SITE_ID: string;
             GA_ID: string;
             IBAN_API_KEY: string;
             NEXT_PUBLIC_CRYPTO_API_KEY: string;
