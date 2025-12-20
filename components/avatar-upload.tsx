@@ -1,8 +1,10 @@
+'use client';
+
 import { Endpoints } from '@/core/constants';
 import { HttpService } from '@/core/services';
 import { Camera, Loader2 } from 'lucide-react';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
 export function AvatarUpload({
@@ -15,7 +17,12 @@ export function AvatarUpload({
     onUploadSuccess?: (fileUrl: string) => void;
 }) {
     const [uploading, setUploading] = useState(false);
-    const [avatarUrl, setAvatarUrl] = useState(initialAvatarUrl || '');
+    const [avatarUrl, setAvatarUrl] = useState('');
+
+    useEffect(() => {
+        if (avatarUrl) return;
+        setAvatarUrl(initialAvatarUrl || '');
+    }, [initialAvatarUrl]);
 
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];

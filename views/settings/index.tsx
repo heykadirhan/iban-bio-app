@@ -75,6 +75,7 @@ export function SettingsPage() {
             visibility: ProfileVisibility.PUBLIC,
         },
     });
+    const avatarUrl = form.watch('avatarUrl');
     const displayName = form.watch('displayName');
 
     useEffect(() => {
@@ -155,6 +156,7 @@ export function SettingsPage() {
 
                             <div className="flex items-center gap-6 mb-8">
                                 <AvatarUpload
+                                    initialAvatarUrl={avatarUrl}
                                     displayName={displayName}
                                     onUploadSuccess={(fileUrl) =>
                                         form.setValue('avatarUrl', fileUrl)

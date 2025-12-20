@@ -19,15 +19,31 @@ jobs:
                   username: ${{ secrets.USERNAME }}
                   key: ${{ secrets.SSH_KEY }}
                   port: 22
+                  command_timeout: 30m
                   script: |
-                      nvm use node
+                      # 1. NVM'i ve Node'u manuel olarak yükle (En garanti yöntem)
+                      export NVM_DIR="$HOME/.nvm"
+                      [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+                      # 2. Herhangi bir komut hata verirse işlemi anında durdur
+                      set -e
+
+                      echo "🚀 Deployment basliyor..."
 
                       cd /home/ubuntu/iban-bio-app
 
+                      echo "⬇️ Git pull yapiliyor..."
                       git pull origin main
 
+                      echo "📦 Paketler yükleniyor..."
                       yarn install
 
+                      echo "🏗️ Build aliniyor (Bu islem biraz sürebilir)..."
+                      # Swap alanı sayesinde burada donmayacaktır
                       yarn build
 
-                      pm2 restart 1
+                      echo "🔄 PM2 Reload yapiliyor..."
+                      # Restart yerine reload kullanırsan kesinti olmaz (Zero Downtime)
+                      pm2 reload 1 || pm2 restart 1
+
+                      echo "✅ Deployment basariyla tamamlandi!"
