@@ -1,5 +1,6 @@
 'use client';
 
+import currencies from 'currency-symbol-map';
 import { useEffect, useState } from 'react';
 import {
     Copy,
@@ -324,6 +325,20 @@ export default function PaymentCard({
                             </>
                         )}
                     </span>
+
+                    {meta.currency && (
+                        <>
+                            <span>/</span>
+                            <span className="flex items-center gap-1 shrink-0">
+                                <Globe size={10} />{' '}
+                                {currencies(meta.currency)
+                                    ? `${meta.currency} (${currencies(
+                                          meta.currency,
+                                      )})`
+                                    : meta.currency}
+                            </span>
+                        </>
+                    )}
                 </div>
 
                 {isDashboard && (
