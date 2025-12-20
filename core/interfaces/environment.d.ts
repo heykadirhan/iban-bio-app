@@ -18,7 +18,7 @@ declare global {
             AWS_ACCESS_KEY_ID: string;
             AWS_SECRET_ACCESS_KEY: string;
             AWS_BUCKET_NAME: string;
-            AWS_BUCKET_URL: string;
+            AWS_STORAGE_URL: string;
             TWILIO_ACCOUNT_SID: string;
             TWILIO_AUTH_TOKEN: string;
             TWILIO_SERVICE_SID: string;
