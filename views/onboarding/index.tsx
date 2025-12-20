@@ -163,7 +163,7 @@ export default function OnboardingPage() {
 
             <div className="absolute top-0 left-0 w-full h-1 bg-zinc-900">
                 <div
-                    className="h-full bg-gradient-to-r from-blue-500 to-indigo-500 transition-all duration-500 ease-out"
+                    className="h-full bg-gradient-to-r from-primary to-indigo-500 transition-all duration-500 ease-out"
                     style={{ width: `${(step / 3) * 100}%` }}
                 />
             </div>

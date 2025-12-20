@@ -66,12 +66,16 @@ export async function POST(req: NextRequest) {
         let bankBic: string | undefined;
 
         if (body.type === PaymentMethodType.IBAN) {
+            console.log('API_KEY:', process.env.IBAN_API_KEY);
             const ibanRes = await fetch(
                 `https://api.ibanapi.com/v1/validate/${body.meta.ibanNumber.replace(
                     /\s+/g,
                     '',
                 )}?api_key=${process.env.IBAN_API_KEY}`,
-            );
+            ).catch((err) => {
+                console.error('Error fetching IBAN API:', err);
+                throw new Error('Failed to validate IBAN number');
+            });
             const ibanData = await ibanRes.json();
             if (ibanData.result !== 200) {
                 return NextResponse.json(

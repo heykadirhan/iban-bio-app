@@ -125,7 +125,7 @@ export default function ModalPayment({
             <DialogContent className="min-w-[80vw] p-0 flex flex-col md:flex-row">
                 <div className="p-6 md:w-3/5 flex flex-col">
                     <DialogHeader className="mb-6">
-                        <div className="flex items-center gap-2 text-blue-500 mb-2">
+                        <div className="flex items-center gap-2 text-primary mb-2">
                             <Sparkles size={16} />
                             <span className="text-xs font-bold uppercase tracking-widest">
                                 Create New

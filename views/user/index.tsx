@@ -63,7 +63,7 @@ export function UserPage({
             <div className="container">
                 <div className="px-6 pb-8 text-center z-10">
                     <div className="relative inline-block">
-                        <div className="w-24 h-24 rounded-full p-[2px] bg-gradient-to-tr from-purple-500 via-blue-500 to-transparent">
+                        <div className="w-24 h-24 rounded-full p-[2px] bg-gradient-to-tr from-purple-500 via-primary to-transparent">
                             {profile.avatarUrl ? (
                                 <Image
                                     src={profile.avatarUrl}
@@ -81,7 +81,7 @@ export function UserPage({
                             )}
                         </div>
                         {/* TODO: Add icon based on user's persona */}
-                        {/* <div className="absolute bottom-0 right-0 bg-blue-500 text-white p-1 rounded-full border-4 border-[#050505]">
+                        {/* <div className="absolute bottom-0 right-0 bg-primary text-white p-1 rounded-full border-4 border-[#050505]">
                             <Shield
                                 size={12}
                                 fill="currentColor"
@@ -276,9 +276,9 @@ export function UserPage({
 
                         <div className="relative flex flex-col justify-between p-6 bg-[#0a0a0a] rounded-2xl border border-white/10 shadow-2xl">
                             <div className="flex items-start gap-4 mb-4 sm:mb-0">
-                                <div className="h-12 w-12 shrink-0 rounded-xl bg-gradient-to-tr from-blue-500/20 to-purple-500/20 flex items-center justify-center border border-white/5">
+                                <div className="h-12 w-12 shrink-0 rounded-xl bg-gradient-to-tr from-primary/20 to-purple-500/20 flex items-center justify-center border border-white/5">
                                     <Sparkles
-                                        className="text-blue-400"
+                                        className="text-primary"
                                         size={24}
                                     />
                                 </div>

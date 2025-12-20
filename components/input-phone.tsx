@@ -72,7 +72,7 @@ export default function InputPhone({
         <div
             className={`relative group ${className}`}
             ref={dropdownRef}>
-            <div className="flex items-center bg-[#111] border border-zinc-800 rounded-xl pr-2 focus-within:border-blue-500/50 focus-within:ring-4 focus-within:ring-blue-900/20 transition-all duration-200">
+            <div className="flex items-center bg-[#111] border border-zinc-800 rounded-xl pr-2 focus-within:border-primary/50 focus-within:ring-4 focus-within:ring-blue-900/20 transition-all duration-200">
                 <button
                     type="button"
                     onClick={() => setIsOpen(!isOpen)}
@@ -117,7 +117,7 @@ export default function InputPhone({
                                 ref={inputRef}
                                 type="text"
                                 placeholder="Search country..."
-                                className="w-full bg-zinc-900 border border-zinc-800 rounded-lg pl-9 pr-3 py-2 text-xs text-white focus:border-blue-500 outline-none placeholder:text-zinc-600"
+                                className="w-full bg-zinc-900 border border-zinc-800 rounded-lg pl-9 pr-3 py-2 text-xs text-white focus:border-primary outline-none placeholder:text-zinc-600"
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
                             />
@@ -132,7 +132,7 @@ export default function InputPhone({
                                     onClick={() => handleSelect(country)}
                                     className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-left transition-colors group ${
                                         selectedCountry?.code === country.code
-                                            ? 'bg-blue-600/10 text-blue-400'
+                                            ? 'bg-blue-600/10 text-primary/60'
                                             : 'hover:bg-zinc-800 text-zinc-300'
                                     }`}>
                                     <div className="flex items-center gap-3 overflow-hidden">

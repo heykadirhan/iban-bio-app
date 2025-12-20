@@ -124,7 +124,7 @@ export function SearchPage() {
                                         <Image
                                             src={foundUser.avatarUrl}
                                             alt={foundUser.displayName}
-                                            className="rounded-full object-cover border-2 border-zinc-800"
+                                            className="rounded-full w-16 h-16 object-cover border-2 border-zinc-800"
                                             width={64}
                                             height={64}
                                         />

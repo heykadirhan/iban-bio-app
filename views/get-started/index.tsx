@@ -125,7 +125,7 @@ export function GetStartedPage() {
     };
 
     return (
-        <div className="min-h-screen bg-[#0a0a0a] text-white flex flex-col items-center justify-center relative overflow-hidden selection:bg-blue-500/30">
+        <div className="min-h-screen bg-[#0a0a0a] text-white flex flex-col items-center justify-center relative overflow-hidden selection:bg-primary/30">
             <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] bg-blue-600/20 rounded-full blur-[120px] pointer-events-none" />
             <div className="absolute bottom-[-20%] right-[-10%] w-[500px] h-[500px] bg-indigo-600/10 rounded-full blur-[120px] pointer-events-none" />
 
@@ -148,7 +148,7 @@ export function GetStartedPage() {
                 </div>
 
                 <div className="group relative">
-                    <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-2xl opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 blur"></div>
+                    <div className="absolute -inset-0.5 bg-gradient-to-r from-primary to-indigo-500 rounded-2xl opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 blur"></div>
 
                     <div className="relative bg-[#121212] rounded-xl p-8 ring-1 ring-white/10 shadow-2xl">
                         {step === 1 && (

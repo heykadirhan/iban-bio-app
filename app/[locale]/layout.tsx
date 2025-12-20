@@ -112,7 +112,7 @@ export async function generateMetadata({
             siteName: '',
             images: [
                 {
-                    url: `/og-${locale}.png`,
+                    url: `/og-image.png`,
                     width: 1200,
                     height: 630,
                     alt: '',
