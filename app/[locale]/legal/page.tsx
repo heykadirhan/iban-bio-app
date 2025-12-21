@@ -8,3 +8,8 @@ export default function Page() {
         </HomeLayout>
     );
 }
+
+export const metadata = {
+    title: 'Legal Center',
+    description: 'Terms of Service and Privacy Policy for iban.bio.',
+};

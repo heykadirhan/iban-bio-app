@@ -59,8 +59,55 @@ export const generateMetadata = async ({ params, searchParams }: Props) => {
         return {};
     }
 
+    const title = `${user.profile.displayName} (@${user.profile.username}) - Financial Profile`;
+    const description = `Explore the secure financial profile of ${user.profile.displayName} on iban.bio. Manage payments and personal info safely.`;
+    const displayName = user.profile.displayName;
+
+    const ogImageUrl = `/api/og?username=${username}`;
+
     return {
-        title: `${user.profile.displayName} (@${user.profile.username}) - iban.bio`,
+        title,
         description: '',
+
+        openGraph: {
+            title: title,
+            description: description,
+            url: process.env.NEXT_PUBLIC_APP_URL + `/${username}`,
+            siteName: 'iban.bio',
+            images: [
+                {
+                    url: ogImageUrl,
+                    width: 1200,
+                    height: 630,
+                    alt: `${displayName} iban.bio Profile`,
+                },
+            ],
+            locale: 'en_US',
+            type: 'profile',
+            username: username,
+        },
+
+        twitter: {
+            card: 'summary_large_image',
+            title: title,
+            description: 'Secure payment and financial identity profile.',
+            images: [ogImageUrl],
+            creator: '@kadirhanyl',
+        },
+
+        robots: {
+            googleBot: {
+                index: true,
+                follow: true,
+                noimageindex: false,
+                'max-video-preview': -1,
+                'max-image-preview': 'large',
+                'max-snippet': -1,
+            },
+        },
+
+        alternates: {
+            canonical: process.env.NEXT_PUBLIC_APP_URL + `/${username}`,
+        },
     };
 };

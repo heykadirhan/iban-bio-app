@@ -2,6 +2,7 @@ import { Routes } from '@/core/constants';
 import { DashboardLayout } from '@/layouts/dashboard-layout';
 import { getServerAuth } from '@/lib';
 import { SettingsPage } from '@/views/settings';
+import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 
 export default async function Page() {
@@ -21,3 +22,8 @@ export default async function Page() {
         </DashboardLayout>
     );
 }
+
+export const metadata: Metadata = {
+    title: 'Settings',
+    description: 'Manage your account settings and preferences.',
+};

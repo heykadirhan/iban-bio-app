@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Routes } from '@/core/constants';
 import { cn } from '@/lib/utils';
 import { Search, Sparkles } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
@@ -30,15 +31,12 @@ export function HomeLayout({ children }: { children: React.ReactNode }) {
                         <Link
                             href={Routes.ROOT}
                             className="flex items-center gap-2 cursor-pointer">
-                            <div className="w-8 h-8 bg-gradient-to-tr from-indigo-600 to-violet-600 rounded-lg flex items-center justify-center shadow-lg shadow-indigo-500/20">
-                                <Sparkles
-                                    size={16}
-                                    className="text-white"
-                                />
-                            </div>
-                            <span className="hidden sm:inline font-bold text-xl tracking-tight">
-                                iban.bio
-                            </span>
+                            <Image
+                                src="/img/logo.svg"
+                                alt="Logo"
+                                width={120}
+                                height={40}
+                            />
                         </Link>
 
                         <div className="hidden md:flex gap-8 text-sm font-medium text-zinc-400">

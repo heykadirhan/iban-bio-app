@@ -11,7 +11,14 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Routes } from '@/core/constants';
-import { ArrowLeft, LogOut, Settings, User } from 'lucide-react';
+import {
+    ArrowLeft,
+    LogOut,
+    Search,
+    Settings,
+    Sparkles,
+    User,
+} from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -44,75 +51,109 @@ export function DashboardLayout({
                                         </Button>
                                     </Link>
                                 )}
-                                {title && (
+                                {title ? (
                                     <h1 className="text-2xl font-bold flex items-center gap-2.5">
                                         <Link href={Routes.ROOT}>{title}</Link>
                                     </h1>
+                                ) : (
+                                    <Link
+                                        href={Routes.ROOT}
+                                        className="flex items-center gap-2 cursor-pointer">
+                                        <Image
+                                            src="/img/logo.svg"
+                                            alt="Logo"
+                                            width={120}
+                                            height={40}
+                                        />
+                                    </Link>
                                 )}
                             </div>
-                            {session.status === 'authenticated' && (
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger>
-                                        <button className="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center border border-zinc-700">
-                                            {session.data?.user.avatarUrl ? (
-                                                <Image
-                                                    src={
-                                                        session.data?.user
-                                                            .avatarUrl
-                                                    }
-                                                    alt="Avatar"
-                                                    width={40}
-                                                    height={40}
-                                                    className="w-10 h-10 rounded-full object-cover"
-                                                />
-                                            ) : (
-                                                <span className="font-bold text-sm">
-                                                    {session.data?.user.displayName
-                                                        ?.charAt(0)
-                                                        .toLocaleUpperCase()}
-                                                </span>
-                                            )}
-                                        </button>
-                                    </DropdownMenuTrigger>
+                            <div className="flex items-center gap-3">
+                                <Link href={Routes.SEARCH}>
+                                    <Button
+                                        size="icon-lg"
+                                        variant="secondary"
+                                        className="border border-zinc-700 rounded-full">
+                                        <Search size={18} />
+                                    </Button>
+                                </Link>
+                                {session.status === 'unauthenticated' ? (
+                                    <Link href={Routes.GET_STARTED}>
+                                        <Button
+                                            size="icon-lg"
+                                            variant="secondary"
+                                            className="border border-zinc-700 rounded-full">
+                                            <User size={18} />
+                                        </Button>
+                                    </Link>
+                                ) : (
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger>
+                                            <button className="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center border border-zinc-700">
+                                                {session.data?.user
+                                                    .avatarUrl ? (
+                                                    <Image
+                                                        src={
+                                                            session.data?.user
+                                                                .avatarUrl
+                                                        }
+                                                        alt="Avatar"
+                                                        width={40}
+                                                        height={40}
+                                                        className="w-10 h-10 rounded-full object-cover"
+                                                    />
+                                                ) : (
+                                                    <span className="font-bold text-sm">
+                                                        {session.data?.user.displayName
+                                                            ?.charAt(0)
+                                                            .toLocaleUpperCase()}
+                                                    </span>
+                                                )}
+                                            </button>
+                                        </DropdownMenuTrigger>
 
-                                    <DropdownMenuContent align="end">
-                                        <DropdownMenuLabel>
-                                            <div className="flex flex-col space-y-1">
-                                                <p className="text-sm font-medium leading-none">
-                                                    {
-                                                        session.data?.user
-                                                            .displayName
-                                                    }
-                                                </p>
-                                                <p className="text-xs leading-none text-zinc-500 font-normal">
-                                                    {session.data?.user.phone}
-                                                </p>
-                                            </div>
-                                        </DropdownMenuLabel>
-                                        <DropdownMenuSeparator />
-                                        <Link href={Routes.DASHBOARD}>
-                                            <DropdownMenuItem>
-                                                <User className="mr-2 h-4 w-4" />
-                                                <span>Dashboard</span>
+                                        <DropdownMenuContent align="end">
+                                            <DropdownMenuLabel>
+                                                <div className="flex flex-col space-y-1">
+                                                    <p className="text-sm font-medium leading-none">
+                                                        {
+                                                            session.data?.user
+                                                                .displayName
+                                                        }
+                                                    </p>
+                                                    <p className="text-xs leading-none text-zinc-500 font-normal">
+                                                        {
+                                                            session.data?.user
+                                                                .phone
+                                                        }
+                                                    </p>
+                                                </div>
+                                            </DropdownMenuLabel>
+                                            <DropdownMenuSeparator />
+                                            <Link href={Routes.DASHBOARD}>
+                                                <DropdownMenuItem>
+                                                    <User className="mr-2 h-4 w-4" />
+                                                    <span>Dashboard</span>
+                                                </DropdownMenuItem>
+                                            </Link>
+                                            <Link href={Routes.SETTINGS}>
+                                                <DropdownMenuItem>
+                                                    <Settings className="mr-2 h-4 w-4" />
+                                                    <span>Settings</span>
+                                                </DropdownMenuItem>
+                                            </Link>
+                                            <DropdownMenuSeparator />
+                                            <DropdownMenuItem
+                                                onClick={() => signOut()}
+                                                className="text-red-500"
+                                                classNameIntent="danger">
+                                                <LogOut className="mr-2 h-4 w-4" />
+                                                <span>Logout</span>
                                             </DropdownMenuItem>
-                                        </Link>
-                                        <Link href={Routes.SETTINGS}>
-                                            <DropdownMenuItem>
-                                                <Settings className="mr-2 h-4 w-4" />
-                                                <span>Settings</span>
-                                            </DropdownMenuItem>
-                                        </Link>
-                                        <DropdownMenuSeparator />
-                                        <DropdownMenuItem
-                                            onClick={() => signOut()}
-                                            className="text-red-500"
-                                            classNameIntent="danger">
-                                            <LogOut className="mr-2 h-4 w-4" />
-                                            <span>Logout</span>
-                                        </DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            )}
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </header>

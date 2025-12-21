@@ -1,6 +1,7 @@
 import { Routes } from '@/core/constants';
 import { getServerAuth } from '@/lib';
 import OnboardingPage from '@/views/onboarding';
+import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 
 export default async function Page() {
@@ -14,3 +15,8 @@ export default async function Page() {
     }
     return <OnboardingPage />;
 }
+
+export const metadata: Metadata = {
+    title: "Let's get you set up'",
+    description: 'Complete your profile to get started with our services.',
+};

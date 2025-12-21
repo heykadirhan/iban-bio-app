@@ -19,3 +19,9 @@ export default async function Page() {
         </DashboardLayout>
     );
 }
+
+export const metadata = {
+    title: 'Dashboard',
+    description:
+        'Your personal dashboard to manage your iban.bio account and payment methods.',
+};

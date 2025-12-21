@@ -6,7 +6,6 @@ import { GoogleAnalytics } from '@next/third-parties/google';
 import Script from 'next/script';
 import { NextIntlClientProvider } from 'next-intl';
 import { PropsWithChildren } from 'react';
-import { MetaFuncProps } from '@/core/interfaces';
 import { TOAST_CONFIG } from '@/core/config';
 import { AuthWrapper } from '@/components/auth-wrapper';
 
@@ -20,47 +19,24 @@ export default async function RootLayout({ children }: PropsWithChildren) {
             <head>
                 <link
                     rel="apple-touch-icon"
+                    sizes="180x180"
                     href="/icons/apple-touch-icon.png"
                 />
                 <link
-                    rel="apple-touch-icon"
-                    sizes="57x57"
-                    href="/icons/apple-touch-icon-57x57.png"
+                    rel="icon"
+                    type="image/png"
+                    sizes="32x32"
+                    href="/icons/favicon-32x32.png"
                 />
                 <link
-                    rel="apple-touch-icon"
-                    sizes="72x72"
-                    href="/icons/apple-touch-icon-72x72.png"
+                    rel="icon"
+                    type="image/png"
+                    sizes="16x16"
+                    href="/icons/favicon-16x16.png"
                 />
                 <link
-                    rel="apple-touch-icon"
-                    sizes="76x76"
-                    href="/icons/apple-touch-icon-76x76.png"
-                />
-                <link
-                    rel="apple-touch-icon"
-                    sizes="114x114"
-                    href="/icons/apple-touch-icon-114x114.png"
-                />
-                <link
-                    rel="apple-touch-icon"
-                    sizes="120x120"
-                    href="/icons/apple-touch-icon-120x120.png"
-                />
-                <link
-                    rel="apple-touch-icon"
-                    sizes="144x144"
-                    href="/icons/apple-touch-icon-144x144.png"
-                />
-                <link
-                    rel="apple-touch-icon"
-                    sizes="152x152"
-                    href="/icons/apple-touch-icon-152x152.png"
-                />
-                <link
-                    rel="apple-touch-icon"
-                    sizes="180x180"
-                    href="/icons/apple-touch-icon-180x180.png"
+                    rel="manifest"
+                    href="/manifest.json"
                 />
             </head>
 
@@ -94,38 +70,59 @@ export default async function RootLayout({ children }: PropsWithChildren) {
     );
 }
 
-export async function generateMetadata({
-    params,
-}: MetaFuncProps): Promise<Metadata> {
-    const { locale } = await params;
-    return {
-        title: '',
-        description: '',
-        keywords: ['iban'],
-        authors: [{ name: 'Kadir Yılmaz', url: 'https://kadirhan.dev' }],
-        creator: 'Kadir Yılmaz',
-        metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL),
-        openGraph: {
-            title: '',
-            description: '',
-            url: process.env.NEXT_PUBLIC_APP_URL,
-            siteName: '',
-            images: [
-                {
-                    url: `/og-image.png`,
-                    width: 1200,
-                    height: 630,
-                    alt: '',
-                },
-            ],
-            locale: 'en_US',
-            type: 'website',
+export const metadata: Metadata = {
+    metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL),
+    title: {
+        default: 'iban.bio - Your Financial Identity in One Link',
+        template: '%s | iban.bio',
+    },
+    description:
+        'Consolidate your IBANs, crypto addresses, and payment links into one secure, shareable profile. The professional way to get paid.',
+    keywords: [
+        'payment link',
+        'iban share',
+        'crypto bio',
+        'financial profile',
+        'freelancer payments',
+    ],
+    authors: [{ name: 'kadirhan', url: 'https://kadirhan.dev' }],
+    creator: 'kadirhan',
+
+    openGraph: {
+        type: 'website',
+        locale: 'en_US',
+        url: process.env.NEXT_PUBLIC_APP_URL,
+        siteName: 'iban.bio',
+        title: 'iban.bio - One Link for All Your Payments',
+        description:
+            'Stop sharing raw IBANs. Create your secure financial profile in seconds.',
+        images: [
+            {
+                url: '/api/og',
+                width: 1200,
+                height: 630,
+                alt: 'iban.bio App Preview',
+            },
+        ],
+    },
+
+    twitter: {
+        card: 'summary_large_image',
+        title: 'iban.bio - One Link for All Your Payments',
+        description: 'Your Financial ID. One Secure Link.',
+        creator: '@kadirhanyl',
+        images: ['/api/og'],
+    },
+
+    robots: {
+        index: true,
+        follow: true,
+        googleBot: {
+            index: true,
+            follow: true,
+            'max-video-preview': -1,
+            'max-image-preview': 'large',
+            'max-snippet': -1,
         },
-        twitter: {
-            card: 'summary_large_image',
-            title: '',
-            description: '',
-            images: [`/og-image.png`],
-        },
-    };
-}
+    },
+};

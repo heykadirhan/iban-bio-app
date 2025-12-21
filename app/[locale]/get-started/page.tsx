@@ -11,3 +11,8 @@ export default async function Page() {
     }
     return <GetStartedPage />;
 }
+
+export const metadata = {
+    title: 'Get Started',
+    description: 'Begin your journey with iban.bio by setting up your account.',
+};

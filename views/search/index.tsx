@@ -137,7 +137,7 @@ export function SearchPage() {
                                     )}
                                 </div>
                                 <div className="flex-1">
-                                    <h3 className="text-xl font-bold text-white group-hover:text-primary transition-colors">
+                                    <h3 className="text-xl font-bold text-white group-hover:text-primary transition-all">
                                         {foundUser.displayName}
                                     </h3>
                                     <p className="text-zinc-500 text-sm">
