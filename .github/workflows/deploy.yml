@@ -38,6 +38,8 @@ jobs:
                       echo "📦 Paketler yükleniyor..."
                       yarn install
 
+                      rm -rf .next
+
                       echo "🏗️ Build aliniyor (Bu islem biraz sürebilir)..."
                       # Swap alanı sayesinde burada donmayacaktır
                       yarn build

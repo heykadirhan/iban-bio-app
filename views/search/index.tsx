@@ -173,7 +173,9 @@ export function SearchPage() {
                                 </p>
 
                                 <Link
-                                    href={`https://wa.me/90${phone}?text=${encodeURIComponent(
+                                    href={`https://wa.me/${isoToCode(
+                                        country,
+                                    )}${phone}?text=${encodeURIComponent(
                                         'Hi! I am inviting you to join iban.bio to easily share your payment details and receive payments securely. Sign up here: https://iban.bio/' +
                                             Routes.GET_STARTED,
                                     )}`}
