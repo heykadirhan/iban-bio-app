@@ -14,6 +14,8 @@ interface IUser extends mongoose.Document {
     visibility: ProfileVisibility;
     lastLogin?: Date;
     deletedAt?: Date | null;
+    createdAt: string;
+    updatedAt: string;
 }
 
 interface IUserModel extends mongoose.Model<IUser> {

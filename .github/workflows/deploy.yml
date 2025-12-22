@@ -1,51 +1,53 @@
-name: Deploy iban.bio App
+- name: Deploy to Server
+    uses: appleboy/ssh-action@master
+    with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        port: 22
+        command_timeout: 30m
+        script: |
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
-on:
-    push:
-        branches: [main]
+            set -e
 
-jobs:
-    deploy:
-        runs-on: ubuntu-latest
+            APP_DIR="/home/ubuntu/iban-bio-app"
+            TEMP_DIR="/home/ubuntu/iban-bio-temp-build"
 
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v2
+            echo "🚀 Guvenli Deployment basliyor..."
 
-            - name: Deploy to Server
-              uses: appleboy/ssh-action@master
-              with:
-                  host: ${{ secrets.HOST }}
-                  username: ${{ secrets.USERNAME }}
-                  key: ${{ secrets.SSH_KEY }}
-                  port: 22
-                  command_timeout: 30m
-                  script: |
-                      # 1. NVM'i ve Node'u manuel olarak yükle (En garanti yöntem)
-                      export NVM_DIR="$HOME/.nvm"
-                      [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            echo "🧹 Gecici build klasoru hazirlaniyor..."
+            rm -rf $TEMP_DIR
+            mkdir -p $TEMP_DIR
 
-                      # 2. Herhangi bir komut hata verirse işlemi anında durdur
-                      set -e
+            echo "📋 Kodlar kopyalaniyor..."
+            cp -r $APP_DIR/. $TEMP_DIR/
+            
+            cd $TEMP_DIR
+            
+            echo "⬇️ Guncel kod cekiliyor..."
+            git pull origin main
 
-                      echo "🚀 Deployment basliyor..."
+            echo "📦 Paketler yukleniyor..."
+            yarn install
 
-                      cd /home/ubuntu/iban-bio-app
+            echo "🏗️ Build aliniyor (Gecici Klasorde)..."
+            yarn build
 
-                      echo "⬇️ Git pull yapiliyor..."
-                      git pull origin main
+            echo "✅ Build basarili! Dosyalar canliya tasiniyor..."
+            
+            rsync -a --delete $TEMP_DIR/.next $APP_DIR/
+            rsync -a $TEMP_DIR/public $APP_DIR/
+            rsync -a $TEMP_DIR/package.json $APP_DIR/
+            rsync -a $TEMP_DIR/yarn.lock $APP_DIR/
+            rsync -a --delete $TEMP_DIR/node_modules $APP_DIR/
 
-                      echo "📦 Paketler yükleniyor..."
-                      yarn install
+            echo "🔄 PM2 Reload yapiliyor..."
+            cd $APP_DIR
+            pm2 reload 1
 
-                      rm -rf .next
+            echo "🧹 Gecici dosyalar temizleniyor..."
+            rm -rf $TEMP_DIR
 
-                      echo "🏗️ Build aliniyor (Bu islem biraz sürebilir)..."
-                      # Swap alanı sayesinde burada donmayacaktır
-                      yarn build
-
-                      echo "🔄 PM2 Reload yapiliyor..."
-                      # Restart yerine reload kullanırsan kesinti olmaz (Zero Downtime)
-                      pm2 restart 1
-
-                      echo "✅ Deployment basariyla tamamlandi!"
+            echo "🎉 Deployment ve Gecis basariyla tamamlandi!"

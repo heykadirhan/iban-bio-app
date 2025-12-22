@@ -44,15 +44,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     let dynamicEntries: MetadataRoute.Sitemap = [];
     if (users.length) {
-        dynamicEntries = users.map((u) => {
-            const last = u.updatedAt ? new Date(u.updatedAt) : new Date();
-            return {
-                url: `${base}${Routes.USER.replace(':username', u.username)}`,
-                lastModified: last,
-                changeFrequency: 'hourly',
-                priority: 0.7,
-            };
-        });
+        dynamicEntries = users
+            .filter((u) => u.username)
+            .map((u) => {
+                const last = u.updatedAt ? new Date(u.updatedAt) : new Date();
+                return {
+                    url: `${base}${Routes.USER.replace(
+                        ':username',
+                        u.username || '',
+                    )}`,
+                    lastModified: last,
+                    changeFrequency: 'hourly',
+                    priority: 0.7,
+                };
+            });
     }
 
     return [...staticEntries, ...dynamicEntries];

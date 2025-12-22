@@ -25,6 +25,8 @@ interface IPaymentMethod extends mongoose.Document {
     copyCount: number;
     isActive: boolean;
     deletedAt?: Date | null;
+    createdAt: string;
+    updatedAt: string;
 }
 
 interface IPaymentMethodModel extends mongoose.Model<IPaymentMethod> {

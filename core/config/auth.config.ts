@@ -19,7 +19,7 @@ export const AUTH_CONFIG: AuthOptions = {
                 phone: { label: 'Phone Number', type: 'text' },
                 otp: { label: 'OTP Code', type: 'text' },
             },
-            async authorize({ phone, country, otp }: any) {
+            async authorize({ phone, country, otp }: any): Promise<any> {
                 await connectDB();
 
                 if (!phone || !otp || !country) {

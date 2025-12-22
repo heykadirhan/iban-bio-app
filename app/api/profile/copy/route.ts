@@ -14,6 +14,13 @@ export async function POST(req: NextRequest) {
             '+iv',
         );
 
+        if (!paymentMethod) {
+            return NextResponse.json(
+                { success: false, message: 'Payment method not found' },
+                { status: HttpStatus.NOT_FOUND },
+            );
+        }
+
         if (paymentMethod.user.toString() !== session?.user.id.toString()) {
             await PaymentMethodModel.updateOne(
                 { _id: id },
