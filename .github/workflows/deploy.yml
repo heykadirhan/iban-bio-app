@@ -11,57 +11,57 @@ jobs:
         steps:
             - name: Checkout code
               uses: actions/checkout@v2
-              
+
             - name: Deploy to Server
-                uses: appleboy/ssh-action@master
-                with:
-                    host: ${{ secrets.HOST }}
-                    username: ${{ secrets.USERNAME }}
-                    key: ${{ secrets.SSH_KEY }}
-                    port: 22
-                    command_timeout: 30m
-                    script: |
-                        export NVM_DIR="$HOME/.nvm"
-                        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+              uses: appleboy/ssh-action@master
+              with:
+                  host: ${{ secrets.HOST }}
+                  username: ${{ secrets.USERNAME }}
+                  key: ${{ secrets.SSH_KEY }}
+                  port: 22
+                  command_timeout: 30m
+                  script: |
+                      export NVM_DIR="$HOME/.nvm"
+                      [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
-                        set -e
+                      set -e
 
-                        APP_DIR="/home/ubuntu/iban-bio-app"
-                        TEMP_DIR="/home/ubuntu/iban-bio-temp-build"
+                      APP_DIR="/home/ubuntu/iban-bio-app"
+                      TEMP_DIR="/home/ubuntu/iban-bio-temp-build"
 
-                        echo "🚀 Guvenli Deployment basliyor..."
+                      echo "🚀 Guvenli Deployment basliyor..."
 
-                        echo "🧹 Gecici build klasoru hazirlaniyor..."
-                        rm -rf $TEMP_DIR
-                        mkdir -p $TEMP_DIR
+                      echo "🧹 Gecici build klasoru hazirlaniyor..."
+                      rm -rf $TEMP_DIR
+                      mkdir -p $TEMP_DIR
 
-                        echo "📋 Kodlar kopyalaniyor..."
-                        cp -r $APP_DIR/. $TEMP_DIR/
-                        
-                        cd $TEMP_DIR
-                        
-                        echo "⬇️ Guncel kod cekiliyor..."
-                        git pull origin main
+                      echo "📋 Kodlar kopyalaniyor..."
+                      cp -r $APP_DIR/. $TEMP_DIR/
 
-                        echo "📦 Paketler yukleniyor..."
-                        yarn install
+                      cd $TEMP_DIR
 
-                        echo "🏗️ Build aliniyor (Gecici Klasorde)..."
-                        yarn build
+                      echo "⬇️ Guncel kod cekiliyor..."
+                      git pull origin main
 
-                        echo "✅ Build basarili! Dosyalar canliya tasiniyor..."
-                        
-                        rsync -a --delete $TEMP_DIR/.next $APP_DIR/
-                        rsync -a $TEMP_DIR/public $APP_DIR/
-                        rsync -a $TEMP_DIR/package.json $APP_DIR/
-                        rsync -a $TEMP_DIR/yarn.lock $APP_DIR/
-                        rsync -a --delete $TEMP_DIR/node_modules $APP_DIR/
+                      echo "📦 Paketler yukleniyor..."
+                      yarn install
 
-                        echo "🔄 PM2 Reload yapiliyor..."
-                        cd $APP_DIR
-                        pm2 reload 1
+                      echo "🏗️ Build aliniyor (Gecici Klasorde)..."
+                      yarn build
 
-                        echo "🧹 Gecici dosyalar temizleniyor..."
-                        rm -rf $TEMP_DIR
+                      echo "✅ Build basarili! Dosyalar canliya tasiniyor..."
 
-                        echo "🎉 Deployment ve Gecis basariyla tamamlandi!"
+                      rsync -a --delete $TEMP_DIR/.next $APP_DIR/
+                      rsync -a $TEMP_DIR/public $APP_DIR/
+                      rsync -a $TEMP_DIR/package.json $APP_DIR/
+                      rsync -a $TEMP_DIR/yarn.lock $APP_DIR/
+                      rsync -a --delete $TEMP_DIR/node_modules $APP_DIR/
+
+                      echo "🔄 PM2 Reload yapiliyor..."
+                      cd $APP_DIR
+                      pm2 reload 1
+
+                      echo "🧹 Gecici dosyalar temizleniyor..."
+                      rm -rf $TEMP_DIR
+
+                      echo "🎉 Deployment ve Gecis basariyla tamamlandi!"
