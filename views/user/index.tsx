@@ -13,6 +13,7 @@ import {
     Bitcoin,
     Smartphone,
     EyeOff,
+    Edit2,
 } from 'lucide-react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
@@ -241,7 +242,7 @@ export function UserPage({
                                     </div>
                                 ))
                         ) : (
-                            <div className="text-center py-12 opacity-70 flex flex-col items-center animate-in zoom-in duration-300">
+                            <div className="text-center py-12 flex flex-col items-center animate-in zoom-in duration-300">
                                 <div className="w-16 h-16 bg-zinc-800/50 rounded-full flex items-center justify-center mb-3">
                                     <LinkIcon
                                         size={32}
@@ -255,20 +256,20 @@ export function UserPage({
                                     Looks like there are no payment methods to
                                     show.
                                 </p>
+                                {session.data?.user?.username ===
+                                    profile.username && (
+                                    <Link href={Routes.DASHBOARD}>
+                                        <Button
+                                            variant="dashed"
+                                            className="mt-4">
+                                            <Edit2 size={16} /> Edit Your
+                                            Profile
+                                        </Button>
+                                    </Link>
+                                )}
                             </div>
                         )}
                     </div>
-
-                    {session.data?.user?.username === profile.username && (
-                        <Link href={Routes.DASHBOARD}>
-                            <Button
-                                size="lg"
-                                variant="dashed"
-                                className="w-full mt-3">
-                                <PlusCircle size={18} /> Add New Payment Method
-                            </Button>
-                        </Link>
-                    )}
                 </div>
                 {session.status === 'unauthenticated' && (
                     <div className="mt-8 mb-12 relative group">

@@ -1,6 +1,27 @@
 import mongoose from 'mongoose';
 import { ProfileVisibility } from '@core/enums';
 
+interface IUser extends mongoose.Document {
+    country: string;
+    phone: string;
+    username?: string;
+    displayName?: string;
+    title?: string;
+    bio?: string;
+    avatarUrl?: string;
+    persona?: string;
+    viewCount: number;
+    visibility: ProfileVisibility;
+    lastLogin?: Date;
+    deletedAt?: Date | null;
+}
+
+interface IUserModel extends mongoose.Model<IUser> {
+    findOneDeleted(query: mongoose.FilterQuery<IUser>): Promise<IUser | null>;
+    softDelete(query: mongoose.FilterQuery<IUser>): Promise<IUser | null>;
+    restore(query: mongoose.FilterQuery<IUser>): Promise<IUser | null>;
+}
+
 const UserSchema = new mongoose.Schema(
     {
         country: {
@@ -32,9 +53,44 @@ const UserSchema = new mongoose.Schema(
             default: ProfileVisibility.EXPIRABLE,
         },
         lastLogin: { type: Date },
+        deletedAt: { type: Date },
     },
     { timestamps: true },
 );
 
+UserSchema.pre(/^find/, function (next) {
+    const query = (this as any).getQuery();
+
+    if (query.deletedAt === undefined) {
+        (this as any).where({ deletedAt: null });
+    }
+
+    next();
+});
+
+UserSchema.statics.findOneDeleted = async function (
+    query: mongoose.FilterQuery<IUser>,
+) {
+    const doc = await (this as any).collection.findOne(query);
+    return doc ? this.hydrate(doc) : null;
+};
+
+UserSchema.statics.softDelete = async function (
+    query: mongoose.FilterQuery<IUser>,
+) {
+    return this.findOneAndUpdate(
+        query,
+        { deletedAt: new Date() },
+        { new: true },
+    );
+};
+
+UserSchema.statics.restore = async function (
+    query: mongoose.FilterQuery<IUser>,
+) {
+    return this.findOneAndUpdate(query, { deletedAt: null }, { new: true });
+};
+
 export const UserModel =
-    mongoose.models.User || mongoose.model('User', UserSchema);
+    (mongoose.models.User as IUserModel) ||
+    mongoose.model<IUser, IUserModel>('User', UserSchema);

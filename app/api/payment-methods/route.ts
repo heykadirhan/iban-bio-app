@@ -232,7 +232,7 @@ export async function DELETE(req: NextRequest) {
 
         const { id } = await req.json();
 
-        await PaymentMethodModel.deleteOne({
+        await PaymentMethodModel.softDelete({
             _id: id,
             user: session.user.id,
         });

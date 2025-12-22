@@ -296,6 +296,7 @@ export function SettingsPage() {
                                 onOpenChange={setDeletePopoverOpen}>
                                 <PopoverTrigger className="w-full">
                                     <Button
+                                        Comp="div"
                                         disabled={isDeleting}
                                         type="button"
                                         variant="destructiveOutline"

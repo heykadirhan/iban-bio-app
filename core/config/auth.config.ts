@@ -33,13 +33,22 @@ export const AUTH_CONFIG: AuthOptions = {
                     throw new Error('Invalid OTP code');
                 }
 
-                let user = await UserModel.findOne({ phone, country });
+                let user = await UserModel.findOneDeleted({
+                    phone,
+                    country,
+                });
 
                 if (!user) {
                     user = await UserModel.create({
                         phone,
                         country,
                     });
+                }
+
+                if (user.deletedAt) {
+                    throw new Error(
+                        'This account has been deleted. Please contact if you want to restore it.',
+                    );
                 }
 
                 return {

@@ -44,14 +44,12 @@ function Button({
     className,
     variant,
     size,
-    asChild = false,
+    Comp = 'button',
     ...props
 }: React.ComponentProps<'button'> &
     VariantProps<typeof buttonVariants> & {
-        asChild?: boolean;
+        Comp?: React.ElementType;
     }) {
-    const Comp = asChild ? Slot : 'button';
-
     return (
         <Comp
             data-slot="button"

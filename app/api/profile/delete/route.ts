@@ -14,8 +14,8 @@ export async function POST() {
                 { status: HttpStatus.UNAUTHORIZED },
             );
 
-        await UserModel.deleteOne({ _id: session.user.id });
-        await PaymentMethodModel.deleteMany({ user: session.user.id });
+        await UserModel.softDelete({ _id: session.user.id });
+        await PaymentMethodModel.softDelete({ user: session.user.id });
         await ShareTokenModel.deleteMany({ user: session.user.id });
 
         return NextResponse.json({ success: true }, { status: HttpStatus.OK });

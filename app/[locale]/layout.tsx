@@ -2,6 +2,7 @@ import '@/assets/styles/global.css';
 import type { Metadata } from 'next';
 import { Gabarito } from 'next/font/google';
 import { Toaster } from 'react-hot-toast';
+import NextTopLoader from 'nextjs-toploader';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import Script from 'next/script';
 import { NextIntlClientProvider } from 'next-intl';
@@ -57,6 +58,8 @@ export default async function RootLayout({ children }: PropsWithChildren) {
             <GoogleAnalytics gaId={process.env.GA_ID} />
 
             <body className={`${fontFamily.className} antialiased dark`}>
+                <NextTopLoader color="#615fff" />
+
                 <NextIntlClientProvider>
                     <Toaster
                         position="bottom-right"

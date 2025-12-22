@@ -27,15 +27,23 @@ export function HomeLayout({ children }: { children: React.ReactNode }) {
                     isScrolled ? 'bg-[#050505]/80' : 'bg-transparent',
                 )}>
                 <div className="container">
-                    <div className="h-20 flex items-center justify-between">
+                    <div className="h-20 flex items-center justify-between gap-2">
                         <Link
                             href={Routes.ROOT}
                             className="flex items-center gap-2 cursor-pointer">
                             <Image
                                 src="/img/logo.svg"
-                                alt="Logo"
+                                alt="iban.bio Logo"
                                 width={120}
                                 height={40}
+                                className="hidden sm:inline"
+                            />
+                            <Image
+                                src="/img/logo-icon.png"
+                                alt="iban.bio Logo Icon"
+                                width={32}
+                                height={32}
+                                className="sm:hidden"
                             />
                         </Link>
 
