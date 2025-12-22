@@ -3,6 +3,11 @@ import { NextRequest } from 'next/server';
 
 export const runtime = 'edge';
 
+const fontBoldURL =
+    'https://cdn.jsdelivr.net/npm/@fontsource/gabarito/files/gabarito-latin-700-normal.woff';
+const fontRegularURL =
+    'https://cdn.jsdelivr.net/npm/@fontsource/gabarito/files/gabarito-latin-400-normal.woff';
+
 export async function GET(request: NextRequest) {
     try {
         const { searchParams } = new URL(request.url);
@@ -10,8 +15,13 @@ export async function GET(request: NextRequest) {
         const username = searchParams.get('username');
         const displayName =
             searchParams.get('displayName') ||
-            (username ? `@${username}` : 'SecurePay');
+            (username ? `@${username}` : 'iban.bio');
         const title = username ? 'Secure Payment Profile' : 'Your Financial ID';
+
+        const [fontBoldData, fontRegularData] = await Promise.all([
+            fetch(fontBoldURL).then((res) => res.arrayBuffer()),
+            fetch(fontRegularURL).then((res) => res.arrayBuffer()),
+        ]);
 
         return new ImageResponse(
             (
@@ -19,17 +29,18 @@ export async function GET(request: NextRequest) {
                     style={{
                         height: '100%',
                         width: '100%',
-                        display: 'flex',
+                        display: 'flex', // ZORUNLU
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
                         backgroundColor: '#030712',
-                        backgroundImage: `
-              radial-gradient(circle at 25px 25px, rgba(255, 255, 255, 0.05) 2%, transparent 0%), 
-              radial-gradient(circle at 75px 75px, rgba(255, 255, 255, 0.05) 2%, transparent 0%)
-            `,
+                        backgroundImage: `radial-gradient(circle at 25px 25px, rgba(255, 255, 255, 0.05) 2%, transparent 0%), radial-gradient(circle at 75px 75px, rgba(255, 255, 255, 0.05) 2%, transparent 0%)`,
                         backgroundSize: '100px 100px',
                         position: 'relative',
                     }}>
                     <div
                         style={{
+                            display: 'flex',
                             position: 'absolute',
                             top: '-20%',
                             right: '-10%',
@@ -42,6 +53,7 @@ export async function GET(request: NextRequest) {
                     />
                     <div
                         style={{
+                            display: 'flex',
                             position: 'absolute',
                             bottom: '-20%',
                             left: '-10%',
@@ -55,7 +67,7 @@ export async function GET(request: NextRequest) {
 
                     <div
                         style={{
-                            display: 'flex',
+                            display: 'flex', // ZORUNLU
                             flexDirection: 'column',
                             justifyContent: 'space-between',
                             width: '100%',
@@ -75,7 +87,7 @@ export async function GET(request: NextRequest) {
                                     background:
                                         'linear-gradient(135deg, #4f46e5, #9333ea)',
                                     borderRadius: '12px',
-                                    display: 'flex',
+                                    display: 'flex', // ZORUNLU
                                     alignItems: 'center',
                                     justifyContent: 'center',
                                     boxShadow:
@@ -91,15 +103,16 @@ export async function GET(request: NextRequest) {
                                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                                 </svg>
                             </div>
-                            <span
+                            <div
                                 style={{
+                                    display: 'flex',
                                     fontSize: '28px',
                                     fontWeight: 700,
                                     color: 'white',
                                     letterSpacing: '-0.5px',
                                 }}>
-                                SecurePay
-                            </span>
+                                iban.bio
+                            </div>
                         </div>
 
                         <div
@@ -108,6 +121,7 @@ export async function GET(request: NextRequest) {
                                 alignItems: 'center',
                                 justifyContent: 'space-between',
                                 gap: '40px',
+                                width: '100%',
                             }}>
                             <div
                                 style={{
@@ -117,24 +131,27 @@ export async function GET(request: NextRequest) {
                                 }}>
                                 <div
                                     style={{
-                                        display: 'flex',
+                                        display: 'flex', // ZORUNLU
                                         alignItems: 'center',
                                         padding: '8px 16px',
                                         background: 'rgba(79, 70, 229, 0.15)',
                                         border: '1px solid rgba(79, 70, 229, 0.3)',
                                         borderRadius: '100px',
                                         marginBottom: '24px',
+                                        alignSelf: 'flex-start',
                                     }}>
                                     <div
                                         style={{
+                                            display: 'flex',
                                             width: '8px',
                                             height: '8px',
                                             background: '#4f46e5',
                                             borderRadius: '50%',
                                             marginRight: '10px',
                                         }}></div>
-                                    <span
+                                    <div
                                         style={{
+                                            display: 'flex',
                                             fontSize: '16px',
                                             color: '#a5b4fc',
                                             fontWeight: 600,
@@ -144,11 +161,12 @@ export async function GET(request: NextRequest) {
                                         {username
                                             ? 'Verified Profile'
                                             : 'Financial Hub'}
-                                    </span>
+                                    </div>
                                 </div>
 
                                 <div
                                     style={{
+                                        display: 'flex',
                                         fontSize: '72px',
                                         fontWeight: 700,
                                         color: 'white',
@@ -161,12 +179,13 @@ export async function GET(request: NextRequest) {
 
                                 <div
                                     style={{
+                                        display: 'flex',
                                         fontSize: '32px',
                                         fontWeight: 400,
                                         color: '#94a3b8',
                                     }}>
                                     {username
-                                        ? `Pay securely via IBAN & Crypto.`
+                                        ? `${username}'s financial profile`
                                         : title}
                                 </div>
 
@@ -181,6 +200,7 @@ export async function GET(request: NextRequest) {
                                             <div
                                                 key={tag}
                                                 style={{
+                                                    display: 'flex',
                                                     fontSize: '18px',
                                                     padding: '6px 14px',
                                                     borderRadius: '8px',
@@ -197,7 +217,7 @@ export async function GET(request: NextRequest) {
 
                             <div
                                 style={{
-                                    display: 'flex',
+                                    display: 'flex', // ZORUNLU
                                     alignItems: 'center',
                                     justifyContent: 'center',
                                     width: '320px',
@@ -213,6 +233,7 @@ export async function GET(request: NextRequest) {
                                 }}>
                                 <div
                                     style={{
+                                        display: 'flex',
                                         position: 'absolute',
                                         top: '30px',
                                         right: '30px',
@@ -224,6 +245,7 @@ export async function GET(request: NextRequest) {
                                 />
                                 <div
                                     style={{
+                                        display: 'flex',
                                         position: 'absolute',
                                         bottom: '40px',
                                         left: '40px',
@@ -262,18 +284,25 @@ export async function GET(request: NextRequest) {
                             style={{
                                 display: 'flex',
                                 justifyContent: 'space-between',
-                                alignItems: 'end',
+                                alignItems: 'flex-end',
                                 borderTop: '1px solid rgba(255,255,255,0.1)',
                                 paddingTop: '20px',
+                                width: '100%',
                             }}>
-                            <div style={{ fontSize: '20px', color: '#64748b' }}>
-                                securepay.com/{username || ''}
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    fontSize: '20px',
+                                    color: '#64748b',
+                                }}>
+                                iban.bio{username && `/${username}`}
                             </div>
                             <div style={{ display: 'flex', gap: '5px' }}>
                                 {[1, 2, 3].map((i) => (
                                     <div
                                         key={i}
                                         style={{
+                                            display: 'flex',
                                             width: '8px',
                                             height: '8px',
                                             background: '#334155',
@@ -289,9 +318,23 @@ export async function GET(request: NextRequest) {
             {
                 width: 1200,
                 height: 630,
+                fonts: [
+                    {
+                        name: 'Gabarito',
+                        data: fontBoldData,
+                        style: 'normal',
+                        weight: 700,
+                    },
+                    {
+                        name: 'Gabarito',
+                        data: fontRegularData,
+                        style: 'normal',
+                        weight: 400,
+                    },
+                ],
             },
         );
-    } catch (e) {
+    } catch (e: any) {
         return new Response(`Failed to generate the image`, { status: 500 });
     }
 }
