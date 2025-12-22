@@ -2,6 +2,7 @@ import type { MetadataRoute } from 'next';
 import { Routes } from '@/core/constants';
 import { UserModel } from '@/core/models';
 import { ProfileVisibility } from '@/core/enums';
+import { connectDB } from '@/lib';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const base = process.env.NEXT_PUBLIC_APP_URL;
@@ -32,6 +33,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             priority: 1.0,
         },
     ];
+
+    await connectDB();
 
     const users = await UserModel.find({
         visibility: ProfileVisibility.PUBLIC,
