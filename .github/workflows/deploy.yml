@@ -24,44 +24,47 @@ jobs:
                       export NVM_DIR="$HOME/.nvm"
                       [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
-                      set -e
+                      set +e
 
-                      APP_DIR="/home/ubuntu/iban-bio-app"
-                      TEMP_DIR="/home/ubuntu/iban-bio-temp-build"
+                      echo "🚀 Deployment basliyor (Disk Tasarruflu Mod)..."
+                      cd /home/ubuntu/iban-bio-app
 
-                      echo "🚀 Guvenli Deployment basliyor..."
-
-                      echo "🧹 Gecici build klasoru hazirlaniyor..."
-                      rm -rf $TEMP_DIR
-                      mkdir -p $TEMP_DIR
-
-                      echo "📋 Kodlar kopyalaniyor..."
-                      cp -r $APP_DIR/. $TEMP_DIR/
-
-                      cd $TEMP_DIR
-
-                      echo "⬇️ Guncel kod cekiliyor..."
+                      echo "⬇️ Git pull..."
                       git pull origin main
 
                       echo "📦 Paketler yukleniyor..."
                       yarn install
 
-                      echo "🏗️ Build aliniyor (Gecici Klasorde)..."
+                      echo "🛡️ Mevcut build yedekleniyor..."
+                      if [ -d ".next" ]; then
+                          rm -rf .next_backup
+                          mv .next .next_backup
+                      fi
+
+                      echo "🏗️ Build aliniyor..."
                       yarn build
 
-                      echo "✅ Build basarili! Dosyalar canliya tasiniyor..."
-
-                      rsync -a --delete $TEMP_DIR/.next $APP_DIR/
-                      rsync -a $TEMP_DIR/public $APP_DIR/
-                      rsync -a $TEMP_DIR/package.json $APP_DIR/
-                      rsync -a $TEMP_DIR/yarn.lock $APP_DIR/
-                      rsync -a --delete $TEMP_DIR/node_modules $APP_DIR/
-
-                      echo "🔄 PM2 Reload yapiliyor..."
-                      cd $APP_DIR
-                      pm2 reload 1
-
-                      echo "🧹 Gecici dosyalar temizleniyor..."
-                      rm -rf $TEMP_DIR
-
-                      echo "🎉 Deployment ve Gecis basariyla tamamlandi!"
+                      if [ $? -eq 0 ]; then
+                          echo "✅ Build BASARILI!"
+                          
+                          echo "🗑️ Yedek temizleniyor..."
+                          rm -rf .next_backup
+                          
+                          echo "🔄 PM2 Reload..."
+                          pm2 reload 1
+                          
+                          echo "🎉 Islem tamamlandi."
+                      else
+                          echo "❌ Build HATALI! Geri aliniyor..."
+                          
+                          rm -rf .next
+                          
+                          if [ -d ".next_backup" ]; then
+                              mv .next_backup .next
+                              echo "♻️ Eski versiyon geri yüklendi. Site çalışmaya devam ediyor."
+                          else
+                              echo "⚠️ Yedek bulunamadı! Site çalışmayabilir."
+                          fi
+                          
+                          exit 1
+                      fi
