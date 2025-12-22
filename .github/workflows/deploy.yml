@@ -44,6 +44,6 @@ jobs:
 
                       echo "🔄 PM2 Reload yapiliyor..."
                       # Restart yerine reload kullanırsan kesinti olmaz (Zero Downtime)
-                      pm2 reload 1 || pm2 restart 1
+                      pm2 restart 1
 
                       echo "✅ Deployment basariyla tamamlandi!"

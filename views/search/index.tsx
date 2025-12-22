@@ -23,7 +23,7 @@ import Image from 'next/image';
 export function SearchPage() {
     const searchParams = useSearchParams();
     const [country, setCountry] = useState(searchParams.get('country') || '');
-    const [phone, setPhone] = useState('');
+    const [phone, setPhone] = useState(searchParams.get('phone') || '');
     const [loading, setLoading] = useState(false);
     const [foundUser, setFoundUser] = useState<
         | {
@@ -39,12 +39,17 @@ export function SearchPage() {
     >(undefined);
 
     useEffect(() => {
-        setPhone(searchParams.get('phone') || '');
+        const phoneParam = searchParams.get('phone');
+        const countryParam = searchParams.get('country');
+        if (phoneParam) {
+            setCountry(countryParam || '');
+            setPhone(phoneParam);
+
+            handleSearch();
+        }
     }, [searchParams]);
 
-    const handleSearch = async (e: React.FormEvent) => {
-        e.preventDefault();
-
+    const handleSearch = async () => {
         try {
             setLoading(true);
 
@@ -84,7 +89,10 @@ export function SearchPage() {
                     </div>
 
                     <form
-                        onSubmit={handleSearch}
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            handleSearch();
+                        }}
                         className="relative group">
                         <div className="mt-2.5">
                             <InputPhone
