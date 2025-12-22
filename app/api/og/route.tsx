@@ -16,7 +16,6 @@ export async function GET(request: NextRequest) {
         const displayName =
             searchParams.get('displayName') ||
             (username ? `@${username}` : 'iban.bio');
-        const title = username ? 'Secure Payment Profile' : 'Your Financial ID';
 
         const [fontBoldData, fontRegularData] = await Promise.all([
             fetch(fontBoldURL).then((res) => res.arrayBuffer()),
@@ -29,12 +28,12 @@ export async function GET(request: NextRequest) {
                     style={{
                         height: '100%',
                         width: '100%',
-                        display: 'flex', // ZORUNLU
+                        display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        backgroundColor: '#030712',
-                        backgroundImage: `radial-gradient(circle at 25px 25px, rgba(255, 255, 255, 0.05) 2%, transparent 0%), radial-gradient(circle at 75px 75px, rgba(255, 255, 255, 0.05) 2%, transparent 0%)`,
+                        backgroundColor: '#020617', // Slate-950
+                        backgroundImage: `radial-gradient(circle at 25px 25px, rgba(255, 255, 255, 0.03) 2%, transparent 0%), radial-gradient(circle at 75px 75px, rgba(255, 255, 255, 0.03) 2%, transparent 0%)`,
                         backgroundSize: '100px 100px',
                         position: 'relative',
                     }}>
@@ -42,12 +41,12 @@ export async function GET(request: NextRequest) {
                         style={{
                             display: 'flex',
                             position: 'absolute',
-                            top: '-20%',
-                            right: '-10%',
-                            width: '800px',
-                            height: '800px',
+                            top: '-10%',
+                            right: '-5%',
+                            width: '700px',
+                            height: '700px',
                             background:
-                                'radial-gradient(circle, rgba(79, 70, 229, 0.3) 0%, transparent 70%)',
+                                'radial-gradient(circle, rgba(99, 102, 241, 0.25) 0%, transparent 70%)',
                             filter: 'blur(80px)',
                         }}
                     />
@@ -55,19 +54,19 @@ export async function GET(request: NextRequest) {
                         style={{
                             display: 'flex',
                             position: 'absolute',
-                            bottom: '-20%',
-                            left: '-10%',
+                            bottom: '-10%',
+                            left: '-5%',
                             width: '600px',
                             height: '600px',
                             background:
-                                'radial-gradient(circle, rgba(147, 51, 234, 0.2) 0%, transparent 70%)',
+                                'radial-gradient(circle, rgba(168, 85, 247, 0.2) 0%, transparent 70%)',
                             filter: 'blur(80px)',
                         }}
                     />
 
                     <div
                         style={{
-                            display: 'flex', // ZORUNLU
+                            display: 'flex',
                             flexDirection: 'column',
                             justifyContent: 'space-between',
                             width: '100%',
@@ -82,31 +81,39 @@ export async function GET(request: NextRequest) {
                             }}>
                             <div
                                 style={{
-                                    width: '50px',
-                                    height: '50px',
+                                    width: '48px',
+                                    height: '48px',
                                     background:
-                                        'linear-gradient(135deg, #4f46e5, #9333ea)',
+                                        'linear-gradient(135deg, #4f46e5, #7c3aed)',
                                     borderRadius: '12px',
-                                    display: 'flex', // ZORUNLU
+                                    display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
                                     boxShadow:
-                                        '0 4px 20px rgba(79, 70, 229, 0.5)',
+                                        '0 4px 15px rgba(79, 70, 229, 0.4)',
                                 }}>
                                 <svg
-                                    width="30"
-                                    height="30"
+                                    width="24"
+                                    height="24"
                                     viewBox="0 0 24 24"
                                     fill="none"
-                                    stroke="white"
-                                    strokeWidth="2.5">
-                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                                    stroke="#ffffff"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path>
+                                    <path d="M20 2v4"></path>
+                                    <path d="M22 4h-4"></path>
+                                    <circle
+                                        cx="4"
+                                        cy="20"
+                                        r="2"></circle>
                                 </svg>
                             </div>
                             <div
                                 style={{
                                     display: 'flex',
-                                    fontSize: '28px',
+                                    fontSize: '26px',
                                     fontWeight: 700,
                                     color: 'white',
                                     letterSpacing: '-0.5px',
@@ -120,22 +127,22 @@ export async function GET(request: NextRequest) {
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'space-between',
-                                gap: '40px',
                                 width: '100%',
+                                paddingTop: '20px',
                             }}>
                             <div
                                 style={{
                                     display: 'flex',
                                     flexDirection: 'column',
-                                    maxWidth: '65%',
+                                    maxWidth: '55%',
                                 }}>
                                 <div
                                     style={{
-                                        display: 'flex', // ZORUNLU
+                                        display: 'flex',
                                         alignItems: 'center',
                                         padding: '8px 16px',
-                                        background: 'rgba(79, 70, 229, 0.15)',
-                                        border: '1px solid rgba(79, 70, 229, 0.3)',
+                                        background: 'rgba(99, 102, 241, 0.1)',
+                                        border: '1px solid rgba(99, 102, 241, 0.3)',
                                         borderRadius: '100px',
                                         marginBottom: '24px',
                                         alignSelf: 'flex-start',
@@ -145,7 +152,7 @@ export async function GET(request: NextRequest) {
                                             display: 'flex',
                                             width: '8px',
                                             height: '8px',
-                                            background: '#4f46e5',
+                                            background: '#6366f1',
                                             borderRadius: '50%',
                                             marginRight: '10px',
                                         }}></div>
@@ -160,7 +167,7 @@ export async function GET(request: NextRequest) {
                                         }}>
                                         {username
                                             ? 'Verified Profile'
-                                            : 'Financial Hub'}
+                                            : 'All-in-One Link'}
                                     </div>
                                 </div>
 
@@ -170,9 +177,11 @@ export async function GET(request: NextRequest) {
                                         fontSize: '72px',
                                         fontWeight: 700,
                                         color: 'white',
-                                        lineHeight: '1.1',
+                                        lineHeight: '1.05',
                                         letterSpacing: '-2px',
-                                        marginBottom: '16px',
+                                        marginBottom: '20px',
+                                        textShadow:
+                                            '0 0 40px rgba(255,255,255,0.1)',
                                     }}>
                                     {displayName}
                                 </div>
@@ -180,103 +189,206 @@ export async function GET(request: NextRequest) {
                                 <div
                                     style={{
                                         display: 'flex',
-                                        fontSize: '32px',
+                                        fontSize: '30px',
                                         fontWeight: 400,
                                         color: '#94a3b8',
+                                        lineHeight: '1.4',
                                     }}>
                                     {username
-                                        ? `${username}'s financial profile`
-                                        : title}
+                                        ? `Pay securely via IBAN, Crypto & Wallets.`
+                                        : 'Consolidate your financial identity in one secure link.'}
                                 </div>
-
-                                {username && (
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            marginTop: '30px',
-                                            gap: '15px',
-                                        }}>
-                                        {['IBAN', 'USDT', 'BTC'].map((tag) => (
-                                            <div
-                                                key={tag}
-                                                style={{
-                                                    display: 'flex',
-                                                    fontSize: '18px',
-                                                    padding: '6px 14px',
-                                                    borderRadius: '8px',
-                                                    background: '#1e293b',
-                                                    color: '#cbd5e1',
-                                                    border: '1px solid #334155',
-                                                }}>
-                                                {tag}
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
                             </div>
 
                             <div
                                 style={{
-                                    display: 'flex', // ZORUNLU
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    width: '320px',
-                                    height: '320px',
-                                    background:
-                                        'linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01))',
-                                    border: '1px solid rgba(255,255,255,0.1)',
-                                    borderRadius: '40px',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    width: '380px',
+                                    background: '#615fff03',
+                                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                                    borderRadius: '24px',
+                                    padding: '24px',
+                                    gap: '16px',
                                     boxShadow:
-                                        '0 25px 50px -12px rgba(0,0,0,0.5)',
-                                    position: 'relative',
-                                    transform: 'rotate(-5deg)',
+                                        '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
+                                    transform:
+                                        'rotate(-6deg) translateY(-20px)',
                                 }}>
                                 <div
                                     style={{
                                         display: 'flex',
-                                        position: 'absolute',
-                                        top: '30px',
-                                        right: '30px',
-                                        width: '60px',
-                                        height: '60px',
-                                        borderRadius: '50%',
-                                        border: '2px solid rgba(255,255,255,0.2)',
-                                    }}
-                                />
+                                        alignItems: 'center',
+                                        backgroundColor: '#334155',
+                                        border: '1px solid rgba(255,255,255,0.05)',
+                                        padding: '16px',
+                                        borderRadius: '16px',
+                                        gap: '16px',
+                                    }}>
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            width: '48px',
+                                            height: '48px',
+                                            borderRadius: '10px',
+                                            background: '#93e439',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                        }}>
+                                        <svg
+                                            width="24"
+                                            height="24"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="#111"
+                                            strokeWidth="2.5">
+                                            <path d="M2 12h20M2 12l4-4m-4 4 4 4" />
+                                        </svg>
+                                    </div>
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            gap: '4px',
+                                        }}>
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                fontSize: '18px',
+                                                fontWeight: 700,
+                                                color: 'white',
+                                            }}>
+                                            Wise (USD)
+                                        </div>
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                fontSize: '14px',
+                                                color: '#cbd5e1',
+                                                fontFamily: 'monospace',
+                                            }}>
+                                            US12 **** **** 91
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div
                                     style={{
                                         display: 'flex',
-                                        position: 'absolute',
-                                        bottom: '40px',
-                                        left: '40px',
-                                        fontSize: '24px',
-                                        color: 'rgba(255,255,255,0.4)',
-                                        fontFamily: 'monospace',
+                                        alignItems: 'center',
+                                        backgroundColor: '#0f172a',
+                                        border: '1px solid rgba(16, 185, 129, 0.3)',
+                                        padding: '16px',
+                                        borderRadius: '16px',
+                                        gap: '16px',
+                                        transform: 'scale(1.03)',
+                                        boxShadow:
+                                            '0 10px 25px -5px rgba(0,0,0,0.3)',
                                     }}>
-                                    **** 4242
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            width: '48px',
+                                            height: '48px',
+                                            borderRadius: '10px',
+                                            background: '#10b981',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                        }}>
+                                        <svg
+                                            width="24"
+                                            height="24"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="white"
+                                            strokeWidth="2">
+                                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                                            <path d="M12 8v8" />
+                                            <path d="M8 12h8" />
+                                        </svg>
+                                    </div>
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            gap: '4px',
+                                        }}>
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                fontSize: '18px',
+                                                fontWeight: 700,
+                                                color: 'white',
+                                            }}>
+                                            USDT (Tether)
+                                        </div>
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                fontSize: '14px',
+                                                color: '#6ee7b7',
+                                            }}>
+                                            TRC20 Network
+                                        </div>
+                                    </div>
                                 </div>
 
-                                <svg
-                                    width="100"
-                                    height="100"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="rgba(255,255,255,0.8)"
-                                    strokeWidth="1.5">
-                                    <rect
-                                        x="2"
-                                        y="5"
-                                        width="20"
-                                        height="14"
-                                        rx="2"
-                                    />
-                                    <line
-                                        x1="2"
-                                        y1="10"
-                                        x2="22"
-                                        y2="10"
-                                    />
-                                </svg>
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        backgroundColor: '#334155',
+                                        border: '1px solid rgba(255,255,255,0.05)',
+                                        padding: '16px',
+                                        borderRadius: '16px',
+                                        gap: '16px',
+                                    }}>
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            width: '48px',
+                                            height: '48px',
+                                            borderRadius: '10px',
+                                            background: '#0070ba',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                        }}>
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                fontSize: '28px',
+                                                fontWeight: 900,
+                                                color: 'white',
+                                                fontFamily: 'sans-serif',
+                                            }}>
+                                            P
+                                        </div>
+                                    </div>
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            gap: '4px',
+                                        }}>
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                fontSize: '18px',
+                                                fontWeight: 700,
+                                                color: 'white',
+                                            }}>
+                                            PayPal
+                                        </div>
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                fontSize: '14px',
+                                                color: '#cbd5e1',
+                                            }}>
+                                            @username
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -286,7 +398,7 @@ export async function GET(request: NextRequest) {
                                 justifyContent: 'space-between',
                                 alignItems: 'flex-end',
                                 borderTop: '1px solid rgba(255,255,255,0.1)',
-                                paddingTop: '20px',
+                                paddingTop: '24px',
                                 width: '100%',
                             }}>
                             <div
@@ -294,22 +406,9 @@ export async function GET(request: NextRequest) {
                                     display: 'flex',
                                     fontSize: '20px',
                                     color: '#64748b',
+                                    fontWeight: 500,
                                 }}>
                                 iban.bio{username && `/${username}`}
-                            </div>
-                            <div style={{ display: 'flex', gap: '5px' }}>
-                                {[1, 2, 3].map((i) => (
-                                    <div
-                                        key={i}
-                                        style={{
-                                            display: 'flex',
-                                            width: '8px',
-                                            height: '8px',
-                                            background: '#334155',
-                                            borderRadius: '2px',
-                                        }}
-                                    />
-                                ))}
                             </div>
                         </div>
                     </div>
