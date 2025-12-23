@@ -270,7 +270,7 @@ export function DashboardPage() {
                     </div>
                 </div>
 
-                <div className="flex flex-col bg-[#0f0f0f] min-h-[500px] rounded-xl border border-zinc-800 p-6 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
+                <div className="flex flex-col bg-[#0f0f0f] rounded-xl min-h-72 border border-zinc-800 p-6 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
                     <div className="flex items-center justify-between mb-6">
                         <h2 className="text-lg font-bold">Payment methods</h2>
                         <div className="flex bg-zinc-900 rounded-lg p-1">
@@ -295,7 +295,7 @@ export function DashboardPage() {
                         </div>
                     </div>
 
-                    <div className="space-y-4">
+                    <div className="flex-1 flex flex-col space-y-4">
                         {dashboard.paymentMethods
                             .filter((m) =>
                                 activeTab === 'active'
@@ -343,10 +343,25 @@ export function DashboardPage() {
                                     className="w-full h-[170px] rounded-2xl"
                                 />
                             ))}
+
+                        {!!dashboard.paymentMethods.length && (
+                            <div className="mt-auto pt-2">
+                                <Button
+                                    onClick={() =>
+                                        setPaymentModal({ isOpen: true })
+                                    }
+                                    variant="dashed"
+                                    size="lg"
+                                    className="w-full">
+                                    <PlusCircle />
+                                    Add payment method
+                                </Button>
+                            </div>
+                        )}
                     </div>
 
                     {!dashboard.paymentMethods.length && !isLoading && (
-                        <div className="flex flex-col items-center justify-center h-full flex-1 text-center pt-10 pb-16 opacity-75">
+                        <div className="flex flex-col items-center justify-center h-full flex-1 text-center py-16 opacity-75">
                             <Wallet
                                 size={48}
                                 className="mx-auto mb-3 text-zinc-600"
