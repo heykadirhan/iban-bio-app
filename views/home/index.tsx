@@ -22,6 +22,7 @@ import { Routes } from '@/core/constants';
 import { createRoute } from '@/core/utils';
 import InputPhone from '@/components/input-phone';
 import Image from 'next/image';
+import { TypingEffect } from './components/typing-effect';
 
 type UseCaseType = 'freelancer' | 'trader' | 'creator';
 
@@ -139,12 +140,8 @@ const HeroVisual = () => {
                     </div>
                 </div>
 
-                <h3 className="text-2xl font-bold text-white mb-1">
-                    Alex Morgan
-                </h3>
-                <p className="text-indigo-400 text-sm font-medium mb-6">
-                    @alex
-                </p>
+                <h3 className="text-2xl font-bold text-white mb-1">Joe Doe</h3>
+                <p className="text-indigo-400 text-sm font-medium mb-6">@joe</p>
 
                 {/* Mini Cards inside Main Card */}
                 <div className="space-y-3">
@@ -240,37 +237,9 @@ const FaqItem = ({
 export function HomePage() {
     const [phoneSearch, setPhoneSearch] = useState('');
     const [phoneSearchCountry, setPhoneSearchCountry] = useState('');
-    const [typedName, setTypedName] = useState('');
-    const targetName = 'alex';
 
     const [activeUseCase, setActiveUseCase] =
         useState<UseCaseType>('freelancer');
-
-    useEffect(() => {
-        let i = 0;
-        let interval: ReturnType<typeof setInterval>;
-
-        const startTyping = () => {
-            interval = setInterval(() => {
-                i++;
-                setTypedName(targetName.slice(0, i));
-
-                if (i === targetName.length) {
-                    clearInterval(interval);
-
-                    setTimeout(() => {
-                        i = 0;
-                        setTypedName('');
-                        startTyping();
-                    }, 2000);
-                }
-            }, 300);
-        };
-
-        startTyping();
-
-        return () => clearInterval(interval);
-    }, [targetName]);
 
     return (
         <>
@@ -310,10 +279,7 @@ export function HomePage() {
                                 <span className="pl-4 text-zinc-500 font-mono text-base">
                                     iban.bio/
                                 </span>
-                                <span className="text-white text-left font-mono font-bold text-lg relative">
-                                    {typedName}
-                                    <span className="absolute -right-1 top-0 h-full w-0.5 bg-indigo-500 animate-blink"></span>
-                                </span>
+                                <TypingEffect />
                                 <Link
                                     href={Routes.GET_STARTED}
                                     className="ml-auto">

@@ -106,14 +106,19 @@ button {
 @keyframes float {
     0%,
     100% {
-        transform: translateY(0px) rotateY(-10deg) rotateX(5deg);
+        transform: translateY(0px);
     }
     50% {
-        transform: translateY(-20px) rotateY(-5deg) rotateX(2deg);
+        transform: translateY(-15px);
     }
 }
 .animate-float {
+    will-change: transform;
     animation: float 6s ease-in-out infinite;
+}
+.animate-float-delayed {
+    will-change: transform;
+    animation: float 7s ease-in-out infinite 1s;
 }
 
 @keyframes scroll {
@@ -125,6 +130,7 @@ button {
     }
 }
 .animate-scroll {
+    will-change: transform;
     animation: scroll 40s linear infinite;
 }
 
@@ -142,9 +148,19 @@ button {
 }
 
 .glass-card {
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(20, 20, 20, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: none; /* Mobilde kapalı */
+    -webkit-backdrop-filter: none;
+}
+
+@media (min-width: 768px) {
+    .glass-card {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
 }
 
 @media print {
