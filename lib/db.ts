@@ -26,7 +26,6 @@ export async function connectDB() {
     if (!cached.promise) {
         const opts: ConnectOptions = {
             bufferCommands: false,
-            dbName: MONGODB_NAME,
         };
         cached.promise = mongoose
             .connect(MONGODB_URI, opts)
