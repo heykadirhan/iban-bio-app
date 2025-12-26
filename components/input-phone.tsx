@@ -93,9 +93,7 @@ export default function InputPhone({
 
                 <input
                     ref={withMask(selectedCountry.mask)}
-                    type="text"
-                    inputMode="numeric"
-                    pattern="[0-9]*"
+                    type="tel"
                     value={value}
                     onChange={(event) =>
                         onPhoneChange(event.target.value.replace(/\D/g, ''))
