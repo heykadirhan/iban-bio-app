@@ -1,7 +1,7 @@
 'use client';
 
 import COUNTRIES from '@/assets/data/countries.json';
-import { useState, useEffect, useRef, ReactNode } from 'react';
+import { useState, useEffect, useRef, ReactNode, useMemo } from 'react';
 import { ChevronDown, Search, Check } from 'lucide-react';
 import { withMask } from 'use-mask-input';
 
@@ -27,6 +27,9 @@ export default function InputPhone({
         COUNTRIES.find((c) => c.code === defaultCountry) || COUNTRIES[0],
     );
 
+    const inputMaskRef = useMemo(() => {
+        return withMask(selectedCountry.mask);
+    }, [selectedCountry.mask]);
     const dropdownRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -92,8 +95,9 @@ export default function InputPhone({
                 </button>
 
                 <input
-                    ref={withMask(selectedCountry.mask)}
-                    type="tel"
+                    ref={inputMaskRef}
+                    type="text"
+                    inputMode="numeric"
                     value={value}
                     onChange={(event) =>
                         onPhoneChange(event.target.value.replace(/\D/g, ''))

@@ -176,7 +176,7 @@ export function SearchPage() {
                                     href={`https://wa.me/${isoToCode(
                                         country,
                                     )}${phone}?text=${encodeURIComponent(
-                                        'Hi! I am inviting you to join iban.bio to easily share your payment details and receive payments securely. Sign up here: https://iban.bio/' +
+                                        'Hi! I am inviting you to join iban.bio to easily share your payment details and receive payments securely. Sign up here: https://iban.bio' +
                                             Routes.GET_STARTED,
                                     )}`}
                                     target="_blank">

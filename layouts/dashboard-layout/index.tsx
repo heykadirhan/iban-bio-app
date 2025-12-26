@@ -37,7 +37,7 @@ export function DashboardLayout({
                 <div className="absolute top-[20%] left-[-10%] w-[300px] h-[300px] bg-blue-900/10 rounded-full blur-[80px]" />
             </div>
 
-            <div className="py-6 pt-8 max-w-lg mx-auto relative z-10">
+            <div className="py-6 max-w-lg mx-auto relative z-10">
                 <header>
                     <div className="container">
                         <div className="flex justify-between items-center h-10">

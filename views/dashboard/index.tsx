@@ -105,7 +105,7 @@ export function DashboardPage() {
     return (
         <>
             <div className="container">
-                <div className="py-6 pt-8">
+                <div className="pb-6 pt-8">
                     <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-zinc-900/50 p-4 shadow-2xl backdrop-blur-xl">
                         <div
                             className={`absolute -left-10 -top-10 h-40 w-40 rounded-full bg-gradient-to-br ${statusConfig?.glow} to-transparent blur-3xl pointer-events-none transition-colors duration-500`}
