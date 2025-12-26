@@ -141,7 +141,9 @@ const HeroVisual = () => {
                 </div>
 
                 <h3 className="text-2xl font-bold text-white mb-1">Joe Doe</h3>
-                <p className="text-indigo-400 text-sm font-medium mb-6">@joe</p>
+                <p className="text-indigo-400 text-sm font-medium mb-6">
+                    @joe-doe
+                </p>
 
                 {/* Mini Cards inside Main Card */}
                 <div className="space-y-3">
