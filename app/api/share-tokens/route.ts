@@ -1,11 +1,13 @@
 import crypto from 'crypto';
 import { ShareTokenModel } from '@/core/models/share-token.model';
 import { connectDB, getServerAuth, HttpStatus } from '@/lib';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { createShareTokenReqDto } from '@/core/dtos';
+import { ShareTokenConfig } from '@/core/enums';
 
-const durationMinutes = 60; // Token validity duration in minutes
+const durationMinutes = 60;
 
-export async function POST() {
+export async function POST(req: NextRequest) {
     try {
         await connectDB();
 
@@ -16,14 +18,36 @@ export async function POST() {
                 { status: HttpStatus.UNAUTHORIZED },
             );
 
-        const token = crypto.randomBytes(4).toString('hex');
+        const unparsedBody = await req.json();
+        const body = createShareTokenReqDto.parse(unparsedBody);
 
         const expiresAt = new Date();
-        expiresAt.setMinutes(expiresAt.getMinutes() + durationMinutes);
+        let isOneTime: boolean = false;
+
+        switch (body.config) {
+            case ShareTokenConfig.FIFTEEN_MINUTES:
+                expiresAt.setMinutes(expiresAt.getMinutes() + 15);
+                break;
+            case ShareTokenConfig.ONE_HOUR:
+                expiresAt.setHours(expiresAt.getHours() + 1);
+                break;
+            case ShareTokenConfig.ONE_DAY:
+                expiresAt.setHours(expiresAt.getHours() + 24);
+                break;
+            case ShareTokenConfig.ONE_VIEW:
+                expiresAt.setHours(expiresAt.getHours() + 24);
+                isOneTime = true;
+                break;
+            default:
+                expiresAt.setHours(expiresAt.getHours() + 1);
+        }
+
+        const token = crypto.randomBytes(4).toString('hex');
 
         const shareToken = await ShareTokenModel.create({
             user: session.user.id,
             token,
+            isOneTime,
             expiresAt,
         });
 

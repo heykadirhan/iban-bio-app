@@ -52,7 +52,7 @@ export function ModalShare({
                 <div className="relative group mt-3 mb-6">
                     <div className="absolute -inset-0.5 bg-gradient-to-tr from-blue-600 to-purple-600 rounded-2xl opacity-30 blur-sm group-hover:opacity-50 transition duration-500"></div>
                     <div className="relative w-full bg-background rounded-xl p-4 flex flex-col items-center text-center">
-                        <div className="w-48 h-48 bg-white text-black p-2 rounded-md flex items-center justify-center overflow-hidden relative">
+                        <div className="w-full max-w-48 max-h-48 bg-white text-black p-2 rounded-md flex items-center justify-center overflow-hidden relative">
                             {!qrLoaded && (
                                 <Loader2
                                     size={24}
@@ -74,7 +74,7 @@ export function ModalShare({
                     </div>
                 </div>
 
-                <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-1.5 flex items-center gap-2 mb-6">
+                <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-1.5 flex items-center gap-2 mb-6 overflow-hidden">
                     <div className="flex-1 px-3 py-2 overflow-hidden">
                         <p className="text-sm text-zinc-500 font-medium truncate">
                             iban.bio/{username}

@@ -30,6 +30,7 @@ import { ModalShare } from '@/components/modal-share';
 import { PaymentMethodType, ProfileVisibility } from '@/core/enums';
 import PaymentCard from '@/components/payment-card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { ModalGenerateLink } from '@/components/modal-generate-link';
 
 export function DashboardPage() {
     const session = useSession();
@@ -41,6 +42,8 @@ export function DashboardPage() {
     const [isGeneratingShareToken, setIsGeneratingShareToken] = useState(false);
     const [activeTab, setActiveTab] = useState('active');
     const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+    const [isGenerateTokenModalOpen, setIsGenerateTokenModalOpen] =
+        useState(false);
     const [shareToken, setShareToken] = useState('');
     const [isCopied, setIsCopied] = useState(false);
     const [dashboard, setDashboard] = useState({
@@ -86,21 +89,6 @@ export function DashboardPage() {
     useEffect(() => {
         fetchDashboard();
     }, []);
-
-    const generateShareToken = async () => {
-        try {
-            setIsGeneratingShareToken(true);
-
-            const res = await HttpService.request(Endpoints.SHARE_TOKENS, {
-                method: 'POST',
-            });
-
-            setShareToken(res?.data?.token);
-            setIsShareModalOpen(true);
-        } finally {
-            setIsGeneratingShareToken(false);
-        }
-    };
 
     return (
         <>
@@ -215,7 +203,9 @@ export function DashboardPage() {
                             ) : (
                                 visibility === ProfileVisibility.EXPIRABLE && (
                                     <Button
-                                        onClick={generateShareToken}
+                                        onClick={() =>
+                                            setIsGenerateTokenModalOpen(true)
+                                        }
                                         disabled={isGeneratingShareToken}
                                         className="w-full h-12 rounded-xl"
                                         variant="secondary">
@@ -408,6 +398,15 @@ export function DashboardPage() {
                         isOpen: false,
                     });
                     fetchDashboard();
+                }}
+            />
+            <ModalGenerateLink
+                isOpen={isGenerateTokenModalOpen}
+                onClose={() => setIsGenerateTokenModalOpen(false)}
+                onGenerate={(token) => {
+                    setIsGenerateTokenModalOpen(false);
+                    setShareToken(token);
+                    setIsShareModalOpen(true);
                 }}
             />
             <ModalShare

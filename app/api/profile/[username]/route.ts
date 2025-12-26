@@ -62,6 +62,10 @@ export async function GET(
                     { status: HttpStatus.NOT_FOUND },
                 );
             }
+
+            if (token.isOneTime) {
+                await ShareTokenModel.deleteOne({ _id: token._id });
+            }
         }
 
         const paymentMethods = await PaymentMethodModel.find({

@@ -13,6 +13,10 @@ const ShareTokenSchema = new mongoose.Schema(
             unique: true,
             index: true,
         },
+        isOneTime: {
+            type: Boolean,
+            default: false,
+        },
         expiresAt: {
             type: Date,
             required: true,
