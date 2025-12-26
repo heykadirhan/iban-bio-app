@@ -1,0 +1,200 @@
+[
+    {
+        "id": "tether",
+        "name": "Tether",
+        "symbol": "USDT",
+        "networks": [
+            "TRC20",
+            "ERC20",
+            "BEP20",
+            "SOL",
+            "POLYGON",
+            "AVAX",
+            "ARBITRUM",
+            "OPTIMISM",
+            "TON"
+        ]
+    },
+    {
+        "id": "usd-coin",
+        "name": "USD Coin",
+        "symbol": "USDC",
+        "networks": [
+            "ERC20",
+            "SOL",
+            "BEP20",
+            "POLYGON",
+            "BASE",
+            "ARBITRUM",
+            "OPTIMISM",
+            "AVAX"
+        ]
+    },
+    {
+        "id": "bitcoin",
+        "name": "Bitcoin",
+        "symbol": "BTC",
+        "networks": [
+            "BTC",
+            "BEP20",
+            "LIGHTNING"
+        ]
+    },
+    {
+        "id": "ethereum",
+        "name": "Ethereum",
+        "symbol": "ETH",
+        "networks": [
+            "ERC20",
+            "BEP20",
+            "ARBITRUM",
+            "OPTIMISM",
+            "BASE",
+            "ZKSYNC"
+        ]
+    },
+    {
+        "id": "binancecoin",
+        "name": "BNB",
+        "symbol": "BNB",
+        "networks": [
+            "BEP20",
+            "BEP2"
+        ]
+    },
+    {
+        "id": "solana",
+        "name": "Solana",
+        "symbol": "SOL",
+        "networks": [
+            "SOL"
+        ]
+    },
+    {
+        "id": "ripple",
+        "name": "XRP",
+        "symbol": "XRP",
+        "networks": [
+            "XRP",
+            "BEP20"
+        ]
+    },
+    {
+        "id": "tron",
+        "name": "Tron",
+        "symbol": "TRX",
+        "networks": [
+            "TRC20",
+            "BEP20"
+        ]
+    },
+    {
+        "id": "dogecoin",
+        "name": "Dogecoin",
+        "symbol": "DOGE",
+        "networks": [
+            "DOGE",
+            "BEP20"
+        ]
+    },
+    {
+        "id": "cardano",
+        "name": "Cardano",
+        "symbol": "ADA",
+        "networks": [
+            "ADA",
+            "BEP20"
+        ]
+    },
+    {
+        "id": "avalanche-2",
+        "name": "Avalanche",
+        "symbol": "AVAX",
+        "networks": [
+            "AVAX-C",
+            "BEP20"
+        ]
+    },
+    {
+        "id": "matic-network",
+        "name": "Polygon",
+        "symbol": "MATIC",
+        "networks": [
+            "POLYGON",
+            "ERC20",
+            "BEP20"
+        ]
+    },
+    {
+        "id": "polkadot",
+        "name": "Polkadot",
+        "symbol": "DOT",
+        "networks": [
+            "DOT",
+            "BEP20"
+        ]
+    },
+    {
+        "id": "shiba-inu",
+        "name": "Shiba Inu",
+        "symbol": "SHIB",
+        "networks": [
+            "ERC20",
+            "BEP20"
+        ]
+    },
+    {
+        "id": "litecoin",
+        "name": "Litecoin",
+        "symbol": "LTC",
+        "networks": [
+            "LTC",
+            "BEP20"
+        ]
+    },
+    {
+        "id": "dai",
+        "name": "Dai",
+        "symbol": "DAI",
+        "networks": [
+            "ERC20",
+            "BEP20",
+            "POLYGON"
+        ]
+    },
+    {
+        "id": "chainlink",
+        "name": "Chainlink",
+        "symbol": "LINK",
+        "networks": [
+            "ERC20",
+            "BEP20",
+            "SOL"
+        ]
+    },
+    {
+        "id": "stellar",
+        "name": "Stellar",
+        "symbol": "XLM",
+        "networks": [
+            "XLM"
+        ]
+    },
+    {
+        "id": "monero",
+        "name": "Monero",
+        "symbol": "XMR",
+        "networks": [
+            "XMR"
+        ]
+    },
+    {
+        "id": "cosmos",
+        "name": "Cosmos Hub",
+        "symbol": "ATOM",
+        "networks": [
+            "ATOM",
+            "BEP20"
+        ]
+    }
+]

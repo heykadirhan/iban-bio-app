@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 
 export function TypingEffect() {
     const [typedName, setTypedName] = useState('');
-    const targetName = 'joe_doe';
+    const targetName = 'joe-doe';
 
     useEffect(() => {
         let i = 0;

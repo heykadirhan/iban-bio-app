@@ -1,4 +1,6 @@
 'use client';
+
+import COINS from '@/assets/data/coins.json';
 import { useState, useEffect } from 'react';
 import { AlertTriangle, Sparkles } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger } from './ui/tabs';
@@ -29,6 +31,13 @@ import { HttpService } from '@/core/services';
 import { APPERANCE_OPTIONS, Endpoints } from '@/core/constants';
 import toast from 'react-hot-toast';
 import PaymentCard from './payment-card';
+import { Combobox } from './ui/combobox';
+
+const coinOptionItems = COINS.map((coin) => ({
+    label: `${coin.name} (${coin.symbol})`,
+    value: `${coin.name} (${coin.symbol})`,
+    networks: coin.networks,
+}));
 
 export default function ModalPayment({
     isOpen,
@@ -72,6 +81,10 @@ export default function ModalPayment({
     const appearance = useWatch({
         control: form.control,
         name: 'appearance',
+    });
+    const coin = useWatch({
+        control: form.control,
+        name: 'meta.coin',
     });
 
     useEffect(() => {
@@ -309,9 +322,24 @@ export default function ModalPayment({
                                                 render={({ field }) => (
                                                     <FormItem>
                                                         <FormControl>
-                                                            <Input
+                                                            <Combobox
                                                                 {...field}
-                                                                placeholder="e.g. BTC"
+                                                                onChange={(
+                                                                    e,
+                                                                ) => {
+                                                                    field.onChange(
+                                                                        e,
+                                                                    );
+                                                                    form.setValue(
+                                                                        'meta.network',
+                                                                        '',
+                                                                    );
+                                                                }}
+                                                                items={
+                                                                    coinOptionItems
+                                                                }
+                                                                inputPlaceholder="Select coin"
+                                                                searchPlaceholder="Search coin..."
                                                             />
                                                         </FormControl>
                                                         <FormMessage />
@@ -328,9 +356,29 @@ export default function ModalPayment({
                                                 render={({ field }) => (
                                                     <FormItem>
                                                         <FormControl>
-                                                            <Input
+                                                            <Combobox
                                                                 {...field}
-                                                                placeholder="e.g. BEP20"
+                                                                disabled={!coin}
+                                                                items={
+                                                                    coinOptionItems
+                                                                        ?.find(
+                                                                            (
+                                                                                item,
+                                                                            ) =>
+                                                                                item.value ===
+                                                                                coin,
+                                                                        )
+                                                                        ?.networks.map(
+                                                                            (
+                                                                                network,
+                                                                            ) => ({
+                                                                                label: network,
+                                                                                value: network,
+                                                                            }),
+                                                                        ) || []
+                                                                }
+                                                                inputPlaceholder="Select network"
+                                                                emptyText="Choose a coin first"
                                                             />
                                                         </FormControl>
                                                         <FormMessage />

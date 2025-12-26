@@ -8,13 +8,12 @@ declare global {
             NEXTAUTH_SECRET: string;
             ENCRYPTION_KEY: string;
             MONGODB_URI: string;
-            MONGODB_NAME: string;
             GOOGLE_CLIENT_ID: string;
             GOOGLE_CLIENT_SECRET: string;
             HOTJAR_SITE_ID: string;
             GA_ID: string;
             IBAN_API_KEY: string;
-            NEXT_PUBLIC_CRYPTO_API_KEY: string;
+            NEXT_PUBLIC_CRYPTO_API_URL: string;
             AWS_REGION: string;
             AWS_ACCESS_KEY_ID: string;
             AWS_SECRET_ACCESS_KEY: string;

@@ -182,14 +182,15 @@ export function DashboardPage() {
                             </div>
 
                             {visibility === ProfileVisibility.PUBLIC ? (
-                                <>
+                                <div className="inline-flex items-center justify-between sm:justify-start gap-3 w-full sm:w-fit">
                                     <Button
                                         onClick={() =>
                                             setIsShareModalOpen(true)
                                         }
-                                        className="h-12 w-12 rounded-xl"
+                                        className="h-12 flex-1 sm:w-12 rounded-xl"
                                         variant="primary">
                                         <Share2 size={20} />
+                                        <span className="sm:hidden">Share</span>
                                     </Button>
                                     <Link
                                         href={createRoute({
@@ -199,14 +200,18 @@ export function DashboardPage() {
                                                     session.data?.user
                                                         .username || '',
                                             },
-                                        })}>
+                                        })}
+                                        className="flex-1 sm:w-12">
                                         <Button
-                                            className="h-12 w-12 rounded-xl"
+                                            className="h-12 w-full rounded-xl"
                                             variant="secondary">
                                             <ArrowUpRight size={20} />
+                                            <span className="sm:hidden">
+                                                View Profile
+                                            </span>
                                         </Button>
                                     </Link>
-                                </>
+                                </div>
                             ) : (
                                 visibility === ProfileVisibility.EXPIRABLE && (
                                     <Button

@@ -45,11 +45,13 @@ export function ModalShare({
             open={isOpen}
             onOpenChange={onClose}>
             <DialogContent>
-                <DialogTitle>Share your iban.bio profile</DialogTitle>
+                <DialogTitle className="hidden sm:inline">
+                    Share your iban.bio profile
+                </DialogTitle>
 
                 <div className="relative group mt-3 mb-6">
                     <div className="absolute -inset-0.5 bg-gradient-to-tr from-blue-600 to-purple-600 rounded-2xl opacity-30 blur-sm group-hover:opacity-50 transition duration-500"></div>
-                    <div className="relative bg-background rounded-xl p-4 flex flex-col items-center text-center">
+                    <div className="relative w-full bg-background rounded-xl p-4 flex flex-col items-center text-center">
                         <div className="w-48 h-48 bg-white text-black p-2 rounded-md flex items-center justify-center overflow-hidden relative">
                             {!qrLoaded && (
                                 <Loader2
