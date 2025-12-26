@@ -17,30 +17,6 @@ const fontFamily = Gabarito({
 export default async function RootLayout({ children }: PropsWithChildren) {
     return (
         <html lang="en">
-            <head>
-                <link
-                    rel="apple-touch-icon"
-                    sizes="180x180"
-                    href="/icons/apple-touch-icon.png"
-                />
-                <link
-                    rel="icon"
-                    type="image/png"
-                    sizes="32x32"
-                    href="/icons/favicon-32x32.png"
-                />
-                <link
-                    rel="icon"
-                    type="image/png"
-                    sizes="16x16"
-                    href="/icons/favicon-16x16.png"
-                />
-                <link
-                    rel="manifest"
-                    href="/manifest.json"
-                />
-            </head>
-
             <Script
                 id="hotjar"
                 strategy="afterInteractive">
@@ -91,6 +67,8 @@ export const metadata: Metadata = {
     authors: [{ name: 'kadirhan', url: 'https://kadirhan.dev' }],
     creator: 'kadirhan',
 
+    manifest: '/manifest.json',
+
     openGraph: {
         type: 'website',
         locale: 'en_US',
@@ -127,5 +105,21 @@ export const metadata: Metadata = {
             'max-image-preview': 'large',
             'max-snippet': -1,
         },
+    },
+
+    icons: {
+        icon: [
+            {
+                url: '/icons/favicon-32x32.png',
+                sizes: '32x32',
+                type: 'image/png',
+            },
+            {
+                url: '/icons/favicon-16x16.png',
+                sizes: '16x16',
+                type: 'image/png',
+            },
+        ],
+        apple: [{ url: '/icons/apple-touch-icon.png', sizes: '180x180' }],
     },
 };
