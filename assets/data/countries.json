@@ -1,31 +1,17 @@
 [
     {
-        "code": "TR",
-        "name": "Turkey",
-        "dial": "+90",
-        "flag": "🇹🇷",
-        "mask": "(999) 999 99 99"
+        "code": "AR",
+        "name": "Argentina",
+        "dial": "+54",
+        "flag": "🇦🇷",
+        "mask": "(99) 9999-9999"
     },
     {
-        "code": "US",
-        "name": "United States",
-        "dial": "+1",
-        "flag": "🇺🇸",
-        "mask": "(999) 999-9999"
-    },
-    {
-        "code": "GB",
-        "name": "United Kingdom",
-        "dial": "+44",
-        "flag": "🇬🇧",
-        "mask": "9999 999999"
-    },
-    {
-        "code": "DE",
-        "name": "Germany",
-        "dial": "+49",
-        "flag": "🇩🇪",
-        "mask": "9999 9999999"
+        "code": "AU",
+        "name": "Australia",
+        "dial": "+61",
+        "flag": "🇦🇺",
+        "mask": "999 999 999"
     },
     {
         "code": "AZ",
@@ -35,60 +21,11 @@
         "mask": "(99) 999 99 99"
     },
     {
-        "code": "FR",
-        "name": "French",
-        "dial": "+33",
-        "flag": "🇫🇷",
-        "mask": "9 99 99 99 99"
-    },
-    {
-        "code": "NL",
-        "name": "Netherlands",
-        "dial": "+31",
-        "flag": "🇳🇱",
-        "mask": "99 9999999"
-    },
-    {
-        "code": "RU",
-        "name": "Russia",
-        "dial": "+7",
-        "flag": "🇷🇺",
-        "mask": "(999) 999-99-99"
-    },
-    {
-        "code": "UA",
-        "name": "Ukraine",
-        "dial": "+380",
-        "flag": "🇺🇦",
-        "mask": "(99) 999 99 99"
-    },
-    {
-        "code": "SA",
-        "name": "Saudi Arabia",
-        "dial": "+966",
-        "flag": "🇸🇦",
-        "mask": "59 999 9999"
-    },
-    {
-        "code": "CN",
-        "name": "China",
-        "dial": "+86",
-        "flag": "🇨🇳",
-        "mask": "999 9999 9999"
-    },
-    {
-        "code": "JP",
-        "name": "Japan",
-        "dial": "+81",
-        "flag": "🇯🇵",
-        "mask": "90-9999-9999"
-    },
-    {
-        "code": "IN",
-        "name": "India",
-        "dial": "+91",
-        "flag": "🇮🇳",
-        "mask": "99999 99999"
+        "code": "BE",
+        "name": "Belgium",
+        "dial": "+32",
+        "flag": "🇧🇪",
+        "mask": "999 99 99 99"
     },
     {
         "code": "BR",
@@ -98,11 +35,144 @@
         "mask": "(99) 99999-9999"
     },
     {
+        "code": "CA",
+        "name": "Canada",
+        "dial": "+1",
+        "flag": "🇨🇦",
+        "mask": "(999) 999-9999"
+    },
+    {
+        "code": "CN",
+        "name": "China",
+        "dial": "+86",
+        "flag": "🇨🇳",
+        "mask": "999 9999 9999"
+    },
+    {
+        "code": "EG",
+        "name": "Egypt",
+        "dial": "+20",
+        "flag": "🇪🇬",
+        "mask": "99 999 9999"
+    },
+    {
+        "code": "FR",
+        "name": "France",
+        "dial": "+33",
+        "flag": "🇫🇷",
+        "mask": "9 99 99 99 99"
+    },
+    {
+        "code": "DE",
+        "name": "Germany",
+        "dial": "+49",
+        "flag": "🇩🇪",
+        "mask": "999 99999999"
+    },
+    {
+        "code": "GR",
+        "name": "Greece",
+        "dial": "+30",
+        "flag": "🇬🇷",
+        "mask": "999 999 9999"
+    },
+    {
+        "code": "IN",
+        "name": "India",
+        "dial": "+91",
+        "flag": "🇮🇳",
+        "mask": "99999 99999"
+    },
+    {
+        "code": "ID",
+        "name": "Indonesia",
+        "dial": "+62",
+        "flag": "🇮🇩",
+        "mask": "999-9999-9999"
+    },
+    {
+        "code": "IR",
+        "name": "Iran",
+        "dial": "+98",
+        "flag": "🇮🇷",
+        "mask": "999 999 9999"
+    },
+    {
         "code": "IT",
         "name": "Italy",
         "dial": "+39",
         "flag": "🇮🇹",
         "mask": "999 999 9999"
+    },
+    {
+        "code": "JP",
+        "name": "Japan",
+        "dial": "+81",
+        "flag": "🇯🇵",
+        "mask": "99-9999-9999"
+    },
+    {
+        "code": "KZ",
+        "name": "Kazakhstan",
+        "dial": "+7",
+        "flag": "🇰🇿",
+        "mask": "(999) 999-99-99"
+    },
+    {
+        "code": "MX",
+        "name": "Mexico",
+        "dial": "+52",
+        "flag": "🇲🇽",
+        "mask": "999 999 9999"
+    },
+    {
+        "code": "NL",
+        "name": "Netherlands",
+        "dial": "+31",
+        "flag": "🇳🇱",
+        "mask": "9 99999999"
+    },
+    {
+        "code": "PL",
+        "name": "Poland",
+        "dial": "+48",
+        "flag": "🇵🇱",
+        "mask": "999 999 999"
+    },
+    {
+        "code": "PT",
+        "name": "Portugal",
+        "dial": "+351",
+        "flag": "🇵🇹",
+        "mask": "99 999 99 99"
+    },
+    {
+        "code": "RU",
+        "name": "Russia",
+        "dial": "+7",
+        "flag": "🇷🇺",
+        "mask": "(999) 999-99-99"
+    },
+    {
+        "code": "SA",
+        "name": "Saudi Arabia",
+        "dial": "+966",
+        "flag": "🇸🇦",
+        "mask": "99 999 9999"
+    },
+    {
+        "code": "ZA",
+        "name": "South Africa",
+        "dial": "+27",
+        "flag": "🇿🇦",
+        "mask": "99 999 9999"
+    },
+    {
+        "code": "KR",
+        "name": "South Korea",
+        "dial": "+82",
+        "flag": "🇰🇷",
+        "mask": "99-9999-9999"
     },
     {
         "code": "ES",
@@ -112,17 +182,52 @@
         "mask": "999 99 99 99"
     },
     {
-        "code": "CA",
-        "name": "Canada",
-        "dial": "+1",
-        "flag": "🇨🇦",
-        "mask": "(999) 999-9999"
+        "code": "SE",
+        "name": "Sweden",
+        "dial": "+46",
+        "flag": "🇸🇪",
+        "mask": "99 999 99 99"
     },
     {
-        "code": "AU",
-        "name": "Australia",
-        "dial": "+61",
-        "flag": "🇦🇺",
-        "mask": "9999 999 999"
+        "code": "CH",
+        "name": "Switzerland",
+        "dial": "+41",
+        "flag": "🇨🇭",
+        "mask": "99 999 99 99"
+    },
+    {
+        "code": "TR",
+        "name": "Turkey",
+        "dial": "+90",
+        "flag": "🇹🇷",
+        "mask": "(999) 999 99 99"
+    },
+    {
+        "code": "UA",
+        "name": "Ukraine",
+        "dial": "+380",
+        "flag": "🇺🇦",
+        "mask": "(99) 999 99 99"
+    },
+    {
+        "code": "AE",
+        "name": "United Arab Emirates",
+        "dial": "+971",
+        "flag": "🇦🇪",
+        "mask": "99 999 9999"
+    },
+    {
+        "code": "GB",
+        "name": "United Kingdom",
+        "dial": "+44",
+        "flag": "🇬🇧",
+        "mask": "9999 999999"
+    },
+    {
+        "code": "US",
+        "name": "United States",
+        "dial": "+1",
+        "flag": "🇺🇸",
+        "mask": "(999) 999-9999"
     }
 ]

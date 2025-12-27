@@ -4,12 +4,13 @@ import COUNTRIES from '@/assets/data/countries.json';
 import { useState, useEffect, useRef, ReactNode, useMemo } from 'react';
 import { ChevronDown, Search, Check } from 'lucide-react';
 import { withMask } from 'use-mask-input';
+import { CookieStorageService } from '@/core/services';
 
 export default function InputPhone({
     value,
     onPhoneChange,
     onCountryChange,
-    defaultCountry = 'TR',
+    defaultCountry = 'US',
     className = '',
     suffix,
 }: {
@@ -32,6 +33,45 @@ export default function InputPhone({
     }, [selectedCountry.mask]);
     const dropdownRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        const detectUserCountry = async () => {
+            const inputCountry = localStorage.getItem('preferred_country');
+            if (inputCountry) {
+                const country = COUNTRIES.find((c) => c.code === inputCountry);
+                if (country) {
+                    setSelectedCountry(country);
+                }
+                return;
+            }
+
+            try {
+                const response = await fetch('https://ipapi.co/json/');
+                const data = await response.json();
+
+                if (data && data.country_code) {
+                    const detectedCountry = COUNTRIES.find(
+                        (c) => c.code === data.country_code,
+                    );
+
+                    if (detectedCountry) {
+                        setSelectedCountry(detectedCountry);
+                        localStorage.setItem(
+                            'preferred_country',
+                            detectedCountry.code,
+                        );
+                    }
+                }
+            } catch (error) {
+                console.error(
+                    'Location could not be detected, using default country.',
+                    error,
+                );
+            }
+        };
+
+        detectUserCountry();
+    }, []);
 
     useEffect(() => {
         onPhoneChange('');
