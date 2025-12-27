@@ -3,11 +3,12 @@ import { DefaultJWT } from 'next-auth/jwt';
 import { ProfileVisibility } from '../enums';
 
 interface CustomUser {
-    displayName: string;
-    phone: string;
-    country: string;
-    username: string;
-    avatarUrl: string;
+    displayName?: string;
+    phone?: string;
+    country?: string;
+    email?: string;
+    username?: string;
+    avatarUrl?: string;
     bio: string;
     visibility: ProfileVisibility;
 }

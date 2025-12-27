@@ -122,10 +122,10 @@ export function DashboardLayout({
                                                         }
                                                     </p>
                                                     <p className="text-xs leading-none text-zinc-500 font-normal">
-                                                        {
+                                                        {session.data?.user
+                                                            .phone ||
                                                             session.data?.user
-                                                                .phone
-                                                        }
+                                                                .email}
                                                     </p>
                                                 </div>
                                             </DropdownMenuLabel>

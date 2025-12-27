@@ -1,6 +1,13 @@
 'use client';
 
-import { Loader2, Save, User, Lock, Trash } from 'lucide-react';
+import {
+    Loader2,
+    CheckCircle2,
+    User,
+    Lock,
+    Trash2,
+    ArrowRightIcon,
+} from 'lucide-react';
 import { SectionHeader } from './components/section-header';
 import { Input } from '@/components/ui/input';
 import { useEffect, useState } from 'react';
@@ -35,6 +42,7 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from '@/components/ui/popover';
+import InputPhone from '@/components/input-phone';
 
 export function SettingsPage() {
     const router = useRouter();
@@ -42,6 +50,7 @@ export function SettingsPage() {
     const [usernameAvailable, setUsernameAvailable] = useState<boolean>(false);
     const [isSaving, setIsSaving] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
+    const [updatingPhone, setUpdatingPhone] = useState(false);
     const [deletePopoverOpen, setDeletePopoverOpen] = useState<boolean>(false);
 
     const formSchema = z.object({
@@ -206,7 +215,7 @@ export function SettingsPage() {
 
                         <section>
                             <SectionHeader
-                                title="Visibility Settings"
+                                title="Personal Settings"
                                 icon={Lock}
                             />
 
@@ -285,7 +294,7 @@ export function SettingsPage() {
                                     </>
                                 ) : (
                                     <>
-                                        <Save className="size-4" />
+                                        <CheckCircle2 className="size-4" />
                                         Save Changes
                                     </>
                                 )}
@@ -302,7 +311,7 @@ export function SettingsPage() {
                                         variant="destructiveOutline"
                                         size="lg"
                                         className="w-full mt-6">
-                                        <Trash size={16} />
+                                        <Trash2 size={16} />
                                         Delete Account
                                     </Button>
                                 </PopoverTrigger>

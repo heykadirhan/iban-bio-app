@@ -17,6 +17,6 @@ export default async function Page() {
 }
 
 export const metadata: Metadata = {
-    title: "Let's get you set up'",
+    title: "Let's get you set up",
     description: 'Complete your profile to get started with our services.',
 };

@@ -29,6 +29,9 @@ const nextConfig: NextConfig = {
             {
                 hostname: 'api.qrserver.com',
             },
+            {
+                hostname: 'lh3.googleusercontent.com',
+            },
         ],
     },
     async headers() {

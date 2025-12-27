@@ -311,7 +311,7 @@ export function HomePage() {
                                         size={16}
                                         className="text-green-500"
                                     />{' '}
-                                    Encrypted Data
+                                    AES-256 Encrypted
                                 </div>
                             </div>
                         </div>
@@ -754,7 +754,7 @@ export function HomePage() {
                     <div className="space-y-2">
                         <FaqItem
                             question="Is iban.bio free?"
-                            answer="Yes! Our core features are 100% free. You can create a profile, add unlimited payment methods, and share your link without paying a dime."
+                            answer="Yes, the core features are free forever. We will introduce Premium features for power users later."
                         />
                         <FaqItem
                             question="Is it safe to share my IBAN?"
@@ -807,6 +807,7 @@ export function HomePage() {
                             <div className="mt-10 flex items-center justify-center gap-8 opacity-60">
                                 <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest">
                                     <ShieldCheck size={16} /> Encrypted
+                                    (AES-256)
                                 </div>
                                 <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest">
                                     <Globe size={16} /> Global

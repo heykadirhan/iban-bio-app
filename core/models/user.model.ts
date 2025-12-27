@@ -2,8 +2,10 @@ import mongoose from 'mongoose';
 import { ProfileVisibility } from '@core/enums';
 
 interface IUser extends mongoose.Document {
-    country: string;
-    phone: string;
+    country?: string;
+    phone?: string;
+    email?: string;
+    googleId?: string;
     username?: string;
     displayName?: string;
     title?: string;
@@ -28,13 +30,23 @@ const UserSchema = new mongoose.Schema(
     {
         country: {
             type: String, // ISO
-            required: true,
         },
         phone: {
             type: String,
-            required: true,
             unique: true,
             index: true,
+        },
+        email: {
+            type: String,
+            unique: true,
+            sparse: true,
+            trim: true,
+            lowercase: true,
+        },
+        googleId: {
+            type: String,
+            unique: true,
+            sparse: true,
         },
         username: {
             type: String,

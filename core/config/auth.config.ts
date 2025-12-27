@@ -53,14 +53,7 @@ export const AUTH_CONFIG: AuthOptions = {
 
                 return {
                     id: user._id.toString(),
-                    _id: user._id.toString(),
-                    phone: user.phone,
-                    country: user.country,
-                    displayName: user.displayName,
-                    username: user.username,
-                    avatarUrl: user.avatarUrl,
-                    bio: user.bio,
-                    visibility: user.visibility,
+                    ...user.toObject(),
                 };
             },
         }),
@@ -87,20 +80,52 @@ export const AUTH_CONFIG: AuthOptions = {
                         googleId: googleId,
                         displayName: user.name,
                         avatarUrl: user.image,
-                        phone: null,
+                        email: user.email,
                     });
                 }
-
-                user.id = existingUser._id.toString();
-                (user as any).username = existingUser.username;
-                (user as any).phone = existingUser.phone;
             }
             return true;
         },
 
-        async jwt({ token, user, trigger, session }) {
-            if (user) {
-                token = user as any;
+        async jwt({ token, user, account, trigger, session }) {
+            if (account && user) {
+                if (account.provider === 'google') {
+                    await connectDB();
+                    const dbUser = await UserModel.findOne({
+                        email: user.email,
+                    });
+
+                    if (dbUser) {
+                        token.id = dbUser._id.toString();
+                        token._id = dbUser._id.toString();
+                        token.username = dbUser.username;
+                        token.displayName = dbUser.displayName;
+                        token.avatarUrl = dbUser.avatarUrl;
+                        token.phone = dbUser.phone;
+                        token.country = dbUser.country;
+                        token.visibility = dbUser.visibility;
+                    }
+                } else {
+                    const u = user as any;
+                    token.id = u.id;
+                    token._id = u.id;
+                    token.username = u.username;
+                    token.displayName = u.displayName;
+                    token.avatarUrl = u.avatarUrl;
+                    token.phone = u.phone;
+                    token.country = u.country;
+                    token.visibility = u.visibility;
+                }
+            } else if (token?._id) {
+                await connectDB();
+                const freshUser = await UserModel.findById(token._id);
+
+                if (freshUser) {
+                    token.displayName = freshUser.displayName;
+                    token.avatarUrl = freshUser.avatarUrl;
+                    token.username = freshUser.username;
+                    token.visibility = freshUser.visibility;
+                }
             }
 
             if (trigger === 'update' && session) {
@@ -112,7 +137,7 @@ export const AUTH_CONFIG: AuthOptions = {
 
         async session({ session, token }) {
             if (token && session.user) {
-                session.user = token;
+                session.user = token as any;
             }
             return session;
         },

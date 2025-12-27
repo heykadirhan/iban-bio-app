@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
     ArrowRight,
     User,
@@ -99,6 +99,10 @@ export default function OnboardingPage() {
             visibility: ProfileVisibility.PUBLIC,
         },
     });
+    const avatarUrl = useWatch({
+        control: form.control,
+        name: 'avatarUrl',
+    });
     const displayName = useWatch({
         control: form.control,
         name: 'displayName',
@@ -112,6 +116,11 @@ export default function OnboardingPage() {
         control: form.control,
         name: 'persona',
     });
+
+    useEffect(() => {
+        form.setValue('avatarUrl', session.data?.user.avatarUrl || '');
+        form.setValue('displayName', session.data?.user.displayName || '');
+    }, [session.data, form]);
 
     const submitForm = async () => {
         if (!usernameAvailable) {
@@ -203,6 +212,7 @@ export default function OnboardingPage() {
 
                             <div className="flex justify-center mb-8">
                                 <AvatarUpload
+                                    initialAvatarUrl={avatarUrl}
                                     displayName={displayName}
                                     onUploadSuccess={(url) =>
                                         form.setValue('avatarUrl', url)

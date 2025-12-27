@@ -2,13 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import z from 'zod';
-import {
-    ArrowRight,
-    Loader2,
-    Sparkles,
-    ShieldCheck,
-    RepeatIcon,
-} from 'lucide-react';
+import { ArrowRight, Sparkles, ShieldCheck, RepeatIcon } from 'lucide-react';
 import Link from 'next/link';
 import { signIn } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
@@ -33,6 +27,7 @@ import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import InputPhone from '@/components/input-phone';
 import { isoToCode } from '@/core/utils';
+import Image from 'next/image';
 
 export function GetStartedPage() {
     const router = useRouter();
@@ -77,6 +72,14 @@ export function GetStartedPage() {
             if (timer) clearTimeout(timer);
         };
     }, [step, remainingSeconds]);
+
+    const handleGoogleLogin = async () => {
+        setIsLoading(true);
+
+        await signIn('google', {
+            callbackUrl: Routes.DASHBOARD,
+        });
+    };
 
     const submitStepOne = async (values: IFormStepOneSchema) => {
         try {
@@ -152,77 +155,97 @@ export function GetStartedPage() {
 
                     <div className="relative bg-[#121212] rounded-xl p-8 ring-1 ring-white/10 shadow-2xl">
                         {step === 1 && (
-                            <Form {...formStepOne}>
-                                <form
-                                    onSubmit={formStepOne.handleSubmit(
-                                        submitStepOne,
-                                    )}
-                                    className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                                    <div>
-                                        <label className="text-xs font-medium text-zinc-500 uppercase tracking-wider">
-                                            Phone Number
-                                        </label>
-
-                                        <FormField
-                                            control={formStepOne.control}
-                                            name="phone"
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormControl>
-                                                        <InputPhone
-                                                            {...field}
-                                                            className="mt-2"
-                                                            onPhoneChange={
-                                                                field.onChange
-                                                            }
-                                                            onCountryChange={(
-                                                                val,
-                                                            ) =>
-                                                                formStepOne.setValue(
-                                                                    'country',
-                                                                    val,
-                                                                )
-                                                            }
-                                                        />
-                                                    </FormControl>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                    </div>
-
-                                    <button
-                                        disabled={isLoading}
-                                        type="submit"
-                                        className="mt-6 w-full bg-white text-black hover:bg-zinc-200 h-14 rounded-lg font-bold text-base transition-all active:scale-[0.98] flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,255,255,0.1)]">
-                                        {isLoading ? (
-                                            <Loader2 className="animate-spin" />
-                                        ) : (
-                                            <>
-                                                Continue{' '}
-                                                <ArrowRight size={18} />
-                                            </>
+                            <>
+                                <Form {...formStepOne}>
+                                    <form
+                                        onSubmit={formStepOne.handleSubmit(
+                                            submitStepOne,
                                         )}
-                                    </button>
+                                        className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                                        <div>
+                                            <label className="text-xs font-medium text-zinc-500 uppercase tracking-wider">
+                                                Phone Number
+                                            </label>
 
-                                    <p className="text-xs text-center text-zinc-600 max-w-48 mx-auto">
-                                        By continuing, you agree to our{' '}
-                                        <Link
-                                            href={Routes.TERMS}
-                                            target="_blank"
-                                            className="border-b border-dashed border-zinc-600 hover:border-white hover:text-white transition-all">
-                                            Terms of Service
-                                        </Link>{' '}
-                                        and{' '}
-                                        <Link
-                                            href={Routes.PRIVACY}
-                                            target="_blank"
-                                            className="border-b border-dashed border-zinc-600 hover:border-white hover:text-white transition-all">
-                                            Privacy Policy
-                                        </Link>
-                                    </p>
-                                </form>
-                            </Form>
+                                            <FormField
+                                                control={formStepOne.control}
+                                                name="phone"
+                                                render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormControl>
+                                                            <InputPhone
+                                                                {...field}
+                                                                className="mt-2"
+                                                                onPhoneChange={
+                                                                    field.onChange
+                                                                }
+                                                                onCountryChange={(
+                                                                    val,
+                                                                ) =>
+                                                                    formStepOne.setValue(
+                                                                        'country',
+                                                                        val,
+                                                                    )
+                                                                }
+                                                            />
+                                                        </FormControl>
+                                                        <FormMessage />
+                                                    </FormItem>
+                                                )}
+                                            />
+                                        </div>
+
+                                        <Button
+                                            disabled={isLoading}
+                                            type="submit"
+                                            size="lg"
+                                            variant="primary"
+                                            className="w-full font-bold">
+                                            Continue <ArrowRight size={18} />
+                                        </Button>
+
+                                        <div className="flex items-center gap-4">
+                                            <div className="h-px bg-zinc-800 flex-1"></div>
+                                            <span className="text-xs text-zinc-500 font-medium uppercase tracking-wider">
+                                                or
+                                            </span>
+                                            <div className="h-px bg-zinc-800 flex-1"></div>
+                                        </div>
+
+                                        <Button
+                                            onClick={handleGoogleLogin}
+                                            disabled={isLoading}
+                                            variant="default"
+                                            size="lg"
+                                            className="w-full font-bold">
+                                            <Image
+                                                src="/img/google.svg"
+                                                alt="Google logo"
+                                                width={16}
+                                                height={16}
+                                            />
+                                            <span>Continue with Google</span>
+                                        </Button>
+
+                                        <p className="text-xs text-center text-zinc-600 max-w-48 mx-auto">
+                                            By continuing, you agree to our{' '}
+                                            <Link
+                                                href={Routes.TERMS}
+                                                target="_blank"
+                                                className="border-b border-dashed border-zinc-600 hover:border-white hover:text-white transition-all">
+                                                Terms of Service
+                                            </Link>{' '}
+                                            and{' '}
+                                            <Link
+                                                href={Routes.PRIVACY}
+                                                target="_blank"
+                                                className="border-b border-dashed border-zinc-600 hover:border-white hover:text-white transition-all">
+                                                Privacy Policy
+                                            </Link>
+                                        </p>
+                                    </form>
+                                </Form>
+                            </>
                         )}
 
                         {step === 2 && (
@@ -294,6 +317,7 @@ export function GetStartedPage() {
                                             type="submit"
                                             disabled={isLoading}
                                             size="lg"
+                                            variant="primary"
                                             className="w-full">
                                             Verify <ArrowRight size={18} />
                                         </Button>
@@ -333,7 +357,7 @@ export function GetStartedPage() {
                         className="text-green-500"
                     />
                     <span className="text-[10px] text-zinc-500 tracking-widest uppercase">
-                        End-to-End Encrypted
+                        Encrypted (AES-256)
                     </span>
                 </div>
             </div>

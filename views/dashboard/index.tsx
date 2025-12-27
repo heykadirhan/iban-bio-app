@@ -14,6 +14,9 @@ import {
     Timer,
     Share2,
     Check,
+    ArrowRight,
+    Smartphone,
+    X,
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { HttpService } from '@/core/services';
@@ -93,6 +96,38 @@ export function DashboardPage() {
     return (
         <>
             <div className="container">
+                {/* {session.status === 'authenticated' &&
+                    !session.data?.user.phone && (
+                        <div className="mt-6 relative overflow-hidden rounded-2xl border border-indigo-500/30 bg-indigo-500/10 p-4 animate-in slide-in-from-top-4 duration-500">
+                            <div className="flex items-start gap-4 relative z-10">
+                                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-indigo-500 text-white shadow-lg shadow-indigo-500/20">
+                                    <Smartphone size={20} />
+                                </div>
+                                <div className="flex-1">
+                                    <h3 className="text-sm font-bold text-white">
+                                        Verify your phone number
+                                    </h3>
+                                    <p className="mt-1 text-xs leading-relaxed text-indigo-200">
+                                        You can currently receive payments by
+                                        sharing a link. Verify your phone number
+                                        to allow people to find you with find &
+                                        pay feature.
+                                    </p>
+                                    <Link href={Routes.SETTINGS}>
+                                        <button className="mt-3 inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-xs font-bold text-white transition-all hover:bg-indigo-500 active:scale-95 shadow-md">
+                                            Verify Phone{' '}
+                                            <ArrowRight size={14} />
+                                        </button>
+                                    </Link>
+                                </div>
+                                <button className="text-indigo-400 hover:text-white transition-colors">
+                                    <X size={16} />
+                                </button>
+                            </div>
+                            <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-indigo-500/20 blur-2xl rounded-full pointer-events-none"></div>
+                        </div>
+                    )} */}
+
                 <div className="pb-6 pt-8">
                     <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-zinc-900/50 p-4 shadow-2xl backdrop-blur-xl">
                         <div
