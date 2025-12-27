@@ -9,6 +9,7 @@ import {
     UserPlus,
     XCircle,
     Globe,
+    Link2,
 } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
@@ -34,6 +35,7 @@ export function SearchPage() {
               bio?: string;
               visibility: ProfileVisibility;
           }
+        | 'hidden'
         | null
         | undefined
     >(undefined);
@@ -123,7 +125,7 @@ export function SearchPage() {
                     </form>
 
                     <div className="mt-16">
-                        {!!foundUser && (
+                        {!!foundUser && foundUser !== 'hidden' && (
                             <Link
                                 href={`/${foundUser?.username}`}
                                 className="bg-zinc-900/50 border border-white/10 hover:border-primary/30 rounded-2xl p-4 flex items-center gap-4 cursor-pointer hover:bg-zinc-900 transition-all animate-in slide-in-from-bottom-4 group">
@@ -156,6 +158,34 @@ export function SearchPage() {
                                     <ArrowRight size={20} />
                                 </div>
                             </Link>
+                        )}
+
+                        {foundUser === 'hidden' && (
+                            <div className="text-center animate-in slide-in-from-bottom-4">
+                                <div className="w-16 h-16 bg-yellow-500/10 text-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4 border border-yellow-500/20">
+                                    <ShieldCheck size={32} />
+                                </div>
+                                <h3 className="text-lg font-bold text-white mb-2">
+                                    Profile is Private
+                                </h3>
+                                <p className="text-zinc-400 text-sm mb-6 max-w-xs mx-auto">
+                                    You need a direct link to access this
+                                    profile as the user has set their profile
+                                    visibility to private.
+                                </p>
+                                <Link
+                                    href={`https://wa.me/${isoToCode(
+                                        country,
+                                    )}${phone}?text=${encodeURIComponent(
+                                        'Hi! I tried to view your profile on iban.bio but it appears to be private. Could you please share your profile link with me so I can access your payment information?',
+                                    )}`}
+                                    target="_blank">
+                                    <Button className="bg-[#25D366] hover:bg-[#20bd5a] text-black !px-12 font-semibold">
+                                        <Link2 size={20} />
+                                        Ask Access via WhatsApp
+                                    </Button>
+                                </Link>
+                            </div>
                         )}
 
                         {foundUser === null && (

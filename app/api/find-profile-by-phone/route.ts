@@ -10,7 +10,6 @@ export async function GET(request: NextRequest) {
 
         const user = await UserModel.findOne({
             phone,
-            visibility: ProfileVisibility.PUBLIC,
         })
             .lean()
             .select([
@@ -29,7 +28,8 @@ export async function GET(request: NextRequest) {
 
         return NextResponse.json({
             success: true,
-            data: user,
+            data:
+                user.visibility === ProfileVisibility.PUBLIC ? user : 'hidden',
         });
     } catch (error: any) {
         return NextResponse.json(
