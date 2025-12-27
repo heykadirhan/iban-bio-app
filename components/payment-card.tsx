@@ -1,5 +1,6 @@
 'use client';
 
+import COINS from '@/assets/data/coins.json';
 import currencies from 'currency-symbol-map';
 import { useEffect, useState } from 'react';
 import {
@@ -55,7 +56,9 @@ const getVisuals = (type: PaymentMethodType, meta: any) => {
             break;
         case PaymentMethodType.CRYPTO:
             icon = <Wallet size={20} />;
-            providerText = meta.coin || 'Crypto Wallet';
+            providerText =
+                COINS.find((coin) => coin.symbol === meta.coin)?.name ||
+                'Crypto Wallet';
             defaultColor = 'from-yellow-600 to-amber-700';
             break;
         case PaymentMethodType.APP:

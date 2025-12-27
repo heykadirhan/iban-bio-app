@@ -35,8 +35,11 @@ import { Combobox } from './ui/combobox';
 
 const coinOptionItems = COINS.map((coin) => ({
     label: `${coin.name} (${coin.symbol})`,
-    value: `${coin.name} (${coin.symbol})`,
-    networks: coin.networks,
+    value: coin.symbol,
+    networks: coin.networks.map((network) => ({
+        value: network,
+        label: network,
+    })),
 }));
 
 export default function ModalPayment({
@@ -360,22 +363,15 @@ export default function ModalPayment({
                                                                 {...field}
                                                                 disabled={!coin}
                                                                 items={
-                                                                    coinOptionItems
-                                                                        ?.find(
-                                                                            (
-                                                                                item,
-                                                                            ) =>
-                                                                                item.value ===
-                                                                                coin,
-                                                                        )
-                                                                        ?.networks.map(
-                                                                            (
-                                                                                network,
-                                                                            ) => ({
-                                                                                label: network,
-                                                                                value: network,
-                                                                            }),
-                                                                        ) || []
+                                                                    coinOptionItems?.find(
+                                                                        (
+                                                                            item,
+                                                                        ) =>
+                                                                            item.value ===
+                                                                            coin,
+                                                                    )
+                                                                        ?.networks ||
+                                                                    []
                                                                 }
                                                                 inputPlaceholder="Select network"
                                                                 emptyText="Choose a coin first"
