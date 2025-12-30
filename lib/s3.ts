@@ -22,7 +22,7 @@ export async function getPresignedUploadUrl(userId: string, fileType: string) {
 
     const uploadUrl = await getSignedUrl(s3Client, command, { expiresIn: 60 });
 
-    const fileUrl = `${process.env.AWS_STORAGE_URL}/${key}`;
+    const fileUrl = `https://${process.env.AWS_STORAGE_URL}/${key}`;
 
     return { uploadUrl, fileUrl };
 }
