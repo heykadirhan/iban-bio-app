@@ -15,9 +15,7 @@ const nextConfig: NextConfig = {
     images: {
         remotePatterns: [
             {
-                protocol: 'https',
-                hostname: '**.cloudfront.net',
-                pathname: '/**',
+                hostname: process.env.AWS_STORAGE_URL,
             },
             {
                 hostname: 't2.gstatic.com',
