@@ -22,6 +22,7 @@ import {
 import z from 'zod';
 import { ProfileVisibility } from '@/core/enums/profile-visibility.enum';
 import {
+    Endpoints,
     PROFILE_VISIBILITY_OPTIONS,
     RegexPatterns,
     Routes,
@@ -43,6 +44,8 @@ import {
     PopoverTrigger,
 } from '@/components/ui/popover';
 import InputPhone from '@/components/input-phone';
+import { ModalOtpVerify } from '@/components/modal-otp-verify';
+import { isoToCode } from '@/core/utils';
 
 export function SettingsPage() {
     const router = useRouter();
@@ -52,6 +55,10 @@ export function SettingsPage() {
     const [isDeleting, setIsDeleting] = useState(false);
     const [updatingPhone, setUpdatingPhone] = useState(false);
     const [deletePopoverOpen, setDeletePopoverOpen] = useState<boolean>(false);
+    const [otpModal, setOtpModal] = useState<{
+        country: string;
+        phone: string;
+    } | null>(null);
 
     const formSchema = z.object({
         avatarUrl: z.string().optional(),
@@ -62,6 +69,8 @@ export function SettingsPage() {
             .string()
             .max(160, { error: 'Biography must be less than 160 characters' })
             .optional(),
+        country: z.string(),
+        phone: z.string(),
         username: z
             .string()
             .nonempty({ message: 'Please enter a username' })
@@ -78,6 +87,8 @@ export function SettingsPage() {
         resolver: zodResolver(formSchema),
         defaultValues: {
             avatarUrl: '',
+            country: '',
+            phone: '',
             bio: '',
             displayName: '',
             username: '',
@@ -95,6 +106,8 @@ export function SettingsPage() {
                 username: session.data.user.username || '',
                 visibility: session.data.user.visibility,
                 displayName: session.data.user.displayName || '',
+                country: session.data.user.country || form.getValues('country'),
+                phone: '',
             });
         }
     }, [session.data, form]);
@@ -114,6 +127,40 @@ export function SettingsPage() {
             );
         } catch {
             setIsDeleting(false);
+        }
+    };
+
+    const sendOtpCode = async () => {
+        setUpdatingPhone(true);
+
+        if (!form.getValues('phone')) {
+            form.setFocus('phone');
+            form.setError('phone', {
+                message: 'Please enter your phone number',
+            });
+            setUpdatingPhone(false);
+            return;
+        }
+
+        form.setError('phone', { message: '' });
+
+        try {
+            await HttpService.request(Endpoints.AUTH_SEND_OTP, {
+                method: 'POST',
+                body: JSON.stringify({
+                    phone: `${isoToCode(
+                        form.getValues('country'),
+                    )}${form.getValues('phone')}`,
+                    country: form.getValues('country'),
+                }),
+            });
+
+            setOtpModal({
+                country: form.getValues('country'),
+                phone: form.getValues('phone'),
+            });
+        } finally {
+            setUpdatingPhone(false);
         }
     };
 
@@ -220,6 +267,59 @@ export function SettingsPage() {
                             />
 
                             <div className="mb-8">
+                                <Label>Update Phone Number</Label>
+
+                                <FormField
+                                    control={form.control}
+                                    name="phone"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormControl>
+                                                <InputPhone
+                                                    {...field}
+                                                    className="mt-2"
+                                                    placeholder="Update phone number"
+                                                    onPhoneChange={
+                                                        field.onChange
+                                                    }
+                                                    onCountryChange={(val) =>
+                                                        form.setValue(
+                                                            'country',
+                                                            val,
+                                                        )
+                                                    }
+                                                    suffix={
+                                                        <Button
+                                                            onClick={() =>
+                                                                sendOtpCode()
+                                                            }
+                                                            disabled={
+                                                                updatingPhone
+                                                            }
+                                                            type="button"
+                                                            size="icon"
+                                                            variant="primary">
+                                                            {updatingPhone ? (
+                                                                <Loader2
+                                                                    size={16}
+                                                                    className="animate-spin"
+                                                                />
+                                                            ) : (
+                                                                <ArrowRightIcon
+                                                                    size={16}
+                                                                />
+                                                            )}
+                                                        </Button>
+                                                    }
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+
+                            <div className="mb-8">
                                 <Label>Username</Label>
 
                                 <FormField
@@ -230,9 +330,36 @@ export function SettingsPage() {
                                             <FormControl>
                                                 <InputUsername
                                                     field={field}
-                                                    onChangeAvailablity={
-                                                        setUsernameAvailable
-                                                    }
+                                                    onChangeAvailablity={async (
+                                                        val,
+                                                    ) => {
+                                                        const isValidFormat =
+                                                            await form.trigger(
+                                                                'username',
+                                                            );
+
+                                                        if (!isValidFormat) {
+                                                            return;
+                                                        }
+
+                                                        setUsernameAvailable(
+                                                            val,
+                                                        );
+                                                        if (!val) {
+                                                            form.setError(
+                                                                'username',
+                                                                {
+                                                                    type: 'manual',
+                                                                    message:
+                                                                        'Username is already taken',
+                                                                },
+                                                            );
+                                                        } else {
+                                                            form.clearErrors(
+                                                                'username',
+                                                            );
+                                                        }
+                                                    }}
                                                 />
                                             </FormControl>
                                             <p className="text-xs text-zinc-500">
@@ -353,6 +480,14 @@ export function SettingsPage() {
                     </form>
                 </Form>
             </div>
+
+            <ModalOtpVerify
+                isOpen={!!otpModal}
+                country={otpModal?.country || ''}
+                phone={otpModal?.phone || ''}
+                onClose={() => setOtpModal(null)}
+                onResendCode={sendOtpCode}
+            />
         </>
     );
 }

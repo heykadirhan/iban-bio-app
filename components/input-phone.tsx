@@ -4,7 +4,6 @@ import COUNTRIES from '@/assets/data/countries.json';
 import { useState, useEffect, useRef, ReactNode, useMemo } from 'react';
 import { ChevronDown, Search, Check } from 'lucide-react';
 import { withMask } from 'use-mask-input';
-import { CookieStorageService } from '@/core/services';
 
 export default function InputPhone({
     value,
@@ -12,6 +11,7 @@ export default function InputPhone({
     onCountryChange,
     defaultCountry = 'US',
     className = '',
+    placeholder = 'Enter phone number',
     suffix,
 }: {
     value: string;
@@ -19,6 +19,7 @@ export default function InputPhone({
     onCountryChange(country: string): void;
     defaultCountry?: string;
     className?: string;
+    placeholder?: string;
     suffix?: ReactNode;
 }) {
     const [isOpen, setIsOpen] = useState(false);
@@ -142,7 +143,7 @@ export default function InputPhone({
                     onChange={(event) =>
                         onPhoneChange(event.target.value.replace(/\D/g, ''))
                     }
-                    placeholder="Enter phone number"
+                    placeholder={placeholder}
                     className="w-full bg-transparent px-4 py-3.5 text-white outline-none placeholder:text-zinc-600 font-mono text-sm rounded-r-xl"
                 />
 

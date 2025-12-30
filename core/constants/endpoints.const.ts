@@ -1,6 +1,7 @@
 export const Endpoints = {
     UPLOAD: 'upload',
     AUTH_SEND_OTP: 'auth/send-otp',
+    AUTH_UPDATE_PHONE: 'auth/update-phone',
     AUTH_CHECK_USERNAME: 'auth/check-username',
     PROFILE: 'profile',
     FIND_PROFILE_BY_PHONE: 'find-profile-by-phone',

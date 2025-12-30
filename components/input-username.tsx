@@ -34,6 +34,7 @@ export function InputUsername({
             await HttpService.request(Endpoints.AUTH_CHECK_USERNAME, {
                 method: 'POST',
                 body: JSON.stringify({ username }),
+                noToastError: true,
             });
 
             setUsernameAvailability('available');

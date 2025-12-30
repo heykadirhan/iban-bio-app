@@ -42,8 +42,8 @@ export function DashboardPage() {
         initialData?: Record<string, unknown>;
     }>({ isOpen: false });
     const [isLoading, setIsLoading] = useState(true);
-    const [isGeneratingShareToken, setIsGeneratingShareToken] = useState(false);
     const [activeTab, setActiveTab] = useState('active');
+    const [profileVerifyHidden, setProfileVerifyHidden] = useState(false);
     const [isShareModalOpen, setIsShareModalOpen] = useState(false);
     const [isGenerateTokenModalOpen, setIsGenerateTokenModalOpen] =
         useState(false);
@@ -93,10 +93,17 @@ export function DashboardPage() {
         fetchDashboard();
     }, []);
 
+    useEffect(() => {
+        setProfileVerifyHidden(
+            localStorage.getItem('hideProfileVerifyBanner') === 'true',
+        );
+    }, []);
+
     return (
         <>
             <div className="container">
-                {/* {session.status === 'authenticated' &&
+                {!profileVerifyHidden &&
+                    session.status === 'authenticated' &&
                     !session.data?.user.phone && (
                         <div className="mt-6 relative overflow-hidden rounded-2xl border border-indigo-500/30 bg-indigo-500/10 p-4 animate-in slide-in-from-top-4 duration-500">
                             <div className="flex items-start gap-4 relative z-10">
@@ -120,13 +127,21 @@ export function DashboardPage() {
                                         </button>
                                     </Link>
                                 </div>
-                                <button className="text-indigo-400 hover:text-white transition-colors">
+                                <button
+                                    onClick={() => {
+                                        localStorage.setItem(
+                                            'hideProfileVerifyBanner',
+                                            'true',
+                                        );
+                                        setProfileVerifyHidden(true);
+                                    }}
+                                    className="text-indigo-400 hover:text-white transition-colors">
                                     <X size={16} />
                                 </button>
                             </div>
                             <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-indigo-500/20 blur-2xl rounded-full pointer-events-none"></div>
                         </div>
-                    )} */}
+                    )}
 
                 <div className="pb-6 pt-8">
                     <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-zinc-900/50 p-4 shadow-2xl backdrop-blur-xl">
@@ -241,7 +256,6 @@ export function DashboardPage() {
                                         onClick={() =>
                                             setIsGenerateTokenModalOpen(true)
                                         }
-                                        disabled={isGeneratingShareToken}
                                         className="w-full h-12 rounded-xl"
                                         variant="secondary">
                                         <Timer size={20} />

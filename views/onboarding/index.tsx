@@ -251,9 +251,38 @@ export default function OnboardingPage() {
                                                 <FormControl>
                                                     <InputUsername
                                                         field={field}
-                                                        onChangeAvailablity={
-                                                            setUsernameAvailable
-                                                        }
+                                                        onChangeAvailablity={async (
+                                                            val,
+                                                        ) => {
+                                                            const isValidFormat =
+                                                                await form.trigger(
+                                                                    'username',
+                                                                );
+
+                                                            if (
+                                                                !isValidFormat
+                                                            ) {
+                                                                return;
+                                                            }
+
+                                                            setUsernameAvailable(
+                                                                val,
+                                                            );
+                                                            if (!val) {
+                                                                form.setError(
+                                                                    'username',
+                                                                    {
+                                                                        type: 'manual',
+                                                                        message:
+                                                                            'Username is already taken',
+                                                                    },
+                                                                );
+                                                            } else {
+                                                                form.clearErrors(
+                                                                    'username',
+                                                                );
+                                                            }
+                                                        }}
                                                     />
                                                 </FormControl>
                                                 <p className="text-xs text-zinc-500">

@@ -69,8 +69,8 @@ export function UserPage({
                                 <Image
                                     src={profile.avatarUrl}
                                     alt={`${profile.displayName}'s avatar`}
-                                    width={96}
-                                    height={96}
+                                    width={256}
+                                    height={256}
                                     className="w-full h-full rounded-full object-cover border-4 border-background"
                                 />
                             ) : (

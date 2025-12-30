@@ -98,8 +98,8 @@ export function DashboardLayout({
                                                                 .avatarUrl
                                                         }
                                                         alt="Avatar"
-                                                        width={40}
-                                                        height={40}
+                                                        width={128}
+                                                        height={128}
                                                         className="w-10 h-10 rounded-full object-cover"
                                                     />
                                                 ) : (

@@ -23,6 +23,8 @@ import { createRoute } from '@/core/utils';
 import InputPhone from '@/components/input-phone';
 import Image from 'next/image';
 import { TypingEffect } from './components/typing-effect';
+import PaymentCard from '@/components/payment-card';
+import { PaymentMethodType } from '@/core/enums';
 
 type UseCaseType = 'freelancer' | 'trader' | 'creator';
 
@@ -123,9 +125,9 @@ const HeroVisual = () => {
             </div>
 
             {/* --- CARD 1: MAIN PROFILE (Front/Center) --- */}
-            <div className="relative z-10 w-72 lg:w-80 bg-gradient-to-b from-[#1a1a1a] to-[#0a0a0a] border border-white/10 rounded-3xl p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5)] transform hover:scale-105 transition-transform duration-500 group">
+            <div className="relative z-10 w-full max-w-[370px] bg-gradient-to-b from-[#1a1a1a] to-[#0a0a0a] border border-white/10 rounded-3xl p-3 sm:!p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5)] transform hover:scale-105 transition-transform duration-500 group">
                 {/* Top Notch Effect */}
-                <div className="flex justify-between items-center mb-6">
+                <div className="flex justify-between items-center mb-3">
                     <div className="w-12 h-12 rounded-full p-[2px] bg-gradient-to-tr from-indigo-500 to-purple-500">
                         <Image
                             src="/img/user.jpg"
@@ -147,7 +149,22 @@ const HeroVisual = () => {
 
                 {/* Mini Cards inside Main Card */}
                 <div className="space-y-3">
-                    <div className="flex items-center gap-3 p-3 bg-white/5 rounded-xl border border-white/5 hover:bg-white/10 transition-colors cursor-pointer">
+                    <PaymentCard
+                        paymentData={{
+                            type: PaymentMethodType.IBAN,
+                            decryptedValue: 'GB15HBUK40127612345678',
+                            meta: {
+                                accountHolderName: 'Joe Doe',
+                                bankName: 'HSBC',
+                                currency: 'GBP',
+                            },
+                            appearance: 'dark',
+                            copyCount: 42,
+                            isActive: true,
+                        }}
+                        isPreview
+                    />
+                    {/* <div className="flex items-center gap-3 p-3 bg-white/5 rounded-xl border border-white/5 hover:bg-white/10 transition-colors cursor-pointer">
                         <div className="w-8 h-8 rounded-lg bg-orange-500/20 text-orange-500 flex items-center justify-center">
                             <Bitcoin size={16} />
                         </div>
@@ -181,7 +198,7 @@ const HeroVisual = () => {
                             size={14}
                             className="text-zinc-600"
                         />
-                    </div>
+                    </div> */}
                 </div>
 
                 {/* Action Button */}
@@ -207,15 +224,18 @@ const HeroVisual = () => {
 const FaqItem = ({
     question,
     answer,
+    isOpen,
+    onClick,
 }: {
     question: string;
     answer: string;
+    isOpen: boolean;
+    onClick(): void;
 }) => {
-    const [isOpen, setIsOpen] = useState(false);
     return (
         <div className="border-b border-white/10">
             <button
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={onClick}
                 className="w-full py-6 flex justify-between items-center text-left focus:outline-none">
                 <span className="text-lg font-medium text-zinc-200">
                     {question}
@@ -240,6 +260,7 @@ export function HomePage() {
     const [phoneSearch, setPhoneSearch] = useState('');
     const [phoneSearchCountry, setPhoneSearchCountry] = useState('');
 
+    const [selectedFaqItem, setSelectedFaqItem] = useState<number>(-1);
     const [activeUseCase, setActiveUseCase] =
         useState<UseCaseType>('freelancer');
 
@@ -316,7 +337,7 @@ export function HomePage() {
                             </div>
                         </div>
 
-                        <div className="order-1 lg:order-2 relative">
+                        <div className="overflow-hidden order-1 lg:order-2 relative">
                             <HeroVisual />
                         </div>
                     </div>
@@ -752,22 +773,32 @@ export function HomePage() {
                         Frequently Asked Questions
                     </h2>
                     <div className="space-y-2">
-                        <FaqItem
-                            question="Is iban.bio free?"
-                            answer="Yes, the core features are free forever. We will introduce Premium features for power users later."
-                        />
-                        <FaqItem
-                            question="Is it safe to share my IBAN?"
-                            answer="iban.bio adds a layer of privacy. Instead of posting your raw IBAN on social media (where bots can scrape it), you share a iban.bio link. We mask the numbers visually until a user clicks to copy."
-                        />
-                        <FaqItem
-                            question="Can I receive payments directly?"
-                            answer="No, iban.bio is a directory for your payment details. We do not process money. Users copy your details and pay you through their own banking apps. This means 0% fees for you."
-                        />
-                        <FaqItem
-                            question="Do you support Crypto?"
-                            answer="Absolutely. We are crypto-native. You can add addresses for Bitcoin, Ethereum, USDT, and specify the network (TRC20, ERC20, etc.) to ensure safe transfers."
-                        />
+                        {[
+                            {
+                                question: 'Is iban.bio free?',
+                                answer: 'Yes, the core features are free forever. We will introduce Premium features for power users later.',
+                            },
+                            {
+                                question: 'Is it safe to share my IBAN?',
+                                answer: 'iban.bio adds a layer of privacy. Instead of posting your raw IBAN on social media (where bots can scrape it), you share a iban.bio link. We mask the numbers visually until a user clicks to copy.',
+                            },
+                            {
+                                question: 'Can I receive payments directly?',
+                                answer: 'No, iban.bio is a directory for your payment details. We do not process money. Users copy your details and pay you through their own banking apps. This means 0% fees for you.',
+                            },
+                            {
+                                question: 'Do you support Crypto?',
+                                answer: 'Absolutely. We are crypto-native. You can add addresses for Bitcoin, Ethereum, USDT, and specify the network (TRC20, ERC20, etc.) to ensure safe transfers.',
+                            },
+                        ].map((item, idx) => (
+                            <FaqItem
+                                key={idx}
+                                question={item.question}
+                                answer={item.answer}
+                                isOpen={selectedFaqItem === idx}
+                                onClick={() => setSelectedFaqItem(idx)}
+                            />
+                        ))}
                     </div>
                 </div>
             </section>

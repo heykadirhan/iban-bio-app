@@ -135,8 +135,8 @@ export function SearchPage() {
                                             src={foundUser.avatarUrl}
                                             alt={foundUser.displayName}
                                             className="rounded-full w-16 h-16 object-cover border-2 border-zinc-800"
-                                            width={64}
-                                            height={64}
+                                            width={256}
+                                            height={256}
                                         />
                                     ) : (
                                         <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center border-2 border-zinc-800 text-zinc-500">
