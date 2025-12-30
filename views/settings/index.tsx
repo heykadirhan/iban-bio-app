@@ -321,7 +321,6 @@ export function SettingsPage() {
 
                             <div className="mb-8">
                                 <Label>Username</Label>
-
                                 <FormField
                                     control={form.control}
                                     name="username"
