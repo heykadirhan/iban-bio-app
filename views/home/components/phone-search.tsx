@@ -3,7 +3,8 @@ import InputPhone from '@/components/input-phone';
 import { Button } from '@/components/ui/button';
 import { Routes } from '@/core/constants';
 import { createRoute } from '@/core/utils';
-import { Link, Search } from 'lucide-react';
+import { SearchIcon } from 'lucide-react';
+import Link from 'next/link';
 import { useState } from 'react';
 
 export function PhoneSearch() {
@@ -28,7 +29,7 @@ export function PhoneSearch() {
                         type="submit"
                         size="icon"
                         variant="primary">
-                        <Search size={16} />
+                        <SearchIcon size={16} />
                     </Button>
                 </Link>
             }
