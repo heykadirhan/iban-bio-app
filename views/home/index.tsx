@@ -1,5 +1,3 @@
-'use client';
-import React, { useState } from 'react';
 import {
     ArrowRight,
     ShieldCheck,
@@ -8,262 +6,21 @@ import {
     Lock,
     Smartphone,
     CheckCircle2,
-    Copy,
-    Check,
-    ChevronDown,
     Wallet,
     CreditCard,
-    Bitcoin,
-    Search,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Routes } from '@/core/constants';
-import { createRoute } from '@/core/utils';
-import InputPhone from '@/components/input-phone';
 import Image from 'next/image';
 import { TypingEffect } from './components/typing-effect';
 import PaymentCard from '@/components/payment-card';
 import { PaymentMethodType } from '@/core/enums';
-
-type UseCaseType = 'freelancer' | 'trader' | 'creator';
-
-const DemoCard = ({
-    title,
-    sub,
-    icon,
-    color,
-}: {
-    title: string;
-    sub: string;
-    icon: React.ReactNode;
-    color: string;
-}) => {
-    const [copied, setCopied] = useState(false);
-
-    const handleCopy = (e: React.MouseEvent<HTMLDivElement>) => {
-        e.stopPropagation();
-        setCopied(true);
-        if (
-            typeof window !== 'undefined' &&
-            window.navigator &&
-            window.navigator.vibrate
-        ) {
-            window.navigator.vibrate(50);
-        }
-        setTimeout(() => setCopied(false), 2000);
-    };
-
-    return (
-        <div
-            onClick={handleCopy}
-            className="group relative bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl p-4 cursor-pointer transition-all active:scale-95 select-none overflow-hidden backdrop-blur-sm">
-            <div
-                className={`absolute inset-0 bg-gradient-to-r ${color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`}
-            />
-            <div className="flex items-center justify-between relative z-10">
-                <div className="flex items-center gap-3">
-                    <div
-                        className={`w-10 h-10 rounded-xl bg-gradient-to-br ${color} flex items-center justify-center text-white shadow-lg`}>
-                        {icon}
-                    </div>
-                    <div>
-                        <p className="font-bold text-white text-sm">{title}</p>
-                        <p className="text-xs text-zinc-400">{sub}</p>
-                    </div>
-                </div>
-                <div
-                    className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
-                        copied
-                            ? 'bg-green-500 text-white'
-                            : 'bg-zinc-800 text-zinc-400'
-                    }`}>
-                    {copied ? <Check size={14} /> : <Copy size={14} />}
-                </div>
-            </div>
-        </div>
-    );
-};
-
-const HeroVisual = () => {
-    return (
-        <div className="relative w-full h-[500px] flex items-center justify-center perspective-1000">
-            {/* Ambient Glow Behind */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-indigo-500/30 rounded-full blur-[80px] animate-pulse-slow"></div>
-
-            {/* --- CARD 3: Crypto (Back/Right) --- */}
-            <div className="absolute top-20 right-0 lg:right-10 w-64 h-40 bg-[#111] border border-white/10 rounded-2xl p-4 shadow-2xl transform rotate-[15deg] translate-z-[-50px] opacity-60 hover:opacity-100 transition-all duration-500 animate-float-delayed backdrop-blur-md">
-                <div className="flex items-center gap-3 mb-4">
-                    <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center text-green-500">
-                        <Zap size={20} />
-                    </div>
-                    <div>
-                        <div className="h-2 w-16 bg-white/20 rounded mb-1"></div>
-                        <div className="h-2 w-10 bg-white/10 rounded"></div>
-                    </div>
-                </div>
-                <div className="space-y-2 mt-6">
-                    <div className="h-2 w-full bg-white/10 rounded"></div>
-                    <div className="h-2 w-2/3 bg-white/10 rounded"></div>
-                </div>
-            </div>
-
-            {/* --- CARD 2: Bank (Back/Left) --- */}
-            <div className="absolute bottom-20 left-0 lg:left-10 w-64 h-40 bg-[#151515] border border-white/10 rounded-2xl p-4 shadow-2xl transform -rotate-[12deg] translate-z-[-30px] opacity-70 hover:opacity-100 transition-all duration-500 animate-float backdrop-blur-md">
-                <div className="flex justify-between items-start mb-6">
-                    <div className="w-8 h-8 rounded bg-primary/20 text-primary/60 flex items-center justify-center">
-                        <CreditCard size={18} />
-                    </div>
-                    <div className="text-[10px] bg-white/5 px-2 py-1 rounded text-zinc-500">
-                        IBAN
-                    </div>
-                </div>
-                <div className="text-zinc-500 font-mono text-xs mb-1">
-                    TR12 **** **** 56
-                </div>
-                <div className="text-white font-bold">Garanti BBVA</div>
-            </div>
-
-            {/* --- CARD 1: MAIN PROFILE (Front/Center) --- */}
-            <div className="relative z-10 w-full max-w-[370px] bg-gradient-to-b from-[#1a1a1a] to-[#0a0a0a] border border-white/10 rounded-3xl p-3 sm:!p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5)] transform hover:scale-105 transition-transform duration-500 group">
-                {/* Top Notch Effect */}
-                <div className="flex justify-between items-center mb-3">
-                    <div className="w-12 h-12 rounded-full p-[2px] bg-gradient-to-tr from-indigo-500 to-purple-500">
-                        <Image
-                            src="/img/user.jpg"
-                            className="w-full h-full rounded-full border-2 border-[#0a0a0a] object-cover"
-                            alt="Avatar"
-                            width={128}
-                            height={128}
-                        />
-                    </div>
-                    <div className="bg-green-500/10 text-green-500 px-3 py-1 rounded-full text-xs font-bold border border-green-500/20 flex items-center gap-1">
-                        <CheckCircle2 size={12} /> Verified
-                    </div>
-                </div>
-
-                <h3 className="text-2xl font-bold text-white mb-1">Joe Doe</h3>
-                <p className="text-indigo-400 text-sm font-medium mb-6">
-                    @joe-doe
-                </p>
-
-                {/* Mini Cards inside Main Card */}
-                <div className="space-y-3">
-                    <PaymentCard
-                        paymentData={{
-                            type: PaymentMethodType.IBAN,
-                            decryptedValue: 'GB15HBUK40127612345678',
-                            meta: {
-                                accountHolderName: 'Joe Doe',
-                                bankName: 'HSBC',
-                                currency: 'GBP',
-                            },
-                            appearance: 'dark',
-                            copyCount: 42,
-                            isActive: true,
-                        }}
-                        isPreview
-                    />
-                    {/* <div className="flex items-center gap-3 p-3 bg-white/5 rounded-xl border border-white/5 hover:bg-white/10 transition-colors cursor-pointer">
-                        <div className="w-8 h-8 rounded-lg bg-orange-500/20 text-orange-500 flex items-center justify-center">
-                            <Bitcoin size={16} />
-                        </div>
-                        <div className="flex-1">
-                            <p className="text-xs font-bold text-zinc-200">
-                                Bitcoin
-                            </p>
-                            <p className="text-[10px] text-zinc-500">
-                                BTC Network
-                            </p>
-                        </div>
-                        <Copy
-                            size={14}
-                            className="text-zinc-600"
-                        />
-                    </div>
-
-                    <div className="flex items-center gap-3 p-3 bg-white/5 rounded-xl border border-white/5 hover:bg-white/10 transition-colors cursor-pointer">
-                        <div className="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-500 flex items-center justify-center">
-                            <Smartphone size={16} />
-                        </div>
-                        <div className="flex-1">
-                            <p className="text-xs font-bold text-zinc-200">
-                                PayPal
-                            </p>
-                            <p className="text-[10px] text-zinc-500">
-                                1239****92
-                            </p>
-                        </div>
-                        <Copy
-                            size={14}
-                            className="text-zinc-600"
-                        />
-                    </div> */}
-                </div>
-
-                {/* Action Button */}
-                <div className="mt-6">
-                    <Link href={Routes.GET_STARTED}>
-                        <Button
-                            className="w-full font-semibold"
-                            size="lg">
-                            Create Your iban.bio
-                            <ArrowRight />
-                        </Button>
-                    </Link>
-                </div>
-            </div>
-
-            {/* Decorative Elements */}
-            <div className="absolute top-10 left-10 w-16 h-16 bg-gradient-to-br from-purple-600 to-transparent opacity-20 rounded-full blur-2xl animate-pulse"></div>
-            <div className="absolute bottom-10 right-10 w-24 h-24 bg-gradient-to-tl from-indigo-600 to-transparent opacity-20 rounded-full blur-2xl animate-pulse"></div>
-        </div>
-    );
-};
-
-const FaqItem = ({
-    question,
-    answer,
-    isOpen,
-    onClick,
-}: {
-    question: string;
-    answer: string;
-    isOpen: boolean;
-    onClick(): void;
-}) => {
-    return (
-        <div className="border-b border-white/10">
-            <button
-                onClick={onClick}
-                className="w-full py-6 flex justify-between items-center text-left focus:outline-none">
-                <span className="text-lg font-medium text-zinc-200">
-                    {question}
-                </span>
-                <ChevronDown
-                    className={`text-zinc-500 transition-transform duration-300 ${
-                        isOpen ? 'rotate-180' : ''
-                    }`}
-                />
-            </button>
-            <div
-                className={`overflow-hidden transition-all duration-300 ${
-                    isOpen ? 'max-h-40 pb-6' : 'max-h-0'
-                }`}>
-                <p className="text-zinc-400 leading-relaxed">{answer}</p>
-            </div>
-        </div>
-    );
-};
+import { PhoneSearch } from './components/phone-search';
+import { SectionUseCases } from './components/section-use-cases';
+import { SectionFaq } from './components/section-faq';
 
 export function HomePage() {
-    const [phoneSearch, setPhoneSearch] = useState('');
-    const [phoneSearchCountry, setPhoneSearchCountry] = useState('');
-
-    const [selectedFaqItem, setSelectedFaqItem] = useState<number>(-1);
-    const [activeUseCase, setActiveUseCase] =
-        useState<UseCaseType>('freelancer');
-
     return (
         <>
             {/* --- HERO SECTION --- */}
@@ -353,7 +110,100 @@ export function HomePage() {
                         </div>
 
                         <div className="overflow-hidden order-1 lg:order-2 relative">
-                            <HeroVisual />
+                            <div className="relative w-full h-[500px] flex items-center justify-center perspective-1000">
+                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-indigo-500/30 rounded-full blur-[80px] animate-pulse-slow"></div>
+
+                                <div className="absolute top-20 right-0 lg:right-10 w-64 h-40 bg-[#111] border border-white/10 rounded-2xl p-4 shadow-2xl transform rotate-[15deg] translate-z-[-50px] opacity-60 hover:opacity-100 transition-all duration-500 animate-float-delayed backdrop-blur-md">
+                                    <div className="flex items-center gap-3 mb-4">
+                                        <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center text-green-500">
+                                            <Zap size={20} />
+                                        </div>
+                                        <div>
+                                            <div className="h-2 w-16 bg-white/20 rounded mb-1"></div>
+                                            <div className="h-2 w-10 bg-white/10 rounded"></div>
+                                        </div>
+                                    </div>
+                                    <div className="space-y-2 mt-6">
+                                        <div className="h-2 w-full bg-white/10 rounded"></div>
+                                        <div className="h-2 w-2/3 bg-white/10 rounded"></div>
+                                    </div>
+                                </div>
+
+                                <div className="absolute bottom-20 left-0 lg:left-10 w-64 h-40 bg-[#151515] border border-white/10 rounded-2xl p-4 shadow-2xl transform -rotate-[12deg] translate-z-[-30px] opacity-70 hover:opacity-100 transition-all duration-500 animate-float backdrop-blur-md">
+                                    <div className="flex justify-between items-start mb-6">
+                                        <div className="w-8 h-8 rounded bg-primary/20 text-primary/60 flex items-center justify-center">
+                                            <CreditCard size={18} />
+                                        </div>
+                                        <div className="text-[10px] bg-white/5 px-2 py-1 rounded text-zinc-500">
+                                            IBAN
+                                        </div>
+                                    </div>
+                                    <div className="text-zinc-500 font-mono text-xs mb-1">
+                                        TR12 **** **** 56
+                                    </div>
+                                    <div className="text-white font-bold">
+                                        Garanti BBVA
+                                    </div>
+                                </div>
+
+                                <div className="relative z-10 w-full max-w-[370px] bg-gradient-to-b from-[#1a1a1a] to-[#0a0a0a] border border-white/10 rounded-3xl p-3 sm:!p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5)] transform hover:scale-105 transition-transform duration-500 group">
+                                    <div className="flex justify-between items-center mb-3">
+                                        <div className="w-12 h-12 rounded-full p-[2px] bg-gradient-to-tr from-indigo-500 to-purple-500">
+                                            <Image
+                                                src="/img/user.jpg"
+                                                className="w-full h-full rounded-full border-2 border-[#0a0a0a] object-cover"
+                                                alt="Avatar"
+                                                width={128}
+                                                height={128}
+                                            />
+                                        </div>
+                                        <div className="bg-green-500/10 text-green-500 px-3 py-1 rounded-full text-xs font-bold border border-green-500/20 flex items-center gap-1">
+                                            <CheckCircle2 size={12} /> Verified
+                                        </div>
+                                    </div>
+
+                                    <h3 className="text-2xl font-bold text-white mb-1">
+                                        Joe Doe
+                                    </h3>
+                                    <p className="text-indigo-400 text-sm font-medium mb-6">
+                                        @joe-doe
+                                    </p>
+
+                                    <div className="space-y-3">
+                                        <PaymentCard
+                                            paymentData={{
+                                                type: PaymentMethodType.IBAN,
+                                                decryptedValue:
+                                                    'GB15HBUK40127612345678',
+                                                meta: {
+                                                    accountHolderName:
+                                                        'Joe Doe',
+                                                    bankName: 'HSBC',
+                                                    currency: 'GBP',
+                                                },
+                                                appearance: 'dark',
+                                                copyCount: 42,
+                                                isActive: true,
+                                            }}
+                                            isPreview
+                                        />
+                                    </div>
+
+                                    <div className="mt-6">
+                                        <Link href={Routes.GET_STARTED}>
+                                            <Button
+                                                className="w-full font-semibold"
+                                                size="lg">
+                                                Create Your iban.bio
+                                                <ArrowRight />
+                                            </Button>
+                                        </Link>
+                                    </div>
+                                </div>
+
+                                <div className="absolute top-10 left-10 w-16 h-16 bg-gradient-to-br from-purple-600 to-transparent opacity-20 rounded-full blur-2xl animate-pulse"></div>
+                                <div className="absolute bottom-10 right-10 w-24 h-24 bg-gradient-to-tl from-indigo-600 to-transparent opacity-20 rounded-full blur-2xl animate-pulse"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -445,36 +295,7 @@ export function HomePage() {
                                     <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2 block">
                                         Find Profile
                                     </label>
-                                    <InputPhone
-                                        onPhoneChange={(val) =>
-                                            setPhoneSearch(val)
-                                        }
-                                        onCountryChange={(val) =>
-                                            setPhoneSearchCountry(val)
-                                        }
-                                        value={phoneSearch}
-                                        suffix={
-                                            <Link
-                                                href={createRoute({
-                                                    path: Routes.SEARCH,
-                                                    searchParams: {
-                                                        phone: phoneSearch.replaceAll(
-                                                            ' ',
-                                                            '',
-                                                        ),
-                                                        country:
-                                                            phoneSearchCountry,
-                                                    },
-                                                })}>
-                                                <Button
-                                                    type="submit"
-                                                    size="icon"
-                                                    variant="primary">
-                                                    <Search size={16} />
-                                                </Button>
-                                            </Link>
-                                        }
-                                    />
+                                    <PhoneSearch />
                                 </div>
 
                                 {/* Mock Result Animation */}
@@ -550,139 +371,7 @@ export function HomePage() {
             </section>
 
             {/* --- USE CASES (INTERACTIVE TABS) --- */}
-            <section className="py-24 bg-[#0a0a0a] border-y border-white/5">
-                <div className="container">
-                    <div className="flex flex-col md:flex-row items-center justify-between mb-12 gap-6">
-                        <div className="text-center md:text-left">
-                            <h2 className="text-3xl lg:text-4xl font-bold mb-2">
-                                Built for Everyone
-                            </h2>
-                            <p className="text-zinc-400">
-                                Tailored experiences for different needs.
-                            </p>
-                        </div>
-
-                        {/* Custom Tabs */}
-                        <div className="flex p-1 bg-zinc-900 rounded-xl border border-white/5">
-                            {['freelancer', 'trader', 'creator'].map((tab) => (
-                                <button
-                                    key={tab}
-                                    onClick={() =>
-                                        setActiveUseCase(tab as UseCaseType)
-                                    }
-                                    className={`px-6 py-2.5 rounded-lg text-sm font-bold capitalize transition-all ${
-                                        activeUseCase === tab
-                                            ? 'bg-zinc-800 text-white shadow-sm'
-                                            : 'text-zinc-500 hover:text-zinc-300'
-                                    }`}>
-                                    {tab}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Tab Content */}
-                    <div className="glass-card rounded-3xl p-8 md:p-12 border border-white/10 min-h-[300px] flex flex-col md:flex-row items-center gap-12">
-                        {/* Content Text */}
-                        <div
-                            className="flex-1 space-y-6 animate-in fade-in slide-in-from-left-4 duration-500"
-                            key={activeUseCase}>
-                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg">
-                                {activeUseCase === 'freelancer' && (
-                                    <BriefcaseIcon className="text-white" />
-                                )}
-                                {activeUseCase === 'trader' && (
-                                    <Zap className="text-white" />
-                                )}
-                                {activeUseCase === 'creator' && (
-                                    <HeartIcon className="text-white" />
-                                )}
-                            </div>
-                            <div>
-                                <h3 className="text-3xl font-bold mb-2 capitalize">
-                                    {activeUseCase}
-                                </h3>
-                                <p className="text-zinc-400 text-lg leading-relaxed">
-                                    {activeUseCase === 'freelancer' &&
-                                        'Stop sending PDF invoices just to share your IBAN. Send one professional link to your clients and get paid faster via Bank Transfer or Wise.'}
-                                    {activeUseCase === 'trader' &&
-                                        'Managing multiple wallets across different networks (ERC20, TRC20, SOL)? List them all clearly with network icons so senders never make a mistake.'}
-                                    {activeUseCase === 'creator' &&
-                                        'Accept donations or payments from your fans effortlessly. Put your iban.bio link in your Instagram bio, YouTube description, or Twitch panels.'}
-                                </p>
-                            </div>
-                            <ul className="space-y-3">
-                                {{
-                                    freelancer: [
-                                        'Instant Copy',
-                                        'Professional Appearance',
-                                        'Hide Personal Phone',
-                                    ],
-                                    trader: [
-                                        'Network Badges',
-                                        'Privacy Masking',
-                                        'Multi-Chain Support',
-                                    ],
-                                    creator: [
-                                        'Mobile Optimized',
-                                        'QR Code Included',
-                                        'Zero Fees',
-                                    ],
-                                }[activeUseCase].map((i) => (
-                                    <li
-                                        key={i}
-                                        className="flex items-center gap-3 text-zinc-300">
-                                        <CheckCircle2
-                                            size={18}
-                                            className="text-indigo-500"
-                                        />
-                                        <span>{i}</span>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-
-                        {/* Visual (Contextual Card) */}
-                        <div className="flex-1 w-full max-w-sm">
-                            <div className="bg-zinc-900 border border-white/10 rounded-2xl p-6 shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-500">
-                                <div className="flex items-center gap-4 mb-6 border-b border-white/5 pb-4">
-                                    <div className="w-12 h-12 bg-zinc-800 rounded-full"></div>
-                                    <div className="space-y-2 w-full">
-                                        <div className="h-2 w-20 bg-zinc-800 rounded"></div>
-                                        <div className="h-2 w-32 bg-zinc-800 rounded"></div>
-                                    </div>
-                                </div>
-                                <div className="space-y-3">
-                                    <DemoCard
-                                        title={
-                                            activeUseCase === 'freelancer'
-                                                ? 'Business Account'
-                                                : activeUseCase === 'trader'
-                                                ? 'Binance'
-                                                : 'Patreon'
-                                        }
-                                        sub={
-                                            activeUseCase === 'freelancer'
-                                                ? 'USD Invoices'
-                                                : activeUseCase === 'trader'
-                                                ? 'Deposit Address'
-                                                : 'Support Me'
-                                        }
-                                        icon={
-                                            activeUseCase === 'freelancer'
-                                                ? '🏦'
-                                                : activeUseCase === 'trader'
-                                                ? '🪙'
-                                                : '❤️'
-                                        }
-                                        color="from-zinc-700 to-zinc-800"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+            <SectionUseCases />
 
             {/* --- BENTO FEATURES --- */}
             <section
@@ -780,43 +469,7 @@ export function HomePage() {
             </section>
 
             {/* --- FAQ SECTION --- */}
-            <section
-                id="faq"
-                className="py-24 px-6 max-w-3xl mx-auto">
-                <div className="container">
-                    <h2 className="text-3xl font-bold mb-10 text-center">
-                        Frequently Asked Questions
-                    </h2>
-                    <div className="space-y-2">
-                        {[
-                            {
-                                question: 'Is iban.bio free?',
-                                answer: 'Yes, the core features are free forever. We will introduce Premium features for power users later.',
-                            },
-                            {
-                                question: 'Is it safe to share my IBAN?',
-                                answer: 'iban.bio adds a layer of privacy. Instead of posting your raw IBAN on social media (where bots can scrape it), you share a iban.bio link. We mask the numbers visually until a user clicks to copy.',
-                            },
-                            {
-                                question: 'Can I receive payments directly?',
-                                answer: 'No, iban.bio is a directory for your payment details. We do not process money. Users copy your details and pay you through their own banking apps. This means 0% fees for you.',
-                            },
-                            {
-                                question: 'Do you support Crypto?',
-                                answer: 'Absolutely. We are crypto-native. You can add addresses for Bitcoin, Ethereum, USDT, and specify the network (TRC20, ERC20, etc.) to ensure safe transfers.',
-                            },
-                        ].map((item, idx) => (
-                            <FaqItem
-                                key={idx}
-                                question={item.question}
-                                answer={item.answer}
-                                isOpen={selectedFaqItem === idx}
-                                onClick={() => setSelectedFaqItem(idx)}
-                            />
-                        ))}
-                    </div>
-                </div>
-            </section>
+            <SectionFaq />
 
             {/* --- CTA SECTION --- */}
             <section className="py-20">
