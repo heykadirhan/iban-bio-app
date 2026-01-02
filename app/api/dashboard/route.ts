@@ -26,7 +26,7 @@ export async function GET() {
         })
             .lean()
             .sort({ order: 1 })
-            .select('+iv');
+            .select('+iv +copyCount');
 
         return NextResponse.json({
             success: true,

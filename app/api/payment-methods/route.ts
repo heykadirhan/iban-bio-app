@@ -4,40 +4,6 @@ import { PaymentMethodModel } from '@/core/models';
 import { paymentMethodBaseReqDto, paymentMethodReqDto } from '@/core/dtos';
 import { PaymentMethodType } from '@/core/enums';
 
-export async function GET() {
-    try {
-        await connectDB();
-
-        const session = await getServerAuth();
-
-        if (!session)
-            return NextResponse.json(
-                { success: false, message: 'Unauthorized' },
-                { status: HttpStatus.UNAUTHORIZED },
-            );
-
-        const methods = await PaymentMethodModel.find({
-            userId: session.user.id,
-        })
-            .sort({ order: 1 })
-            .select('+iv');
-
-        const decryptedMethods = methods.map((m) => ({
-            ...m.toObject(),
-            value: decrypt({ iv: m.iv, content: m.encryptedValue }),
-            encryptedValue: undefined,
-            iv: undefined,
-        }));
-
-        return NextResponse.json({ data: decryptedMethods });
-    } catch (error: any) {
-        return NextResponse.json(
-            { success: false, message: error.message },
-            { status: HttpStatus.BAD_REQUEST },
-        );
-    }
-}
-
 export async function POST(req: NextRequest) {
     try {
         await connectDB();

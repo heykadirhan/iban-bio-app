@@ -314,68 +314,80 @@ export default function PaymentCard({
                 </div>
             </div>
 
-            <div className="mt-3 pt-3 border-t border-white/5 flex items-center justify-between gap-2 text-xs text-zinc-500">
-                {/* Sol Taraf: İstatistikler (Dashboardda da görünebilir, opsiyonel) */}
-                <div className="flex items-center gap-2 overflow-hidden">
-                    <span className="flex items-center gap-1 shrink-0">
-                        {type === PaymentMethodType.LINK ? (
+            {(copyCount !== undefined || !!meta.currency || isDashboard) && (
+                <div className="mt-3 pt-3 border-t border-white/5 flex items-center justify-between gap-2 text-xs text-zinc-500">
+                    <div className="flex items-center gap-2 overflow-hidden">
+                        {copyCount !== undefined && (
+                            <span className="flex items-center gap-1 shrink-0">
+                                {type === PaymentMethodType.LINK ? (
+                                    <>
+                                        <Link size={10} /> {copyCount} times
+                                        opened
+                                    </>
+                                ) : (
+                                    <>
+                                        <Copy size={10} /> {copyCount} times
+                                        copied
+                                    </>
+                                )}
+                            </span>
+                        )}
+
+                        {copyCount !== undefined && meta.currency && (
+                            <span>/</span>
+                        )}
+
+                        {meta.currency && (
                             <>
-                                <Link size={10} /> {copyCount} times opened
-                            </>
-                        ) : (
-                            <>
-                                <Copy size={10} /> {copyCount} times copied
+                                <span className="flex items-center gap-1 shrink-0">
+                                    <Globe size={10} /> Currency:{' '}
+                                    <b>
+                                        {currencies(meta.currency)
+                                            ? `${meta.currency} (${currencies(
+                                                  meta.currency,
+                                              )})`
+                                            : meta.currency}
+                                    </b>
+                                </span>
                             </>
                         )}
-                    </span>
+                    </div>
 
-                    {meta.currency && (
-                        <>
-                            <span>/</span>
-                            <span className="flex items-center gap-1 shrink-0">
-                                <Globe size={10} />{' '}
-                                {currencies(meta.currency)
-                                    ? `${meta.currency} (${currencies(
-                                          meta.currency,
-                                      )})`
-                                    : meta.currency}
-                            </span>
-                        </>
+                    {isDashboard && (
+                        <div
+                            className="flex items-center gap-1 relative"
+                            onClick={(e) => e.stopPropagation()}>
+                            <button
+                                onClick={() =>
+                                    togglePaymentMethodStatus(
+                                        paymentData._id,
+                                        paymentData.isActive,
+                                    )
+                                }
+                                className={`p-2 rounded-full ${
+                                    isActive
+                                        ? 'text-green-500 hover:bg-green-500/10'
+                                        : 'text-red-500 hover:bg-red-500/10'
+                                }`}
+                                title="Active / Deactivate">
+                                <Power size={16} />
+                            </button>
+                            <button
+                                onClick={() => onEdit?.()}
+                                className="p-2 text-zinc-400 hover:text-white hover:bg-zinc-700 rounded-full">
+                                <Edit2 size={16} />
+                            </button>
+                            <button
+                                onClick={() =>
+                                    deletePaymentMethod(paymentData._id)
+                                }
+                                className="p-2 text-zinc-400 hover:text-red-500 hover:bg-red-500/10 rounded-full">
+                                <Trash2 size={16} />
+                            </button>
+                        </div>
                     )}
                 </div>
-
-                {isDashboard && (
-                    <div
-                        className="flex items-center gap-1 relative"
-                        onClick={(e) => e.stopPropagation()}>
-                        <button
-                            onClick={() =>
-                                togglePaymentMethodStatus(
-                                    paymentData._id,
-                                    paymentData.isActive,
-                                )
-                            }
-                            className={`p-2 rounded-full ${
-                                isActive
-                                    ? 'text-green-500 hover:bg-green-500/10'
-                                    : 'text-red-500 hover:bg-red-500/10'
-                            }`}
-                            title="Active / Deactivate">
-                            <Power size={16} />
-                        </button>
-                        <button
-                            onClick={() => onEdit?.()}
-                            className="p-2 text-zinc-400 hover:text-white hover:bg-zinc-700 rounded-full">
-                            <Edit2 size={16} />
-                        </button>
-                        <button
-                            onClick={() => deletePaymentMethod(paymentData._id)}
-                            className="p-2 text-zinc-400 hover:text-red-500 hover:bg-red-500/10 rounded-full">
-                            <Trash2 size={16} />
-                        </button>
-                    </div>
-                )}
-            </div>
+            )}
         </div>
     );
 }

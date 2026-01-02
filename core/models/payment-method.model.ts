@@ -75,7 +75,7 @@ const PaymentMethodSchema = new mongoose.Schema(
         },
 
         order: { type: Number, default: 0 },
-        copyCount: { type: Number, default: 0 },
+        copyCount: { type: Number, default: 0, select: false },
         isActive: { type: Boolean, default: true },
         deletedAt: { type: Date },
     },
