@@ -15,6 +15,7 @@ export async function GET() {
         }
 
         const user: any = await UserModel.findById(session.user.id).lean();
+
         if (!user)
             return NextResponse.json(
                 { success: false, message: 'User not found' },
