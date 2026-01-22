@@ -43,7 +43,7 @@ export function HomePage() {
                                     Universal Payment Profile
                                 </div>
 
-                                <a
+                                {/* <a
                                     href="https://www.producthunt.com/products/iban-bio?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-iban-bio"
                                     target="_blank"
                                     rel="noopener noreferrer"
@@ -53,7 +53,7 @@ export function HomePage() {
                                         className="h-9 w-auto grayscale group-hover:grayscale-0 transition-all duration-300"
                                         src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1056311&amp;theme=dark&amp;t=1767127446453"
                                     />
-                                </a>
+                                </a> */}
                             </div>
 
                             <h1 className="text-5xl lg:text-7xl font-bold tracking-tight leading-[1.1] mb-6">
