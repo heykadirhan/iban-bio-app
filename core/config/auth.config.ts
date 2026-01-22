@@ -51,6 +51,16 @@ export const AUTH_CONFIG: AuthOptions = {
                     );
                 }
 
+                await UserModel.findOneAndUpdate(
+                    {
+                        phone,
+                        country,
+                    },
+                    {
+                        lastLogin: new Date(),
+                    },
+                );
+
                 return {
                     id: user._id.toString(),
                     ...user.toObject(),
