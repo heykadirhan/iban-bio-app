@@ -28,9 +28,6 @@ const nextConfig: NextConfig = {
                 hostname: 'assets.coincap.io',
             },
             {
-                hostname: 'api.qrserver.com',
-            },
-            {
                 hostname: 'lh3.googleusercontent.com',
             },
         ],
