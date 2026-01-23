@@ -111,40 +111,53 @@ export default function PaymentCard({
     const handleClick = async () => {
         if (isPreview) return;
 
-        let copyText = value;
-
-        if (!isPreview && !isDashboard) {
-            setIsLoading(true);
-
-            const res = await HttpService.request(Endpoints.PROFILE_COPY, {
-                method: 'POST',
-                body: JSON.stringify({
-                    id: paymentData._id,
-                }),
-            });
-
-            if (res?.data) copyText = res.data;
-
-            setIsLoading(false);
-        }
-
+        // 1. Link yönlendirmesi (Aynı kalabilir)
         if (type === PaymentMethodType.LINK) {
             window.open(value, '_blank');
             return;
         }
 
-        navigator.clipboard.writeText(copyText || value);
-        setCopied(true);
+        try {
+            if (!isPreview && !isDashboard) {
+                setIsLoading(true);
 
-        if (
-            typeof window !== 'undefined' &&
-            window.navigator &&
-            window.navigator.vibrate
-        ) {
-            window.navigator.vibrate(50);
+                const textBlobPromise = HttpService.request(
+                    Endpoints.PROFILE_COPY,
+                    {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            id: paymentData._id,
+                        }),
+                    },
+                )
+                    .then((res) => {
+                        const text = res?.data || value;
+                        return new Blob([text], { type: 'text/plain' });
+                    })
+                    .catch(() => {
+                        return new Blob([value], { type: 'text/plain' });
+                    });
+
+                const item = new ClipboardItem({
+                    'text/plain': textBlobPromise,
+                });
+
+                await navigator.clipboard.write([item]);
+                setIsLoading(false);
+            } else {
+                await navigator.clipboard.writeText(value);
+            }
+
+            setCopied(true);
+
+            if (typeof window !== 'undefined' && window.navigator?.vibrate) {
+                window.navigator.vibrate(50);
+            }
+
+            setTimeout(() => setCopied(false), 2000);
+        } catch (err) {
+            console.error('Copy error:', err);
         }
-
-        setTimeout(() => setCopied(false), 2000);
     };
 
     const cardColor =
