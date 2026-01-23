@@ -1,16 +1,15 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Dialog, DialogContent, DialogTitle } from './ui/dialog';
 import {
     Check,
     Copy,
-    Loader2,
     MessageCircle,
     Smartphone,
     XCircleIcon,
 } from 'lucide-react';
-import Image from 'next/image';
+import { QRCodeSVG } from 'qrcode.react';
 
 export function ModalShare({
     isOpen,
@@ -27,11 +26,6 @@ export function ModalShare({
         shareToken ? `?shareToken=${shareToken}` : ''
     }`;
     const [copied, setCopied] = useState(false);
-    const [qrLoaded, setQrLoaded] = useState(false);
-
-    useEffect(() => {
-        setQrLoaded(false);
-    }, [isOpen]);
 
     const handleCopy = () => {
         navigator.clipboard.writeText(shareUrl).then(() => {
@@ -53,19 +47,19 @@ export function ModalShare({
                     <div className="absolute -inset-0.5 bg-gradient-to-tr from-blue-600 to-purple-600 rounded-2xl opacity-30 blur-sm group-hover:opacity-50 transition duration-500"></div>
                     <div className="relative w-full bg-background rounded-xl p-4 flex flex-col items-center text-center">
                         <div className="w-full max-w-48 max-h-48 bg-white text-black p-2 rounded-md flex items-center justify-center overflow-hidden relative">
-                            {!qrLoaded && (
-                                <Loader2
-                                    size={24}
-                                    className="animate-spin absolute"
-                                />
-                            )}
-                            <Image
-                                src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${shareUrl}`}
-                                alt="QR Code"
-                                className="w-full h-full object-contain mix-blend-multiply opacity-90"
-                                width={512}
-                                height={512}
-                                onLoad={() => setQrLoaded(true)}
+                            <QRCodeSVG
+                                value={shareUrl}
+                                size={200}
+                                level={'H'}
+                                className="w-full h-auto"
+                                imageSettings={{
+                                    src: '/img/logo-icon.png',
+                                    x: undefined,
+                                    y: undefined,
+                                    height: 56,
+                                    width: 56,
+                                    excavate: true,
+                                }}
                             />
                         </div>
                         <p className="text-xs text-zinc-400 mt-2.5 font-medium uppercase tracking-wider">
