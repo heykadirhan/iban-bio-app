@@ -1,0 +1,32 @@
+services:
+    next-app:
+        container_name: nextjs_dev_container
+        build:
+            context: .
+            dockerfile: Dockerfile
+        volumes:
+            - ./:/app
+            - /app/node_modules
+            - /app/.next
+        ports:
+            - '3000:3000'
+        env_file:
+            - .env
+        environment:
+            - MONGODB_URI=mongodb://mongo_db:27017/iban
+            - CHOKIDAR_USEPOLLING=true
+            - WATCHPACK_POLLING=true
+
+        depends_on:
+            - mongo_db
+
+    mongo_db:
+        container_name: mongodb_container
+        image: mongo:latest
+        ports:
+            - '27017:27017'
+        volumes:
+            - mongo_data:/data/db
+
+volumes:
+    mongo_data:
