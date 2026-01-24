@@ -95,7 +95,7 @@ export default function CopySuccessModal({
         <Dialog
             open={isOpen}
             onOpenChange={onClose}>
-            <DialogContent className="sm:max-w-sm border-zinc-800 bg-[#09090b] p-0 overflow-hidden gap-0">
+            <DialogContent className="sm:max-w-sm border-zinc-800 bg-[#09090b] p-0 overflow-hidden gap-0 !max-h-[90vh] overflow-y-auto">
                 <div
                     className={`-z-1 absolute top-0 left-1/2 -translate-x-1/2 w-48 h-48 ${typeInfo.bg} blur-[60px] rounded-full pointer-events-none opacity-40`}
                 />
@@ -235,7 +235,7 @@ export default function CopySuccessModal({
                     </div>
                 </div>
 
-                <div className="p-6 bg-zinc-900/30 border-t border-white/5">
+                <div className="p-6 bg-zinc-900 border-t border-white/5 sticky bottom-0">
                     <Button
                         onClick={onClose}
                         type="button"
