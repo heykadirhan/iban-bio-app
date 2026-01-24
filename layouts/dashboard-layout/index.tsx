@@ -164,7 +164,7 @@ export function DashboardLayout({
                         <div className="mt-12 text-center opacity-50 hover:opacity-100 transition-opacity duration-500">
                             <Link
                                 href="/"
-                                className="text-xs font-medium text-zinc-500 tracking-widest uppercase flex items-center justify-center gap-2">
+                                className="text-xs font-medium text-zinc-500 tracking-widest uppercase flex items-center justify-center gap-2 w-fit mx-auto">
                                 <span className="w-1.5 h-1.5 rounded-full bg-zinc-500"></span>
                                 Powered by iban.bio
                                 <span className="w-1.5 h-1.5 rounded-full bg-zinc-500"></span>
