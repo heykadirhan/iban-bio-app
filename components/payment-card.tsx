@@ -23,6 +23,7 @@ import { PaymentMethodType } from '@/core/enums';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import toast from 'react-hot-toast';
+import CopySuccessModal from './modal-copy-success';
 
 interface PaymentCardProps {
     paymentData: any;
@@ -102,6 +103,13 @@ export default function PaymentCard({
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [imageFailed, setImageFailed] = useState<boolean>(false);
     const [copied, setCopied] = useState(false);
+    const [copySuccessModal, setCopySuccessModal] = useState<{
+        isOpen: boolean;
+        data: any;
+    }>({
+        isOpen: false,
+        data: null,
+    });
     const visuals = getVisuals(type, meta);
 
     useEffect(() => {
@@ -111,7 +119,6 @@ export default function PaymentCard({
     const handleClick = async () => {
         if (isPreview) return;
 
-        // 1. Link yönlendirmesi (Aynı kalabilir)
         if (type === PaymentMethodType.LINK) {
             window.open(value, '_blank');
             return;
@@ -149,6 +156,15 @@ export default function PaymentCard({
             }
 
             setCopied(true);
+            setCopySuccessModal({
+                isOpen: true,
+                data: {
+                    encryptedValue: value,
+                    meta: paymentData.meta,
+                    title: paymentData.title,
+                    type: paymentData.type,
+                },
+            });
 
             if (typeof window !== 'undefined' && window.navigator?.vibrate) {
                 window.navigator.vibrate(50);
@@ -202,112 +218,115 @@ export default function PaymentCard({
     };
 
     return (
-        <div
-            onClick={(e) => {
-                e.stopPropagation();
-                handleClick();
-            }}
-            className={cn(
-                `
+        <>
+            <div
+                onClick={(e) => {
+                    e.stopPropagation();
+                    handleClick();
+                }}
+                className={cn(
+                    `
         group relative w-full overflow-hidden rounded-2xl border border-white/5 
         bg-[#1a1a1a] p-4 transition-all duration-300 
         hover:border-white/10 hover:shadow-xl hover:shadow-black/50 
         active:scale-[0.98] select-none cursor-pointer`,
-                isDashboard && !isActive && 'opacity-75 grayscale-[0.5]',
-                isLoading && 'pointer-events-none opacity-50',
-                className,
-            )}>
-            {/* Background Effects */}
-            <div
-                className={`absolute inset-0 bg-gradient-to-r ${cardColor} opacity-0 group-hover:opacity-10 transition-opacity duration-500`}
-            />
-            <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-5 mix-blend-overlay pointer-events-none" />
+                    isDashboard && !isActive && 'opacity-75 grayscale-[0.5]',
+                    isLoading && 'pointer-events-none opacity-50',
+                    className,
+                )}>
+                {/* Background Effects */}
+                <div
+                    className={`absolute inset-0 bg-gradient-to-r ${cardColor} opacity-0 group-hover:opacity-10 transition-opacity duration-500`}
+                />
+                <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-5 mix-blend-overlay pointer-events-none" />
 
-            <div className="relative z-10 flex items-center justify-between gap-4">
-                <div className="flex items-center gap-4 min-w-0">
-                    <div
-                        className={`
+                <div className="relative z-10 flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-4 min-w-0">
+                        <div
+                            className={`
             relative flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl 
             bg-gradient-to-br ${cardColor} text-white shadow-lg
             ring-1 ring-white/10 group-hover:scale-105 transition-transform duration-300
           `}>
-                        <div className="absolute inset-0 bg-white/20 blur-md opacity-50" />
-                        <span className="relative z-10 font-bold drop-shadow-md">
-                            {[
-                                PaymentMethodType.CRYPTO,
-                                PaymentMethodType.LINK,
-                            ].includes(type) &&
-                                !imageFailed && (
-                                    <Image
-                                        src={
-                                            {
-                                                [PaymentMethodType.CRYPTO]: `https://assets.coincap.io/assets/icons/${meta.coin?.toLowerCase()}@2x.png`,
-                                                [PaymentMethodType.LINK]: `https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${decryptedValue}/&size=64`,
-                                                [PaymentMethodType.IBAN]: '',
-                                                [PaymentMethodType.APP]: '',
-                                            }[type as PaymentMethodType]
-                                        }
-                                        width={64}
-                                        height={64}
-                                        alt="icon"
-                                        className="h-8 w-8 rounded-md"
-                                        onLoadingComplete={(result) => {
-                                            if (result.naturalWidth === 0) {
-                                                setImageFailed(true);
-                                            } else {
-                                                setImageFailed(false);
+                            <div className="absolute inset-0 bg-white/20 blur-md opacity-50" />
+                            <span className="relative z-10 font-bold drop-shadow-md">
+                                {[
+                                    PaymentMethodType.CRYPTO,
+                                    PaymentMethodType.LINK,
+                                ].includes(type) &&
+                                    !imageFailed && (
+                                        <Image
+                                            src={
+                                                {
+                                                    [PaymentMethodType.CRYPTO]: `https://assets.coincap.io/assets/icons/${meta.coin?.toLowerCase()}@2x.png`,
+                                                    [PaymentMethodType.LINK]: `https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${decryptedValue}/&size=64`,
+                                                    [PaymentMethodType.IBAN]:
+                                                        '',
+                                                    [PaymentMethodType.APP]: '',
+                                                }[type as PaymentMethodType]
                                             }
-                                        }}
-                                        onError={() => {
-                                            setImageFailed(true);
-                                        }}
-                                    />
-                                )}
-                            {(imageFailed ||
-                                [
-                                    PaymentMethodType.IBAN,
-                                    PaymentMethodType.APP,
-                                ].includes(type)) &&
-                                visuals.icon}
-                        </span>
-                    </div>
-
-                    <div className="flex flex-col min-w-0">
-                        <span className="truncate text-base font-bold text-white group-hover:text-white transition-colors">
-                            <span>{title || visuals.providerText}</span>
-                        </span>
-                        {type === PaymentMethodType.IBAN &&
-                            meta.accountHolderName && (
-                                <span className="flex items-center gap-1 truncate text-xs text-zinc-400">
-                                    <User size={10} />
-                                    {meta.accountHolderName}
-                                </span>
-                            )}
-                        {type === PaymentMethodType.CRYPTO && meta.network && (
-                            <span className="flex items-center gap-1 truncate text-zinc-400 text-xs">
-                                <Globe size={10} />
-                                Network: {meta.network}
-                            </span>
-                        )}
-
-                        <div className="mt-1.5 flex w-fit items-center gap-1.5 rounded-md bg-black/40 px-2 py-1 border border-white/5">
-                            <span
-                                className={cn(
-                                    'truncate font-mono text-[10px] sm:text-xs text-zinc-300 group-hover:text-white transition-colors tracking-tight',
-                                    { italic: !value },
-                                    { 'line-through': !isActive },
-                                )}>
-                                {value
-                                    ? maskValue(value, type)
-                                    : 'Not Provided'}
+                                            width={64}
+                                            height={64}
+                                            alt="icon"
+                                            className="h-8 w-8 rounded-md"
+                                            onLoadingComplete={(result) => {
+                                                if (result.naturalWidth === 0) {
+                                                    setImageFailed(true);
+                                                } else {
+                                                    setImageFailed(false);
+                                                }
+                                            }}
+                                            onError={() => {
+                                                setImageFailed(true);
+                                            }}
+                                        />
+                                    )}
+                                {(imageFailed ||
+                                    [
+                                        PaymentMethodType.IBAN,
+                                        PaymentMethodType.APP,
+                                    ].includes(type)) &&
+                                    visuals.icon}
                             </span>
                         </div>
-                    </div>
-                </div>
 
-                <div className="flex flex-col items-end gap-1">
-                    <div
-                        className={`
+                        <div className="flex flex-col min-w-0">
+                            <span className="truncate text-base font-bold text-white group-hover:text-white transition-colors">
+                                <span>{title || visuals.providerText}</span>
+                            </span>
+                            {type === PaymentMethodType.IBAN &&
+                                meta.accountHolderName && (
+                                    <span className="flex items-center gap-1 truncate text-xs text-zinc-400">
+                                        <User size={10} />
+                                        {meta.accountHolderName}
+                                    </span>
+                                )}
+                            {type === PaymentMethodType.CRYPTO &&
+                                meta.network && (
+                                    <span className="flex items-center gap-1 truncate text-zinc-400 text-xs">
+                                        <Globe size={10} />
+                                        Network: {meta.network}
+                                    </span>
+                                )}
+
+                            <div className="mt-1.5 flex w-fit items-center gap-1.5 rounded-md bg-black/40 px-2 py-1 border border-white/5">
+                                <span
+                                    className={cn(
+                                        'truncate font-mono text-[10px] sm:text-xs text-zinc-300 group-hover:text-white transition-colors tracking-tight',
+                                        { italic: !value },
+                                        { 'line-through': !isActive },
+                                    )}>
+                                    {value
+                                        ? maskValue(value, type)
+                                        : 'Not Provided'}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col items-end gap-1">
+                        <div
+                            className={`
                 flex h-10 w-10 shrink-0 items-center justify-center rounded-full 
                 transition-all duration-300 shadow-sm border border-transparent
                 ${
@@ -316,91 +335,102 @@ export default function PaymentCard({
                         : 'bg-zinc-800 text-zinc-400 group-hover:bg-white group-hover:text-black group-hover:border-zinc-300'
                 }
              `}>
-                        {type === PaymentMethodType.LINK ? (
-                            <LinkIcon size={16} />
-                        ) : copied ? (
-                            <Check size={16} />
-                        ) : (
-                            <Copy size={16} />
-                        )}
+                            {type === PaymentMethodType.LINK ? (
+                                <LinkIcon size={16} />
+                            ) : copied ? (
+                                <Check size={16} />
+                            ) : (
+                                <Copy size={16} />
+                            )}
+                        </div>
                     </div>
                 </div>
+
+                {(copyCount !== undefined ||
+                    !!meta.currency ||
+                    isDashboard) && (
+                    <div className="mt-3 pt-3 border-t border-white/5 flex items-center justify-between gap-2 text-xs text-zinc-500">
+                        <div className="flex items-center gap-2 overflow-hidden">
+                            {copyCount !== undefined && (
+                                <span className="flex items-center gap-1 shrink-0">
+                                    {type === PaymentMethodType.LINK ? (
+                                        <>
+                                            <Link size={10} /> {copyCount} times
+                                            opened
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Copy size={10} /> {copyCount} times
+                                            copied
+                                        </>
+                                    )}
+                                </span>
+                            )}
+
+                            {copyCount !== undefined && meta.currency && (
+                                <span>/</span>
+                            )}
+
+                            {meta.currency && (
+                                <>
+                                    <span className="flex items-center gap-1 shrink-0">
+                                        <Globe size={10} /> Currency:{' '}
+                                        <b>
+                                            {currencies(meta.currency)
+                                                ? `${meta.currency} (${currencies(
+                                                      meta.currency,
+                                                  )})`
+                                                : meta.currency}
+                                        </b>
+                                    </span>
+                                </>
+                            )}
+                        </div>
+
+                        {isDashboard && (
+                            <div
+                                className="flex items-center gap-1 relative"
+                                onClick={(e) => e.stopPropagation()}>
+                                <button
+                                    onClick={() =>
+                                        togglePaymentMethodStatus(
+                                            paymentData._id,
+                                            paymentData.isActive,
+                                        )
+                                    }
+                                    className={`p-2 rounded-full ${
+                                        isActive
+                                            ? 'text-green-500 hover:bg-green-500/10'
+                                            : 'text-red-500 hover:bg-red-500/10'
+                                    }`}
+                                    title="Active / Deactivate">
+                                    <Power size={16} />
+                                </button>
+                                <button
+                                    onClick={() => onEdit?.()}
+                                    className="p-2 text-zinc-400 hover:text-white hover:bg-zinc-700 rounded-full">
+                                    <Edit2 size={16} />
+                                </button>
+                                <button
+                                    onClick={() =>
+                                        deletePaymentMethod(paymentData._id)
+                                    }
+                                    className="p-2 text-zinc-400 hover:text-red-500 hover:bg-red-500/10 rounded-full">
+                                    <Trash2 size={16} />
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
 
-            {(copyCount !== undefined || !!meta.currency || isDashboard) && (
-                <div className="mt-3 pt-3 border-t border-white/5 flex items-center justify-between gap-2 text-xs text-zinc-500">
-                    <div className="flex items-center gap-2 overflow-hidden">
-                        {copyCount !== undefined && (
-                            <span className="flex items-center gap-1 shrink-0">
-                                {type === PaymentMethodType.LINK ? (
-                                    <>
-                                        <Link size={10} /> {copyCount} times
-                                        opened
-                                    </>
-                                ) : (
-                                    <>
-                                        <Copy size={10} /> {copyCount} times
-                                        copied
-                                    </>
-                                )}
-                            </span>
-                        )}
-
-                        {copyCount !== undefined && meta.currency && (
-                            <span>/</span>
-                        )}
-
-                        {meta.currency && (
-                            <>
-                                <span className="flex items-center gap-1 shrink-0">
-                                    <Globe size={10} /> Currency:{' '}
-                                    <b>
-                                        {currencies(meta.currency)
-                                            ? `${meta.currency} (${currencies(
-                                                  meta.currency,
-                                              )})`
-                                            : meta.currency}
-                                    </b>
-                                </span>
-                            </>
-                        )}
-                    </div>
-
-                    {isDashboard && (
-                        <div
-                            className="flex items-center gap-1 relative"
-                            onClick={(e) => e.stopPropagation()}>
-                            <button
-                                onClick={() =>
-                                    togglePaymentMethodStatus(
-                                        paymentData._id,
-                                        paymentData.isActive,
-                                    )
-                                }
-                                className={`p-2 rounded-full ${
-                                    isActive
-                                        ? 'text-green-500 hover:bg-green-500/10'
-                                        : 'text-red-500 hover:bg-red-500/10'
-                                }`}
-                                title="Active / Deactivate">
-                                <Power size={16} />
-                            </button>
-                            <button
-                                onClick={() => onEdit?.()}
-                                className="p-2 text-zinc-400 hover:text-white hover:bg-zinc-700 rounded-full">
-                                <Edit2 size={16} />
-                            </button>
-                            <button
-                                onClick={() =>
-                                    deletePaymentMethod(paymentData._id)
-                                }
-                                className="p-2 text-zinc-400 hover:text-red-500 hover:bg-red-500/10 rounded-full">
-                                <Trash2 size={16} />
-                            </button>
-                        </div>
-                    )}
-                </div>
-            )}
-        </div>
+            <CopySuccessModal
+                isOpen={copySuccessModal.isOpen}
+                onClose={() =>
+                    setCopySuccessModal({ isOpen: false, data: null })
+                }
+                data={copySuccessModal.data}
+            />
+        </>
     );
 }
