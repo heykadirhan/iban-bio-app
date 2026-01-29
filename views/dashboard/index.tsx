@@ -56,7 +56,6 @@ export function DashboardPage() {
 
     const visibility: ProfileVisibility | undefined =
         session.data?.user?.visibility;
-
     const statusConfig = visibility
         ? {
               [ProfileVisibility.PUBLIC]: {
