@@ -6,64 +6,64 @@ on:
 
 jobs:
     deploy:
-        runs-on: ubuntu-latest
+        runs-on: self-hosted
+
         steps:
             - name: Checkout code
-              uses: actions/checkout@v2
+              uses: actions/checkout@v4
 
             - name: Deploy to Server
-              uses: appleboy/ssh-action@master
-              with:
-                  host: ${{ secrets.HOST }}
-                  username: ${{ secrets.USERNAME }}
-                  key: ${{ secrets.SSH_KEY }}
-                  port: 22
-                  command_timeout: 30m
-                  script: |
-                      export NVM_DIR="$HOME/.nvm"
-                      [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+              shell: bash
+              run: |
+                  # NVM ve Node ortamını yükle
+                  export NVM_DIR="$HOME/.nvm"
+                  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
-                      set +e
+                  set +e
 
-                      echo "🚀 Deployment basliyor (Disk Tasarruflu Mod)..."
-                      cd /home/ubuntu/iban-bio-app
+                  echo "🚀 Deployment basliyor (Local/Self-hosted)..."
 
-                      echo "⬇️ Git pull..."
-                      git pull origin main
+                  # Projenin çalıştığı ana klasöre git
+                  cd /home/ubuntu/iban-bio-app
 
-                      echo "📦 Paketler yukleniyor..."
-                      yarn install
+                  echo "⬇️ Git pull..."
+                  git pull origin main
 
-                      echo "🛡️ Mevcut build yedekleniyor..."
-                      if [ -d ".next" ]; then
-                          rm -rf .next_backup
-                          mv .next .next_backup
-                      fi
+                  echo "📦 Paketler yukleniyor..."
+                  # Bağımlılıkları yükle (Yarn yüklü değilse 'npm install' da diyebilirsin)
+                  yarn install
 
-                      echo "🏗️ Build aliniyor..."
-                      yarn build
+                  echo "🛡️ Mevcut build yedekleniyor..."
+                  if [ -d ".next" ]; then
+                      rm -rf .next_backup
+                      mv .next .next_backup
+                  fi
 
-                      if [ $? -eq 0 ]; then
-                          echo "✅ Build BASARILI!"
-                          
-                          echo "🗑️ Yedek temizleniyor..."
-                          rm -rf .next_backup
-                          
-                          echo "🔄 PM2 Reload..."
-                          pm2 reload 1
-                          
-                          echo "🎉 Islem tamamlandi."
+                  echo "🏗️ Build aliniyor..."
+                  yarn build
+
+                  if [ $? -eq 0 ]; then
+                      echo "✅ Build BASARILI!"
+                      
+                      echo "🗑️ Yedek temizleniyor..."
+                      rm -rf .next_backup
+                      
+                      echo "🔄 PM2 Reload..."
+                      # PM2'nin globalde tanımlı olduğundan emin olmalısın
+                      pm2 reload 1
+                      
+                      echo "🎉 Islem tamamlandi."
+                  else
+                      echo "❌ Build HATALI! Geri aliniyor..."
+                      
+                      rm -rf .next
+                      
+                      if [ -d ".next_backup" ]; then
+                          mv .next_backup .next
+                          echo "♻️ Eski versiyon geri yüklendi. Site çalışmaya devam ediyor."
                       else
-                          echo "❌ Build HATALI! Geri aliniyor..."
-                          
-                          rm -rf .next
-                          
-                          if [ -d ".next_backup" ]; then
-                              mv .next_backup .next
-                              echo "♻️ Eski versiyon geri yüklendi. Site çalışmaya devam ediyor."
-                          else
-                              echo "⚠️ Yedek bulunamadı! Site çalışmayabilir."
-                          fi
-                          
-                          exit 1
+                          echo "⚠️ Yedek bulunamadı! Site çalışmayabilir."
                       fi
+                      
+                      exit 1
+                  fi
