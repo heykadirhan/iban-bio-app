@@ -45,7 +45,7 @@ jobs:
                   TWILIO_PHONE_NUMBER: ${{ secrets.TWILIO_PHONE_NUMBER }}
 
             - name: Compress Build Files
-              run: tar -czf release.tar.gz .next public package.json next.config.js yarn.lock
+              run: tar -czf release.tar.gz .next public package.json next.config.ts yarn.lock
 
             - name: Upload Artifact
               uses: actions/upload-artifact@v4
