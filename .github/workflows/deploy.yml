@@ -1,69 +1,56 @@
-name: Deploy iban.bio App
+name: Build Locally & Deploy to EC2 (No SSH)
 
 on:
     push:
         branches: [main]
 
 jobs:
-    deploy:
-        runs-on: self-hosted
-
+    build:
+        runs-on: [self-hosted, local-build]
         steps:
             - name: Checkout code
               uses: actions/checkout@v4
 
-            - name: Deploy to Server
+            - name: Install dependencies
+              run: yarn install
+
+            - name: Build project
+              run: yarn build
+
+            - name: Create Deployment Package
+              run: tar -czf build-artifact.tar.gz .next public package.json next.config.js yarn.lock
+
+            - name: Upload Artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: next-build
+                  path: build-artifact.tar.gz
+                  retention-days: 1
+
+    deploy:
+        needs: build
+        runs-on: [self-hosted, ec2-deploy]
+        steps:
+            - name: Download Artifact
+              uses: actions/download-artifact@v4
+              with:
+                  name: next-build
+
+            - name: Extract & Deploy
               shell: bash
               run: |
-                  # NVM ve Node ortamını yükle
-                  export NVM_DIR="$HOME/.nvm"
-                  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-
-                  set +e
-
-                  echo "🚀 Deployment basliyor (Local/Self-hosted)..."
-
-                  # Projenin çalıştığı ana klasöre git
+                  echo "🚀 Deploy basliyor..."
                   cd /home/ubuntu/iban-bio-app
 
-                  echo "⬇️ Git pull..."
-                  git pull origin main
+                  # Mevcut paketi aç (eski dosyaların üzerine yazar)
+                  tar -xzf $GITHUB_WORKSPACE/build-artifact.tar.gz -C .
 
-                  echo "📦 Paketler yukleniyor..."
-                  # Bağımlılıkları yükle (Yarn yüklü değilse 'npm install' da diyebilirsin)
-                  yarn install
+                  # Sadece production paketlerini yükle (Eğer yeni paket gelmişse)
+                  yarn install --production
 
-                  echo "🛡️ Mevcut build yedekleniyor..."
-                  if [ -d ".next" ]; then
-                      rm -rf .next_backup
-                      mv .next .next_backup
-                  fi
+                  echo "🔄 PM2 Reload..."
+                  pm2 reload 1 || pm2 start yarn --name "iban-bio" -- start
 
-                  echo "🏗️ Build aliniyor..."
-                  yarn build
-
-                  if [ $? -eq 0 ]; then
-                      echo "✅ Build BASARILI!"
-                      
-                      echo "🗑️ Yedek temizleniyor..."
-                      rm -rf .next_backup
-                      
-                      echo "🔄 PM2 Reload..."
-                      # PM2'nin globalde tanımlı olduğundan emin olmalısın
-                      pm2 reload 1
-                      
-                      echo "🎉 Islem tamamlandi."
-                  else
-                      echo "❌ Build HATALI! Geri aliniyor..."
-                      
-                      rm -rf .next
-                      
-                      if [ -d ".next_backup" ]; then
-                          mv .next_backup .next
-                          echo "♻️ Eski versiyon geri yüklendi. Site çalışmaya devam ediyor."
-                      else
-                          echo "⚠️ Yedek bulunamadı! Site çalışmayabilir."
-                      fi
-                      
-                      exit 1
-                  fi
+                  # Temizlik
+                  rm $GITHUB_WORKSPACE/build-artifact.tar.gz
+                  echo "🎉 Islem tamamlandi."
