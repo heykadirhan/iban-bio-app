@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import type { MetadataRoute } from 'next';
 import { Routes } from '@/core/constants';
 import { UserModel } from '@/core/models';
