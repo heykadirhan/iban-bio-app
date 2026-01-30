@@ -5,7 +5,6 @@ on:
         branches: [main]
 
 jobs:
-    # 1. BÖLÜM: GitHub'ın kendi sunucusunda build alıyoruz
     build:
         runs-on: ubuntu-latest
         steps:
@@ -24,10 +23,28 @@ jobs:
             - name: Build project
               run: yarn build
               env:
-                  NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+                  NEXT_PUBLIC_APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL }}
+                  NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
+                  NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+                  MONGODB_URI: ${{ secrets.MONGODB_URI }}
+                  GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+                  GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+                  GA_ID: ${{ secrets.GA_ID }}
+                  HOTJAR_SITE_ID: ${{ secrets.HOTJAR_SITE_ID }}
+                  ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
+                  IBAN_API_KEY: ${{ secrets.IBAN_API_KEY }}
+                  NEXT_PUBLIC_CRYPTO_API_URL: ${{ secrets.NEXT_PUBLIC_CRYPTO_API_URL }}
+                  AWS_REGION: ${{ secrets.AWS_REGION }}
+                  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
+                  AWS_STORAGE_URL: ${{ secrets.AWS_STORAGE_URL }}
+                  TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
+                  TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
+                  TWILIO_SERVICE_SID: ${{ secrets.TWILIO_SERVICE_SID }}
+                  TWILIO_PHONE_NUMBER: ${{ secrets.TWILIO_PHONE_NUMBER }}
 
             - name: Compress Build Files
-              # Sadece production için gerekenleri paketliyoruz
               run: tar -czf release.tar.gz .next public package.json next.config.js yarn.lock
 
             - name: Upload Artifact
@@ -35,9 +52,8 @@ jobs:
               with:
                   name: next-app-bundle
                   path: release.tar.gz
-                  retention-days: 1 # Sunucuda yer kaplamasın, 1 gün yeterli
+                  retention-days: 1
 
-    # 2. BÖLÜM: Senin EC2 sunucun paketi indirip çalıştırıyor
     deploy:
         needs: build
         runs-on: self-hosted
