@@ -14,6 +14,7 @@ import {
     Smartphone,
     EyeOff,
     Edit2,
+    Rocket,
 } from 'lucide-react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
@@ -88,6 +89,16 @@ export function UserPage({
                                 fill="currentColor"
                             />
                         </div> */}
+                    </div>
+
+                    <div className="flex justify-center mb-3 animate-in fade-in slide-in-from-bottom-2 duration-700">
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-500 text-[10px] font-bold uppercase tracking-wider shadow-[0_0_15px_-5px_rgba(245,158,11,0.4)] hover:bg-amber-500/20 transition-colors cursor-default">
+                            <Rocket
+                                size={12}
+                                className="fill-amber-500/20"
+                            />
+                            Early Adopter
+                        </div>
                     </div>
 
                     <div className="mt-3 flex justify-center items-center gap-3">
