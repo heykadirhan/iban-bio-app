@@ -94,7 +94,10 @@ export function GetStartedPage() {
                 }),
             });
 
-            formStepTwo.setValue('otp', res?.data?.otp || '');
+            formStepTwo.setValue(
+                'otp',
+                process.env.NODE_ENV === 'development' ? '999999' : '',
+            );
 
             setRemainingSeconds(60);
             setStep(2);

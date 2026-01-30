@@ -27,7 +27,10 @@ export async function POST(req: NextRequest) {
 
             if (!result.success) {
                 return NextResponse.json(
-                    { success: false, message: result.message },
+                    {
+                        success: false,
+                        message: 'SMS sending failed, please try again later.',
+                    },
                     { status: HttpStatus.INTERNAL_SERVER_ERROR },
                 );
             }
