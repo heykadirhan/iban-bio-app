@@ -59,6 +59,7 @@ const getVisuals = (type: PaymentMethodType, meta: any) => {
             icon = <Wallet size={20} />;
             providerText =
                 COINS.find((coin) => coin.symbol === meta.coin)?.name ||
+                meta?.coin ||
                 'Crypto Wallet';
             defaultColor = 'from-yellow-600 to-amber-700';
             break;
@@ -114,7 +115,7 @@ export default function PaymentCard({
 
     useEffect(() => {
         setImageFailed(false);
-    }, [decryptedValue]);
+    }, [decryptedValue, meta.coin]);
 
     const handleClick = async () => {
         if (isPreview) return;

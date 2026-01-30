@@ -35,9 +35,8 @@ export function HomeLayout({ children }: { children: React.ReactNode }) {
                                 Terms of Service
                             </Link>
 
-                            {/* Telegram Linki */}
                             <Link
-                                href="https://t.me/ibanbio" // Kanal linkini buraya girebilirsin
+                                href="https://t.me/ibanbio"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="flex items-center gap-2 text-indigo-400 hover:text-white transition-colors font-medium">

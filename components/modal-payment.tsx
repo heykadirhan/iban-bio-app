@@ -52,6 +52,7 @@ export default function ModalPayment({
     onClose: () => void;
 }) {
     const [isLoading, setIsLoading] = useState(false);
+    const [isManualCrypto, setIsManualCrypto] = useState(false);
 
     const formSchema = paymentMethodReqDto;
     type IFormSchema = z.infer<typeof formSchema>;
@@ -93,6 +94,7 @@ export default function ModalPayment({
 
     useEffect(() => {
         if (isOpen) {
+            setIsManualCrypto(false);
             form.reset();
             form.resetField('meta');
 
@@ -107,6 +109,16 @@ export default function ModalPayment({
 
             for (const key in initialData.meta) {
                 form.setValue(`meta.${key}` as any, initialData.meta[key]);
+            }
+
+            if (
+                initialData.type === PaymentMethodType.CRYPTO &&
+                initialData.meta?.coin &&
+                !coinOptionItems.some(
+                    (item) => item.value === initialData.meta.coin,
+                )
+            ) {
+                setIsManualCrypto(true);
             }
         }
     }, [isOpen, form, initialData]);
@@ -324,32 +336,62 @@ export default function ModalPayment({
                                 {type === PaymentMethodType.CRYPTO && (
                                     <>
                                         <div className="col-12 mb-4">
-                                            <Label>Coin</Label>
+                                            <div className="flex items-center justify-between mb-2">
+                                                <Label className="mb-0">
+                                                    Coin
+                                                </Label>
+                                                <button
+                                                    type="button"
+                                                    onClick={() =>
+                                                        setIsManualCrypto(
+                                                            !isManualCrypto,
+                                                        )
+                                                    }
+                                                    className="text-xs text-zinc-400 hover:text-white transition-colors hover:underline">
+                                                    {isManualCrypto
+                                                        ? 'Select from list'
+                                                        : "Can't find your currency?"}
+                                                </button>
+                                            </div>
                                             <FormField
                                                 control={form.control}
                                                 name="meta.coin"
                                                 render={({ field }) => (
                                                     <FormItem>
                                                         <FormControl>
-                                                            <Combobox
-                                                                {...field}
-                                                                onChange={(
-                                                                    e,
-                                                                ) => {
-                                                                    field.onChange(
+                                                            {isManualCrypto ? (
+                                                                <Input
+                                                                    {...field}
+                                                                    placeholder="e.g. BTC"
+                                                                    onChange={(
                                                                         e,
-                                                                    );
-                                                                    form.setValue(
-                                                                        'meta.network',
-                                                                        '',
-                                                                    );
-                                                                }}
-                                                                items={
-                                                                    coinOptionItems
-                                                                }
-                                                                inputPlaceholder="Select coin"
-                                                                searchPlaceholder="Search coin..."
-                                                            />
+                                                                    ) =>
+                                                                        field.onChange(
+                                                                            e.target.value.toUpperCase(),
+                                                                        )
+                                                                    }
+                                                                />
+                                                            ) : (
+                                                                <Combobox
+                                                                    {...field}
+                                                                    onChange={(
+                                                                        e,
+                                                                    ) => {
+                                                                        field.onChange(
+                                                                            e,
+                                                                        );
+                                                                        form.setValue(
+                                                                            'meta.network',
+                                                                            '',
+                                                                        );
+                                                                    }}
+                                                                    items={
+                                                                        coinOptionItems
+                                                                    }
+                                                                    inputPlaceholder="Select coin"
+                                                                    searchPlaceholder="Search coin..."
+                                                                />
+                                                            )}
                                                         </FormControl>
                                                         <FormMessage />
                                                     </FormItem>
@@ -365,23 +407,39 @@ export default function ModalPayment({
                                                 render={({ field }) => (
                                                     <FormItem>
                                                         <FormControl>
-                                                            <Combobox
-                                                                {...field}
-                                                                disabled={!coin}
-                                                                items={
-                                                                    coinOptionItems?.find(
-                                                                        (
-                                                                            item,
-                                                                        ) =>
-                                                                            item.value ===
-                                                                            coin,
-                                                                    )
-                                                                        ?.networks ||
-                                                                    []
-                                                                }
-                                                                inputPlaceholder="Select network"
-                                                                emptyText="Choose a coin first"
-                                                            />
+                                                            {isManualCrypto ? (
+                                                                <Input
+                                                                    {...field}
+                                                                    placeholder="e.g. ERC20"
+                                                                    onChange={(
+                                                                        e,
+                                                                    ) =>
+                                                                        field.onChange(
+                                                                            e.target.value.toUpperCase(),
+                                                                        )
+                                                                    }
+                                                                />
+                                                            ) : (
+                                                                <Combobox
+                                                                    {...field}
+                                                                    disabled={
+                                                                        !coin
+                                                                    }
+                                                                    items={
+                                                                        coinOptionItems?.find(
+                                                                            (
+                                                                                item,
+                                                                            ) =>
+                                                                                item.value ===
+                                                                                coin,
+                                                                        )
+                                                                            ?.networks ||
+                                                                        []
+                                                                    }
+                                                                    inputPlaceholder="Select network"
+                                                                    emptyText="Choose a coin first"
+                                                                />
+                                                            )}
                                                         </FormControl>
                                                         <FormMessage />
                                                     </FormItem>
