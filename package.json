@@ -30,7 +30,7 @@
     "cmdk": "^1.1.1",
     "country-data-list": "^1.5.5",
     "currency-symbol-map": "^5.1.0",
-    "framer-motion": "^12.23.24",
+    "framer-motion": "^12.25.0",
     "http-status": "^2.1.0",
     "input-otp": "^1.4.2",
     "ioredis": "^5.8.2",
