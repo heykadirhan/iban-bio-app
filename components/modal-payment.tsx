@@ -63,6 +63,7 @@ export default function ModalPayment({
             title: '',
             meta: {
                 accountHolderName: '',
+                bankName: '',
                 ibanNumber: '',
                 address: '',
                 coin: '',
@@ -232,26 +233,31 @@ export default function ModalPayment({
                                     </div>
                                 </div>
 
-                                {/* <div className="col-12 mb-4">
-                                    <Label>Title (Optional)</Label>
+                                {/* START: IBAN */}
+
+                                <div
+                                    className={cn('col-12 mb-4', {
+                                        hidden:
+                                            !initialData ||
+                                            type !== PaymentMethodType.IBAN,
+                                    })}>
+                                    <Label>Bank Name</Label>
                                     <FormField
                                         control={form.control}
-                                        name="title"
+                                        name="meta.bankName"
                                         render={({ field }) => (
                                             <FormItem>
                                                 <FormControl>
                                                     <Input
                                                         {...field}
-                                                        placeholder="e.g. Salary Account"
+                                                        placeholder="e.g. Bank of America"
                                                     />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
                                         )}
                                     />
-                                </div> */}
-
-                                {/* START: IBAN */}
+                                </div>
 
                                 <div
                                     className={cn('col-12 mb-4', {

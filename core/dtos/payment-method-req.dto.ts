@@ -19,6 +19,7 @@ export const paymentMethodReqDto = z.discriminatedUnion('type', [
             accountHolderName: z
                 .string()
                 .nonempty({ message: 'Please enter the account holder name' }),
+            bankName: z.string().optional(),
             ibanNumber: z
                 .string()
                 .nonempty({ message: 'Please enter the IBAN' }),

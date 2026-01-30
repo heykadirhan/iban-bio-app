@@ -123,8 +123,9 @@ export async function PATCH(req: NextRequest) {
 
         let encryptedData;
         let currency = methodBeforeUpdated.meta.currency;
-        let bankName = methodBeforeUpdated.meta.bankName;
         let bankBic = methodBeforeUpdated.meta.bankBic;
+        let bankName =
+            body?.meta?.bankName || methodBeforeUpdated.meta.bankName;
 
         if (
             value &&
