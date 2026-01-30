@@ -1,56 +1,67 @@
-name: Build Locally & Deploy to EC2 (No SSH)
+name: GitHub Build & Self-Hosted Deploy
 
 on:
     push:
         branches: [main]
 
 jobs:
+    # 1. BÖLÜM: GitHub'ın kendi sunucusunda build alıyoruz
     build:
-        runs-on: [self-hosted, local-build]
+        runs-on: ubuntu-latest
         steps:
             - name: Checkout code
               uses: actions/checkout@v4
 
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '20'
+                  cache: 'yarn'
+
             - name: Install dependencies
-              run: yarn install
+              run: yarn install --frozen-lockfile
 
             - name: Build project
               run: yarn build
+              env:
+                  NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
 
-            - name: Create Deployment Package
-              run: tar -czf build-artifact.tar.gz .next public package.json next.config.js yarn.lock
+            - name: Compress Build Files
+              # Sadece production için gerekenleri paketliyoruz
+              run: tar -czf release.tar.gz .next public package.json next.config.js yarn.lock
 
             - name: Upload Artifact
               uses: actions/upload-artifact@v4
               with:
-                  name: next-build
-                  path: build-artifact.tar.gz
-                  retention-days: 1
+                  name: next-app-bundle
+                  path: release.tar.gz
+                  retention-days: 1 # Sunucuda yer kaplamasın, 1 gün yeterli
 
+    # 2. BÖLÜM: Senin EC2 sunucun paketi indirip çalıştırıyor
     deploy:
         needs: build
-        runs-on: [self-hosted, ec2-deploy]
+        runs-on: self-hosted
         steps:
             - name: Download Artifact
               uses: actions/download-artifact@v4
               with:
-                  name: next-build
+                  name: next-app-bundle
 
-            - name: Extract & Deploy
+            - name: Extract and Reload PM2
               shell: bash
               run: |
-                  echo "🚀 Deploy basliyor..."
+                  echo "🚀 Deployment basliyor..."
                   cd /home/ubuntu/iban-bio-app
 
-                  # Mevcut paketi aç (eski dosyaların üzerine yazar)
-                  tar -xzf $GITHUB_WORKSPACE/build-artifact.tar.gz -C .
+                  # Paketi açıyoruz
+                  tar -xzf $GITHUB_WORKSPACE/release.tar.gz -C .
 
-                  # Sadece production paketlerini yükle (Eğer yeni paket gelmişse)
-                  yarn install --production
+                  # Sadece eksik paketleri (production) yükle
+                  yarn install --production --ignore-scripts
 
-                  echo "🔄 PM2 Reload..."
+                  echo "🔄 PM2 Reloading..."
                   pm2 reload 1 || pm2 start yarn --name "iban-bio" -- start
 
                   # Temizlik
-                  rm $GITHUB_WORKSPACE/build-artifact.tar.gz
-                  echo "🎉 Islem tamamlandi."
+                  rm $GITHUB_WORKSPACE/release.tar.gz
+                  echo "✅ Basariyla deploy edildi!"
