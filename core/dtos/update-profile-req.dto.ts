@@ -4,6 +4,10 @@ import { ProfileVisibility } from '@core/enums';
 
 export const updateProfileReqDto = z.object({
     avatarUrl: z.string().optional(),
+    title: z
+        .string()
+        .max(30, { error: 'Title must be less than 30 characters' })
+        .optional(),
     bio: z
         .string()
         .max(160, { error: 'Biography must be less than 160 characters' })

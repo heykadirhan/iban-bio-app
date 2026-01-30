@@ -9,6 +9,7 @@ interface CustomUser {
     email?: string;
     username?: string;
     avatarUrl?: string;
+    title?: string;
     bio: string;
     visibility: ProfileVisibility;
 }

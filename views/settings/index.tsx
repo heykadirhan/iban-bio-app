@@ -65,6 +65,10 @@ export function SettingsPage() {
         displayName: z
             .string()
             .nonempty({ message: 'Please enter your full name' }),
+        title: z
+            .string()
+            .max(30, { error: 'Title must be less than 30 characters' })
+            .optional(),
         bio: z
             .string()
             .max(160, { error: 'Biography must be less than 160 characters' })
@@ -89,6 +93,7 @@ export function SettingsPage() {
             avatarUrl: '',
             country: '',
             phone: '',
+            title: '',
             bio: '',
             displayName: '',
             username: '',
@@ -102,6 +107,7 @@ export function SettingsPage() {
         if (session.data?.user) {
             form.reset({
                 avatarUrl: session.data.user.avatarUrl || '',
+                title: session.data.user.title || '',
                 bio: session.data.user.bio || '',
                 username: session.data.user.username || '',
                 visibility: session.data.user.visibility,
@@ -183,6 +189,7 @@ export function SettingsPage() {
                 user: {
                     ...session.data?.user,
                     avatarUrl: values.avatarUrl,
+                    title: values.title,
                     bio: values.bio,
                     username: values.username,
                     visibility: values.visibility,
@@ -237,6 +244,29 @@ export function SettingsPage() {
                                         )}
                                     />
                                 </div>
+                            </div>
+
+                            <div>
+                                <Label>Title</Label>
+                                <FormField
+                                    control={form.control}
+                                    name="title"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormControl>
+                                                <Input
+                                                    {...field}
+                                                    placeholder="e.g Software Engineer"
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+
+                                            <p className="text-xs text-zinc-500 text-right">
+                                                {field.value?.length || 0}/30
+                                            </p>
+                                        </FormItem>
+                                    )}
+                                />
                             </div>
 
                             <div>

@@ -38,6 +38,7 @@ export async function PATCH(req: NextRequest) {
                 username: body.username,
                 persona: body.persona,
                 visibility: body.visibility,
+                title: body.title,
                 bio: body.bio,
             },
         );
