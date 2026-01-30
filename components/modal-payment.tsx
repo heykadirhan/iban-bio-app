@@ -139,7 +139,7 @@ export default function ModalPayment({
         <Dialog
             open={isOpen}
             onOpenChange={onClose}>
-            <DialogContent className="min-w-[80vw] p-0 flex flex-col md:flex-row">
+            <DialogContent className="min-w-auto w-[90vw] sm:w-[80vw] !max-w-[1200px] p-0 flex flex-col md:flex-row">
                 <div className="p-6 md:w-3/5 flex flex-col">
                     <DialogHeader className="mb-6">
                         <div className="flex items-center gap-2 text-primary mb-2">
@@ -148,12 +148,12 @@ export default function ModalPayment({
                                 Create New
                             </span>
                         </div>
-                        <DialogTitle>
+                        <DialogTitle className="text-left">
                             {initialData
                                 ? 'Edit Payment Method'
                                 : 'Add Payment Method'}
                         </DialogTitle>
-                        <DialogDescription>
+                        <DialogDescription className="text-left">
                             {initialData
                                 ? 'Modify your existing payment method details.'
                                 : 'Add a new payment method to your profile by filling out the form below.'}
