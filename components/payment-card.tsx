@@ -2,7 +2,7 @@
 
 import COINS from '@/assets/data/coins.json';
 import currencies from 'currency-symbol-map';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Copy,
     Check,
@@ -226,30 +226,44 @@ export default function PaymentCard({
                 }}
                 className={cn(
                     `
-        group relative w-full overflow-hidden rounded-2xl border border-white/5 
-        bg-[#1a1a1a] p-4 transition-all duration-300 
-        hover:border-white/10 hover:shadow-xl hover:shadow-black/50 
+        group relative w-full overflow-hidden rounded-[20px] 
+        border border-white/5 
+        bg-[#09090b] p-4 transition-all duration-500
+        hover:border-white/10 hover:shadow-[0_8px_30px_-12px_rgba(0,0,0,0.8)] hover:-translate-y-1
         active:scale-[0.98] select-none cursor-pointer`,
-                    isDashboard && !isActive && 'opacity-75 grayscale-[0.5]',
+                    isDashboard && !isActive && 'opacity-60 grayscale',
                     isLoading && 'pointer-events-none opacity-50',
                     className,
                 )}>
-                {/* Background Effects */}
+                {/* Ambient Glow Effects */}
                 <div
-                    className={`absolute inset-0 bg-gradient-to-r ${cardColor} opacity-0 group-hover:opacity-10 transition-opacity duration-500`}
+                    className={cn(
+                        'absolute -top-20 -right-20 h-56 w-56 rounded-full blur-[80px] opacity-20 group-hover:opacity-30 transition-all duration-700 ease-in-out',
+                        'bg-gradient-to-br',
+                        cardColor,
+                    )}
                 />
-                <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-5 mix-blend-overlay pointer-events-none" />
+                <div
+                    className={cn(
+                        'absolute -bottom-20 -left-20 h-56 w-56 rounded-full blur-[80px] opacity-10 group-hover:opacity-20 transition-all duration-700 ease-in-out',
+                        'bg-gradient-to-tl',
+                        cardColor,
+                    )}
+                />
+
+                {/* Texture */}
+                <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.15] mix-blend-overlay pointer-events-none" />
 
                 <div className="relative z-10 flex items-center justify-between gap-4">
                     <div className="flex items-center gap-4 min-w-0">
-                        <div
-                            className={`
-            relative flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl 
-            bg-gradient-to-br ${cardColor} text-white shadow-lg
-            ring-1 ring-white/10 group-hover:scale-105 transition-transform duration-300
-          `}>
-                            <div className="absolute inset-0 bg-white/20 blur-md opacity-50" />
-                            <span className="relative z-10 font-bold drop-shadow-md">
+                        <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-[18px] overflow-hidden group-hover:scale-105 transition-transform duration-500 ring-1 ring-white/10 bg-white/[0.02]">
+                            <div
+                                className={cn(
+                                    'absolute inset-0 bg-gradient-to-br opacity-25 mix-blend-plus-lighter',
+                                    cardColor,
+                                )}
+                            />
+                            <span className="relative z-10 font-bold drop-shadow-sm text-white/90">
                                 {[
                                     PaymentMethodType.CRYPTO,
                                     PaymentMethodType.LINK,
@@ -268,7 +282,7 @@ export default function PaymentCard({
                                             width={64}
                                             height={64}
                                             alt="icon"
-                                            className="h-8 w-8 rounded-md"
+                                            className="h-7 w-7 rounded-md"
                                             onLoadingComplete={(result) => {
                                                 if (result.naturalWidth === 0) {
                                                     setImageFailed(true);
@@ -286,33 +300,42 @@ export default function PaymentCard({
                                         PaymentMethodType.IBAN,
                                         PaymentMethodType.APP,
                                     ].includes(type)) &&
-                                    visuals.icon}
+                                    React.cloneElement(
+                                        visuals.icon as React.ReactElement,
+                                        { size: 18 } as any,
+                                    )}
                             </span>
                         </div>
 
-                        <div className="flex flex-col min-w-0">
-                            <span className="truncate text-base font-bold text-white group-hover:text-white transition-colors">
-                                <span>{title || visuals.providerText}</span>
+                        <div className="flex flex-col min-w-0 gap-1">
+                            <span className="truncate text-base font-semibold text-white/90 group-hover:text-white transition-colors">
+                                {title || visuals.providerText}
                             </span>
                             {type === PaymentMethodType.IBAN &&
                                 meta.accountHolderName && (
-                                    <span className="flex items-center gap-1 truncate text-xs text-zinc-400">
-                                        <User size={10} />
+                                    <span className="flex items-center gap-1.5 truncate text-xs text-zinc-400 font-medium">
+                                        <User
+                                            size={12}
+                                            className="text-zinc-500"
+                                        />
                                         {meta.accountHolderName}
                                     </span>
                                 )}
                             {type === PaymentMethodType.CRYPTO &&
                                 meta.network && (
-                                    <span className="flex items-center gap-1 truncate text-zinc-400 text-xs">
-                                        <Globe size={10} />
+                                    <span className="flex items-center gap-1.5 truncate text-zinc-400 text-xs font-medium">
+                                        <Globe
+                                            size={12}
+                                            className="text-zinc-500"
+                                        />
                                         Network: {meta.network}
                                     </span>
                                 )}
 
-                            <div className="mt-1.5 flex w-fit items-center gap-1.5 rounded-md bg-black/40 px-2 py-1 border border-white/5">
+                            <div className="mt-1 flex w-fit items-center rounded-md bg-white/[0.03] px-2.5 py-1.5 border border-white/5 group-hover:bg-white/[0.05] transition-colors">
                                 <span
                                     className={cn(
-                                        'truncate font-mono text-[10px] sm:text-xs text-zinc-300 group-hover:text-white transition-colors tracking-tight',
+                                        'truncate font-mono text-xs sm:text-xs text-zinc-300 group-hover:text-zinc-100 transition-colors tracking-tight',
                                         { italic: !value },
                                         { 'line-through': !isActive },
                                     )}>
@@ -324,23 +347,23 @@ export default function PaymentCard({
                         </div>
                     </div>
 
-                    <div className="flex flex-col items-end gap-1">
+                    <div className="flex flex-col items-end gap-1 self-start">
                         <div
                             className={`
-                flex h-10 w-10 shrink-0 items-center justify-center rounded-full 
-                transition-all duration-300 shadow-sm border border-transparent
+                flex h-8 w-8 shrink-0 items-center justify-center rounded-lg 
+                transition-all duration-300 shadow-sm border
                 ${
                     copied
-                        ? 'bg-green-500 text-white scale-110 shadow-[0_0_15px_rgba(34,197,94,0.4)]'
-                        : 'bg-zinc-800 text-zinc-400 group-hover:bg-white group-hover:text-black group-hover:border-zinc-300'
+                        ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500'
+                        : 'bg-white/[0.03] border-white/5 text-zinc-400 group-hover:bg-white/[0.08] group-hover:text-white group-hover:border-white/10'
                 }
              `}>
                             {type === PaymentMethodType.LINK ? (
-                                <LinkIcon size={16} />
+                                <LinkIcon size={14} />
                             ) : copied ? (
-                                <Check size={16} />
+                                <Check size={14} />
                             ) : (
-                                <Copy size={16} />
+                                <Copy size={14} />
                             )}
                         </div>
                     </div>
@@ -349,18 +372,18 @@ export default function PaymentCard({
                 {(copyCount !== undefined ||
                     !!meta.currency ||
                     isDashboard) && (
-                    <div className="mt-3 pt-3 border-t border-white/5 flex items-center justify-between gap-2 text-xs text-zinc-500">
+                    <div className="mt-4 pt-3 border-t border-white/[0.06] flex items-center justify-between gap-3 text-xs font-medium text-zinc-500">
                         <div className="flex items-center gap-2 overflow-hidden">
                             {copyCount !== undefined && (
-                                <span className="flex items-center gap-1 shrink-0">
+                                <span className="flex items-center gap-1.5 shrink-0 px-2 py-1 rounded-md bg-white/[0.02]">
                                     {type === PaymentMethodType.LINK ? (
                                         <>
-                                            <Link size={10} /> {copyCount} times
+                                            <Link size={12} /> {copyCount} times
                                             opened
                                         </>
                                     ) : (
                                         <>
-                                            <Copy size={10} /> {copyCount} times
+                                            <Copy size={12} /> {copyCount} times
                                             copied
                                         </>
                                     )}
@@ -374,7 +397,7 @@ export default function PaymentCard({
                             {meta.currency && (
                                 <>
                                     <span className="flex items-center gap-1 shrink-0">
-                                        <Globe size={10} /> Currency:{' '}
+                                        <Globe size={12} /> Currency:{' '}
                                         <b>
                                             {currencies(meta.currency)
                                                 ? `${meta.currency} (${currencies(
