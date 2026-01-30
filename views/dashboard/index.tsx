@@ -251,15 +251,36 @@ export function DashboardPage() {
                                 </div>
                             ) : (
                                 visibility === ProfileVisibility.EXPIRABLE && (
-                                    <Button
-                                        onClick={() =>
-                                            setIsGenerateTokenModalOpen(true)
-                                        }
-                                        className="w-full h-12 rounded-xl"
-                                        variant="secondary">
-                                        <Timer size={20} />
-                                        Generate Link
-                                    </Button>
+                                    <>
+                                        <Link
+                                            href={createRoute({
+                                                path: Routes.USER,
+                                                pathParams: {
+                                                    username:
+                                                        session.data?.user
+                                                            .username || '',
+                                                },
+                                            })}
+                                            className="w-12">
+                                            <Button
+                                                className="h-12 w-full rounded-xl"
+                                                variant="secondary">
+                                                <ArrowUpRight size={20} />
+                                            </Button>
+                                        </Link>
+
+                                        <Button
+                                            onClick={() =>
+                                                setIsGenerateTokenModalOpen(
+                                                    true,
+                                                )
+                                            }
+                                            className="w-full h-12 rounded-xl"
+                                            variant="primary">
+                                            <Timer size={20} />
+                                            Generate Link
+                                        </Button>
+                                    </>
                                 )
                             )}
                         </div>

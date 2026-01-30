@@ -436,37 +436,27 @@ export function SettingsPage() {
                             </div>
                         </section>
 
-                        <div className="pt-6 border-t border-zinc-800">
-                            <Button
-                                size="lg"
-                                type="submit"
-                                disabled={isSaving}
-                                variant="primary"
-                                className="w-full mt-4">
-                                {isSaving ? (
-                                    <>
-                                        <Loader2 className="size-4 animate-spin" />
-                                        Saving...
-                                    </>
-                                ) : (
-                                    <>
-                                        <CheckCircle2 className="size-4" />
-                                        Save Changes
-                                    </>
-                                )}
-                            </Button>
+                        <section>
+                            <SectionHeader
+                                title="Danger Zone"
+                                icon={Trash2}
+                            />
+
+                            <p className="text-sm text-neutral-500">
+                                Deleting your account will remove all your data
+                                permanently. This action cannot be undone.
+                            </p>
 
                             <Popover
                                 open={deletePopoverOpen}
                                 onOpenChange={setDeletePopoverOpen}>
-                                <PopoverTrigger className="w-full">
+                                <PopoverTrigger>
                                     <Button
                                         Comp="div"
                                         disabled={isDeleting}
                                         type="button"
                                         variant="destructiveOutline"
-                                        size="lg"
-                                        className="w-full mt-6">
+                                        className="mt-6">
                                         <Trash2 size={16} />
                                         Delete Account
                                     </Button>
@@ -505,6 +495,27 @@ export function SettingsPage() {
                                     </div>
                                 </PopoverContent>
                             </Popover>
+                        </section>
+
+                        <div className="p-6 bg-background/10 border-t border-white/5 sticky bottom-0 backdrop-blur-xs">
+                            <Button
+                                size="lg"
+                                type="submit"
+                                disabled={isSaving}
+                                variant="primary"
+                                className="w-full">
+                                {isSaving ? (
+                                    <>
+                                        <Loader2 className="size-4 animate-spin" />
+                                        Saving...
+                                    </>
+                                ) : (
+                                    <>
+                                        <CheckCircle2 className="size-4" />
+                                        Save Changes
+                                    </>
+                                )}
+                            </Button>
                         </div>
                     </form>
                 </Form>
