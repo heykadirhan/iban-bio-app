@@ -33,27 +33,12 @@ export function HomePage() {
                     <div className="grid lg:grid-cols-2 gap-16 relative z-10">
                         {/* Text */}
                         <div className="text-center lg:text-left">
-                            <div className="flex flex-col-reverse sm:flex-row items-center gap-6 mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-                                {/* Existing Badge */}
-                                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-900/30 border border-indigo-500/30 text-indigo-400 text-xs font-bold">
-                                    <span className="relative flex h-2 w-2">
-                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
-                                        <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
-                                    </span>
-                                    Universal Payment Profile
-                                </div>
-
-                                {/* <a
-                                    href="https://www.producthunt.com/products/iban-bio?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-iban-bio"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="group flex items-center gap-2 opacity-70 hover:opacity-100 transition-all">
-                                    <img
-                                        alt="iban.bio Product Hunt"
-                                        className="h-9 w-auto grayscale group-hover:grayscale-0 transition-all duration-300"
-                                        src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1056311&amp;theme=dark&amp;t=1767127446453"
-                                    />
-                                </a> */}
+                            <div className="mb-8 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-900/30 border border-indigo-500/30 text-indigo-400 text-xs font-bold">
+                                <span className="relative flex h-2 w-2">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
+                                </span>
+                                Universal Payment Profile
                             </div>
 
                             <h1 className="text-5xl lg:text-7xl font-bold tracking-tight leading-[1.1] mb-6">
