@@ -1,5 +1,7 @@
 'use client';
 
+import COINS from '@/assets/data/coins.json';
+import currencies from 'currency-symbol-map';
 import { PaymentMethodType } from '@/core/enums';
 import {
     CheckCircle2,
@@ -12,9 +14,9 @@ import {
     Coins,
     User,
     Building2,
-    DollarSign,
     Check,
     AlertTriangle,
+    ArrowRightLeft,
 } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from './ui/dialog';
 import { Button } from './ui/button';
@@ -180,10 +182,13 @@ export default function CopySuccessModal({
                             {meta.coin && (
                                 <div className="flex justify-between items-center p-3">
                                     <span className="text-sm text-zinc-500 flex items-center gap-2">
-                                        <Coins size={14} /> Asset
+                                        <Coins size={14} /> Coin
                                     </span>
                                     <span className="text-sm text-zinc-200 font-medium">
-                                        {meta.coin}
+                                        {COINS.find(
+                                            (coin) => coin.symbol === meta.coin,
+                                        )?.name || meta?.coin}{' '}
+                                        ({meta.coin})
                                     </span>
                                 </div>
                             )}
@@ -202,10 +207,12 @@ export default function CopySuccessModal({
                             {meta.currency && (
                                 <div className="flex justify-between items-center p-3">
                                     <span className="text-sm text-zinc-500 flex items-center gap-2">
-                                        <DollarSign size={14} /> Currency
+                                        <ArrowRightLeft size={14} /> Currency
                                     </span>
                                     <span className="text-sm text-zinc-200 font-medium">
-                                        {meta.currency}
+                                        {currencies(meta.currency)
+                                            ? `${meta.currency} (${currencies(meta.currency)})`
+                                            : meta.currency}
                                     </span>
                                 </div>
                             )}

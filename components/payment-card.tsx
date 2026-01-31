@@ -2,7 +2,7 @@
 
 import COINS from '@/assets/data/coins.json';
 import currencies from 'currency-symbol-map';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Copy,
     Check,
@@ -11,12 +11,14 @@ import {
     Smartphone,
     Globe,
     LinkIcon,
-    Link,
     Edit2,
     Trash2,
     Power,
     User,
-} from 'lucide-react';
+    Network,
+    ArrowRightLeft,
+    CornerDownRight,
+} from 'lucide-react'; // CornerDownRight eklendi
 import { HttpService } from '@/core/services';
 import { APPERANCE_OPTIONS, Endpoints } from '@/core/constants';
 import { PaymentMethodType } from '@/core/enums';
@@ -42,7 +44,7 @@ const maskValue = (val: string, type: PaymentMethodType) => {
     if (val.length > 18) {
         return `${val.slice(0, 8)}...${val.slice(-6)}`;
     }
-    return val;
+    return `${val.slice(0, 4)}...${val.slice(-4)}`;
 };
 
 const getVisuals = (type: PaymentMethodType, meta: any) => {
@@ -80,6 +82,26 @@ const getVisuals = (type: PaymentMethodType, meta: any) => {
     }
     return { icon, providerText, defaultColor };
 };
+
+// Badge bileşeni küçültüldü ve daha minimal hale getirildi
+const MiniBadge = ({
+    icon: Icon,
+    text,
+    className,
+}: {
+    icon?: any;
+    text: string;
+    className?: string;
+}) => (
+    <div
+        className={cn(
+            'flex items-center gap-1 text-[10px] font-medium text-zinc-400',
+            className,
+        )}>
+        {Icon && <Icon size={10} />}
+        <span>{text}</span>
+    </div>
+);
 
 export default function PaymentCard({
     paymentData,
@@ -184,7 +206,6 @@ export default function PaymentCard({
     const togglePaymentMethodStatus = async (id: string, isActive: boolean) => {
         try {
             setIsLoading(true);
-
             await HttpService.request(Endpoints.PAYMENT_METHODS, {
                 method: 'PATCH',
                 body: JSON.stringify({
@@ -192,7 +213,6 @@ export default function PaymentCard({
                     isActive: !isActive,
                 }),
             });
-
             paymentData.isActive = !paymentData.isActive;
         } finally {
             setIsLoading(false);
@@ -202,20 +222,78 @@ export default function PaymentCard({
     const deletePaymentMethod = async (id: string) => {
         if (!confirm('Are you sure you want to delete this payment method?'))
             return;
-
         try {
             setIsLoading(true);
-
             await HttpService.request(Endpoints.PAYMENT_METHODS, {
                 method: 'DELETE',
                 body: JSON.stringify({ id }),
             });
-
             onRefetch?.();
             toast.success('Payment method deleted from your profile!');
         } finally {
             setIsLoading(false);
         }
+    };
+
+    // UI HELPER: Meta verileri tek bir satırda toplamak için
+    const renderMetaInfo = () => {
+        const items = [];
+
+        // 1. Provider Text (Eğer özel başlık varsa, provider'ı meta olarak göster)
+        if (title && visuals.providerText) {
+            items.push(
+                <span
+                    key="provider"
+                    className="text-zinc-400">
+                    {visuals.providerText}
+                </span>,
+            );
+        }
+
+        // 2. Network Badge
+        if (type === PaymentMethodType.CRYPTO && meta.network) {
+            items.push(
+                <MiniBadge
+                    key="network"
+                    icon={Network}
+                    text={meta.network}
+                    className="text-emerald-400"
+                />,
+            );
+        }
+
+        // 3. Currency Badge
+        if (meta.currency) {
+            items.push(
+                <MiniBadge
+                    key="currency"
+                    icon={ArrowRightLeft}
+                    text={
+                        currencies(meta.currency)
+                            ? `${meta.currency} (${currencies(meta.currency)})`
+                            : meta.currency
+                    }
+                    className="text-blue-400"
+                />,
+            );
+        }
+
+        if (items.length === 0) return null;
+
+        return (
+            <div className="flex flex-wrap items-center gap-2 text-[11px] leading-none mt-1.5">
+                {items.map((item, index) => (
+                    <div
+                        key={index}
+                        className="flex items-center gap-2">
+                        {index > 0 && (
+                            <div className="h-0.5 w-0.5 rounded-full bg-zinc-600" />
+                        )}
+                        {item}
+                    </div>
+                ))}
+            </div>
+        );
     };
 
     return (
@@ -226,94 +304,97 @@ export default function PaymentCard({
                     handleClick();
                 }}
                 className={cn(
-                    `
-        group relative w-full overflow-hidden rounded-2xl border border-white/5 
-        bg-[#1a1a1a] p-4 transition-all duration-300 
-        hover:border-white/10 hover:shadow-xl hover:shadow-black/50 
-        active:scale-[0.98] select-none cursor-pointer`,
-                    isDashboard && !isActive && 'opacity-75 grayscale-[0.5]',
+                    'group relative w-full overflow-hidden rounded-xl border border-white/5 bg-[#18181b] p-4 transition-all duration-200 hover:border-white/10 hover:shadow-lg active:scale-[0.99] select-none cursor-pointer',
+                    isDashboard && !isActive && 'opacity-60 grayscale-[0.3]',
                     isLoading && 'pointer-events-none opacity-50',
                     className,
                 )}>
                 {/* Background Effects */}
                 <div
-                    className={`absolute inset-0 bg-gradient-to-r ${cardColor} opacity-0 group-hover:opacity-10 transition-opacity duration-500`}
+                    className={`absolute inset-0 bg-gradient-to-r ${cardColor} opacity-0 group-hover:opacity-5 transition-opacity duration-300`}
                 />
-                <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-5 mix-blend-overlay pointer-events-none" />
 
-                <div className="relative z-10 flex items-center justify-between gap-4">
-                    <div className="flex items-center gap-4 min-w-0">
-                        <div
-                            className={`
-            relative flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl 
-            bg-gradient-to-br ${cardColor} text-white shadow-lg
-            ring-1 ring-white/10 group-hover:scale-105 transition-transform duration-300
-          `}>
-                            <div className="absolute inset-0 bg-white/20 blur-md opacity-50" />
-                            <span className="relative z-10 font-bold drop-shadow-md">
-                                {[
-                                    PaymentMethodType.CRYPTO,
-                                    PaymentMethodType.LINK,
-                                ].includes(type) &&
-                                    !imageFailed && (
-                                        <Image
-                                            src={
-                                                {
-                                                    [PaymentMethodType.CRYPTO]: `https://assets.coincap.io/assets/icons/${meta.coin?.toLowerCase()}@2x.png`,
-                                                    [PaymentMethodType.LINK]: `https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${decryptedValue}/&size=64`,
-                                                    [PaymentMethodType.IBAN]:
-                                                        '',
-                                                    [PaymentMethodType.APP]: '',
-                                                }[type as PaymentMethodType]
-                                            }
-                                            width={64}
-                                            height={64}
-                                            alt="icon"
-                                            className="h-8 w-8 rounded-md"
-                                            onLoadingComplete={(result) => {
-                                                if (result.naturalWidth === 0) {
-                                                    setImageFailed(true);
-                                                } else {
-                                                    setImageFailed(false);
-                                                }
-                                            }}
-                                            onError={() => {
-                                                setImageFailed(true);
-                                            }}
-                                        />
-                                    )}
-                                {(imageFailed ||
-                                    [
-                                        PaymentMethodType.IBAN,
-                                        PaymentMethodType.APP,
-                                    ].includes(type)) &&
-                                    visuals.icon}
-                            </span>
+                <div className="relative z-10 flex gap-3">
+                    {/* LEFT: ICON */}
+                    <div
+                        className={`
+                            relative flex h-10 w-10 shrink-0 items-center justify-center rounded-lg 
+                            bg-gradient-to-br ${cardColor} text-white shadow-md
+                            ring-1 ring-white/10 mt-0.5
+                        `}>
+                        <div className="absolute inset-0 bg-white/20 blur-md opacity-50" />
+                        <span className="relative z-10 font-bold drop-shadow-md">
+                            {[
+                                PaymentMethodType.CRYPTO,
+                                PaymentMethodType.LINK,
+                            ].includes(type) && !imageFailed ? (
+                                <Image
+                                    src={
+                                        {
+                                            [PaymentMethodType.CRYPTO]: `https://assets.coincap.io/assets/icons/${meta.coin?.toLowerCase()}@2x.png`,
+                                            [PaymentMethodType.LINK]: `https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${decryptedValue}/&size=64`,
+                                            [PaymentMethodType.IBAN]: '',
+                                            [PaymentMethodType.APP]: '',
+                                        }[type as PaymentMethodType]
+                                    }
+                                    width={64}
+                                    height={64}
+                                    alt="icon"
+                                    className="h-6 w-6 rounded-md"
+                                    onLoadingComplete={(result) => {
+                                        if (result.naturalWidth === 0)
+                                            setImageFailed(true);
+                                        else setImageFailed(false);
+                                    }}
+                                    onError={() => setImageFailed(true)}
+                                />
+                            ) : (
+                                React.cloneElement(visuals.icon as any, {
+                                    size: 18,
+                                })
+                            )}
+                        </span>
+                    </div>
+
+                    {/* MIDDLE: CONTENT */}
+                    <div className="flex flex-col min-w-0 flex-1">
+                        {/* Header Row: Title & Copy Button */}
+                        <div className="flex items-center justify-between gap-2">
+                            <div className="flex flex-col min-w-0">
+                                <span className="truncate text-sm font-semibold text-zinc-100">
+                                    {title || visuals.providerText}
+                                </span>
+                                {renderMetaInfo()}
+                            </div>
+
+                            {/* Copy Status Icon */}
+                            <div
+                                className={cn(
+                                    'flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition-all duration-200',
+                                    copied
+                                        ? 'bg-green-500/20 text-green-500'
+                                        : 'bg-zinc-800/50 text-zinc-500 group-hover:bg-zinc-700 group-hover:text-zinc-300',
+                                )}>
+                                {type === PaymentMethodType.LINK ? (
+                                    <LinkIcon size={12} />
+                                ) : copied ? (
+                                    <Check size={12} />
+                                ) : (
+                                    <Copy size={12} />
+                                )}
+                            </div>
                         </div>
 
-                        <div className="flex flex-col min-w-0">
-                            <span className="truncate text-base font-bold text-white group-hover:text-white transition-colors">
-                                <span>{title || visuals.providerText}</span>
-                            </span>
-                            {type === PaymentMethodType.IBAN &&
-                                meta.accountHolderName && (
-                                    <span className="flex items-center gap-1 truncate text-xs text-zinc-400">
-                                        <User size={10} />
-                                        {meta.accountHolderName}
-                                    </span>
-                                )}
-                            {type === PaymentMethodType.CRYPTO &&
-                                meta.network && (
-                                    <span className="flex items-center gap-1 truncate text-zinc-400 text-xs">
-                                        <Globe size={10} />
-                                        Network: {meta.network}
-                                    </span>
-                                )}
-
-                            <div className="mt-1.5 flex w-fit items-center gap-1.5 rounded-md bg-black/40 px-2 py-1 border border-white/5">
+                        {/* Value Row - Distinct Box */}
+                        <div className="mt-2.5 relative group/value">
+                            <div className="flex w-full items-center gap-2 rounded-md bg-black/20 border border-white/5 px-2.5 py-1.5 transition-colors group-hover:border-white/10 group-hover:bg-black/40">
+                                <CornerDownRight
+                                    size={10}
+                                    className="text-zinc-600 shrink-0"
+                                />
                                 <span
                                     className={cn(
-                                        'truncate font-mono text-[10px] sm:text-xs text-zinc-300 group-hover:text-white transition-colors tracking-tight',
+                                        'truncate font-mono text-[11px] text-zinc-300 w-full',
                                         { italic: !value },
                                         { 'line-through': !isActive },
                                     )}>
@@ -324,73 +405,27 @@ export default function PaymentCard({
                             </div>
                         </div>
                     </div>
-
-                    <div className="flex flex-col items-end gap-1">
-                        <div
-                            className={`
-                flex h-10 w-10 shrink-0 items-center justify-center rounded-full 
-                transition-all duration-300 shadow-sm border border-transparent
-                ${
-                    copied
-                        ? 'bg-green-500 text-white scale-110 shadow-[0_0_15px_rgba(34,197,94,0.4)]'
-                        : 'bg-zinc-800 text-zinc-400 group-hover:bg-white group-hover:text-black group-hover:border-zinc-300'
-                }
-             `}>
-                            {type === PaymentMethodType.LINK ? (
-                                <LinkIcon size={16} />
-                            ) : copied ? (
-                                <Check size={16} />
-                            ) : (
-                                <Copy size={16} />
-                            )}
-                        </div>
-                    </div>
                 </div>
 
-                {(copyCount !== undefined ||
-                    !!meta.currency ||
-                    isDashboard) && (
-                    <div className="mt-3 pt-3 border-t border-white/5 flex items-center justify-between gap-2 text-xs text-zinc-500">
-                        <div className="flex items-center gap-2 overflow-hidden">
+                {/* BOTTOM: DASHBOARD ACTIONS */}
+                {(copyCount !== undefined || isDashboard) && (
+                    <div className="mt-3 pt-2 border-t border-white/5 flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-1.5 text-xs text-zinc-500">
                             {copyCount !== undefined && (
-                                <span className="flex items-center gap-1 shrink-0">
-                                    {type === PaymentMethodType.LINK ? (
-                                        <>
-                                            <Link size={10} /> {copyCount} times
-                                            opened
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Copy size={10} /> {copyCount} times
-                                            copied
-                                        </>
-                                    )}
-                                </span>
-                            )}
-
-                            {copyCount !== undefined && meta.currency && (
-                                <span>/</span>
-                            )}
-
-                            {meta.currency && (
                                 <>
-                                    <span className="flex items-center gap-1 shrink-0">
-                                        <Globe size={10} /> Currency:{' '}
-                                        <b>
-                                            {currencies(meta.currency)
-                                                ? `${meta.currency} (${currencies(
-                                                      meta.currency,
-                                                  )})`
-                                                : meta.currency}
-                                        </b>
-                                    </span>
+                                    <User size={10} />
+                                    {type === PaymentMethodType.LINK ? (
+                                        <span>{copyCount} opens</span>
+                                    ) : (
+                                        <span>{copyCount} copies</span>
+                                    )}
                                 </>
                             )}
                         </div>
 
                         {isDashboard && (
                             <div
-                                className="flex items-center gap-1 relative"
+                                className="relative flex items-center gap-1"
                                 onClick={(e) => e.stopPropagation()}>
                                 <button
                                     onClick={() =>
@@ -399,25 +434,30 @@ export default function PaymentCard({
                                             paymentData.isActive,
                                         )
                                     }
-                                    className={`p-2 rounded-full ${
+                                    className={cn(
+                                        'p-1.5 rounded-md transition-colors hover:bg-white/5',
                                         isActive
-                                            ? 'text-green-500 hover:bg-green-500/10'
-                                            : 'text-red-500 hover:bg-red-500/10'
-                                    }`}
-                                    title="Active / Deactivate">
-                                    <Power size={16} />
+                                            ? 'text-zinc-400 hover:text-green-400'
+                                            : 'text-zinc-500 hover:text-red-400',
+                                    )}
+                                    title={
+                                        isActive ? 'Deactivate' : 'Activate'
+                                    }>
+                                    <Power size={14} />
                                 </button>
                                 <button
                                     onClick={() => onEdit?.()}
-                                    className="p-2 text-zinc-400 hover:text-white hover:bg-zinc-700 rounded-full">
-                                    <Edit2 size={16} />
+                                    className="p-1.5 text-zinc-400 hover:text-white hover:bg-white/5 rounded-md transition-colors"
+                                    title="Edit">
+                                    <Edit2 size={14} />
                                 </button>
                                 <button
                                     onClick={() =>
                                         deletePaymentMethod(paymentData._id)
                                     }
-                                    className="p-2 text-zinc-400 hover:text-red-500 hover:bg-red-500/10 rounded-full">
-                                    <Trash2 size={16} />
+                                    className="p-1.5 text-zinc-400 hover:text-red-400 hover:bg-red-400/10 rounded-md transition-colors"
+                                    title="Delete">
+                                    <Trash2 size={14} />
                                 </button>
                             </div>
                         )}

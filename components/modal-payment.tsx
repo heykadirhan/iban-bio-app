@@ -245,24 +245,17 @@ export default function ModalPayment({
                                     </div>
                                 </div>
 
-                                {/* START: IBAN */}
-
-                                <div
-                                    className={cn('col-12 mb-4', {
-                                        hidden:
-                                            !initialData ||
-                                            type !== PaymentMethodType.IBAN,
-                                    })}>
-                                    <Label>Bank Name</Label>
+                                <div className="col-12 mb-4">
+                                    <Label>Title</Label>
                                     <FormField
                                         control={form.control}
-                                        name="meta.bankName"
+                                        name="title"
                                         render={({ field }) => (
                                             <FormItem>
                                                 <FormControl>
                                                     <Input
                                                         {...field}
-                                                        placeholder="e.g. Bank of America"
+                                                        placeholder="e.g. Rent Payment"
                                                     />
                                                 </FormControl>
                                                 <FormMessage />
@@ -270,6 +263,8 @@ export default function ModalPayment({
                                         )}
                                     />
                                 </div>
+
+                                {/* START: IBAN */}
 
                                 <div
                                     className={cn('col-12 mb-4', {
@@ -324,6 +319,30 @@ export default function ModalPayment({
                                                             </InputGroupText>
                                                         </InputGroupAddon>
                                                     </InputGroup>
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                </div>
+
+                                <div
+                                    className={cn('col-12 mb-4', {
+                                        hidden:
+                                            !initialData ||
+                                            type !== PaymentMethodType.IBAN,
+                                    })}>
+                                    <Label>Bank Name</Label>
+                                    <FormField
+                                        control={form.control}
+                                        name="meta.bankName"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormControl>
+                                                    <Input
+                                                        {...field}
+                                                        placeholder="e.g. Bank of America"
+                                                    />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
