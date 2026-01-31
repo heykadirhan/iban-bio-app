@@ -17,6 +17,7 @@ import {
 import { HttpService } from '@/core/services';
 import { Endpoints } from '@/core/constants';
 import { AdminLayout } from '@/layouts/admin-layout';
+import toast from 'react-hot-toast';
 
 const STATS = [
     {
@@ -103,15 +104,46 @@ function StatCard({ label, value, icon, color, bg }: StatCardProps) {
 export function AdminDashboard() {
     const [searchTerm, setSearch] = useState('');
     const [dashboardData, setDashboardData] = useState<any>(null);
+    const [maintenanceMode, setMaintenanceMode] = useState(false);
+    const [loadingMaintenance, setLoadingMaintenance] = useState(false);
 
     const fetchData = async () => {
         try {
-            const res = await HttpService.request(Endpoints.ADMIN_DASHBOARD);
-            if (res?.success) {
-                setDashboardData(res?.data);
+            const [dashRes, mainRes] = await Promise.all([
+                HttpService.request(Endpoints.ADMIN_DASHBOARD),
+                HttpService.request(Endpoints.ADMIN_MAINTENANCE),
+            ]);
+            if (dashRes?.success) {
+                setDashboardData(dashRes?.data);
+            }
+            if (mainRes?.success) {
+                setMaintenanceMode(mainRes?.data?.maintenance);
             }
         } catch (error) {
             console.error('Admin dashboard fetch error:', error);
+        }
+    };
+
+    const handleMaintenanceToggle = async () => {
+        setLoadingMaintenance(true);
+        try {
+            const res = await HttpService.request(Endpoints.ADMIN_MAINTENANCE, {
+                method: 'POST',
+                body: JSON.stringify({ enabled: !maintenanceMode }),
+            });
+            if (res?.success) {
+                setMaintenanceMode(res?.data?.maintenance);
+                toast.success(
+                    res?.message || 'Bakım modu başarıyla güncellendi',
+                );
+                // Refresh dashboard data
+                fetchData();
+            }
+        } catch (error) {
+            console.error('Maintenance toggle error:', error);
+            toast.error('Bakım modu güncellenirken hata oluştu');
+        } finally {
+            setLoadingMaintenance(false);
         }
     };
 
@@ -440,48 +472,70 @@ export function AdminDashboard() {
                         </div>
 
                         {/* System Status (Quick Actions) */}
-                        <div className="bg-gradient-to-br from-indigo-900/10 to-purple-900/10 border border-indigo-500/20 p-6 rounded-3xl">
+                        <div
+                            className={`bg-gradient-to-br ${maintenanceMode ? 'from-red-900/10 to-orange-900/10 border-red-500/20' : 'from-indigo-900/10 to-purple-900/10 border-indigo-500/20'} border p-6 rounded-3xl`}>
                             <h3 className="font-bold text-white mb-4 flex items-center justify-between">
-                                Sistem Durumu
+                                {maintenanceMode
+                                    ? 'Bakım Modu Aktif'
+                                    : 'Sistem Durumu'}
                                 <div className="flex gap-1">
-                                    <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                                    <div
+                                        className={`w-2 h-2 rounded-full ${maintenanceMode ? 'bg-red-500' : 'bg-green-500'} animate-pulse`}></div>
                                 </div>
                             </h3>
                             <div className="space-y-4 mb-6">
                                 <div className="space-y-1.5">
                                     <div className="flex justify-between text-xs font-medium">
                                         <span className="text-zinc-400">
-                                            CPU Yükü
+                                            {maintenanceMode
+                                                ? 'Bakım Modu Durumu'
+                                                : 'CPU Yükü'}
                                         </span>
-                                        <span className="text-green-400 font-mono">
-                                            12%
+                                        <span
+                                            className={`font-mono ${maintenanceMode ? 'text-red-400' : 'text-green-400'}`}>
+                                            {maintenanceMode ? 'Aktif' : '12%'}
                                         </span>
                                     </div>
-                                    <div className="w-full bg-black/40 rounded-full h-1.5 overflow-hidden">
-                                        <div
-                                            className="bg-green-500 h-1.5 rounded-full"
-                                            style={{ width: '12%' }}></div>
-                                    </div>
+                                    {!maintenanceMode && (
+                                        <div className="w-full bg-black/40 rounded-full h-1.5 overflow-hidden">
+                                            <div
+                                                className="bg-green-500 h-1.5 rounded-full"
+                                                style={{ width: '12%' }}></div>
+                                        </div>
+                                    )}
                                 </div>
 
-                                <div className="space-y-1.5">
-                                    <div className="flex justify-between text-xs font-medium">
-                                        <span className="text-zinc-400">
-                                            Veritabanı
-                                        </span>
-                                        <span className="text-indigo-400 font-mono">
-                                            45%
-                                        </span>
+                                {!maintenanceMode && (
+                                    <div className="space-y-1.5">
+                                        <div className="flex justify-between text-xs font-medium">
+                                            <span className="text-zinc-400">
+                                                Veritabanı
+                                            </span>
+                                            <span className="text-indigo-400 font-mono">
+                                                45%
+                                            </span>
+                                        </div>
+                                        <div className="w-full bg-black/40 rounded-full h-1.5 overflow-hidden">
+                                            <div
+                                                className="bg-indigo-500 h-1.5 rounded-full"
+                                                style={{ width: '45%' }}></div>
+                                        </div>
                                     </div>
-                                    <div className="w-full bg-black/40 rounded-full h-1.5 overflow-hidden">
-                                        <div
-                                            className="bg-indigo-500 h-1.5 rounded-full"
-                                            style={{ width: '45%' }}></div>
-                                    </div>
-                                </div>
+                                )}
                             </div>
-                            <button className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold transition-all shadow-lg shadow-indigo-900/20 active:scale-95">
-                                Bakım Modunu Başlat
+                            <button
+                                onClick={handleMaintenanceToggle}
+                                disabled={loadingMaintenance}
+                                className={`w-full py-2.5 rounded-xl text-xs font-bold transition-all shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${
+                                    maintenanceMode
+                                        ? 'bg-green-600 hover:bg-green-500 text-white shadow-green-900/20'
+                                        : 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-indigo-900/20'
+                                }`}>
+                                {loadingMaintenance
+                                    ? 'Yükleniyor...'
+                                    : maintenanceMode
+                                      ? 'Bakım Modunu Kapat'
+                                      : 'Bakım Modunu Başlat'}
                             </button>
                         </div>
                     </div>

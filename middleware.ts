@@ -4,9 +4,11 @@ import { Locale } from '@core/enums';
 import { getToken } from 'next-auth/jwt';
 
 const rateLimit = new Map();
+const maintenanceCache = { value: false, timestamp: 0 };
 
-const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute;
+const RATE_LIMIT_WINDOW = 60 * 1000;
 const RATE_LIMIT_MAX_REQUESTS = 30;
+const MAINTENANCE_CACHE_TTL = 5000;
 
 function rateLimiter(req: any) {
     const ip =
@@ -31,9 +33,57 @@ function rateLimiter(req: any) {
 }
 
 export default async function middleware(request: NextRequest) {
-    // Check if the request is for admin pages
     const pathname = request.nextUrl.pathname;
+
+    if (
+        pathname.includes('/_next/') ||
+        pathname.includes('/api/') ||
+        pathname.match(/\.(ico|png|jpg|jpeg|svg|gif|webp|woff|woff2|ttf)$/)
+    ) {
+        return NextResponse.next();
+    }
+
     const isAdminRoute = pathname.includes('/admin');
+    const isMaintenancePage = pathname.includes('/maintenance');
+
+    if (!isAdminRoute && !isMaintenancePage) {
+        const now = Date.now();
+        const isCacheValid =
+            now - maintenanceCache.timestamp < MAINTENANCE_CACHE_TTL;
+
+        let isMaintenanceMode = false;
+
+        if (isCacheValid) {
+            isMaintenanceMode = maintenanceCache.value;
+        } else {
+            try {
+                const mainRes = await fetch(
+                    `${request.nextUrl.origin}/api/admin/maintenance`,
+                    {
+                        method: 'GET',
+                        cache: 'no-store',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    },
+                );
+                if (mainRes.ok) {
+                    const data = await mainRes.json();
+                    isMaintenanceMode = data?.data?.maintenance || false;
+                    maintenanceCache.value = isMaintenanceMode;
+                    maintenanceCache.timestamp = now;
+                }
+            } catch {
+                isMaintenanceMode = maintenanceCache.value;
+            }
+        }
+
+        if (isMaintenanceMode) {
+            const url = request.nextUrl.clone();
+            url.pathname = '/maintenance';
+            return NextResponse.redirect(url);
+        }
+    }
 
     if (isAdminRoute) {
         const token = await getToken({

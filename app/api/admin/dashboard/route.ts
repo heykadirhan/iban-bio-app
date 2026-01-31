@@ -31,7 +31,7 @@ export async function GET() {
 
         const lastPaymentMethods = await PaymentMethodModel.find()
             .lean()
-            .sort({ createdAt: 1 })
+            .sort({ createdAt: -1 })
             .limit(20)
             .select('+iv +copyCount');
 
