@@ -7,14 +7,81 @@ import { GoogleAnalytics } from '@next/third-parties/google';
 import Script from 'next/script';
 import { NextIntlClientProvider } from 'next-intl';
 import { PropsWithChildren } from 'react';
-import { TOAST_CONFIG } from '@/core/config';
+import { TOAST_CONFIG, AUTH_CONFIG } from '@/core/config';
 import { AuthWrapper } from '@/components/auth-wrapper';
+import { headers } from 'next/headers';
+import { getServerSession } from 'next-auth';
+import UAParser from 'ua-parser-js';
+import { connectDB } from '@/lib/db';
+import { ActivityModel, UserModel } from '@/core/models';
 
 const fontFamily = Gabarito({
     subsets: ['latin'],
 });
 
+const logActivityIfSession = async () => {
+    try {
+        const session = await getServerSession(AUTH_CONFIG);
+        const userId =
+            (session?.user as any)?._id || (session?.user as any)?.id;
+
+        if (!userId) return;
+
+        const h = await headers();
+        const userAgent = h.get('user-agent') || '';
+        const parser = new UAParser(userAgent);
+        const ua = parser.getResult();
+
+        const ip =
+            h.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+            h.get('x-real-ip') ||
+            h.get('cf-connecting-ip') ||
+            'unknown';
+
+        const path =
+            h.get('next-url') ||
+            h.get('x-url') ||
+            h.get('referer') ||
+            undefined;
+
+        const method = h.get('x-http-method-override') || undefined;
+        const locale = h.get('accept-language') || undefined;
+
+        const now = new Date();
+
+        await connectDB();
+
+        await ActivityModel.findOneAndUpdate(
+            { userId, ip },
+            {
+                $set: {
+                    userAgent,
+                    deviceType: ua.device.type,
+                    deviceVendor: ua.device.vendor,
+                    deviceModel: ua.device.model,
+                    browserName: ua.browser.name,
+                    browserVersion: ua.browser.version,
+                    osName: ua.os.name,
+                    osVersion: ua.os.version,
+                    path,
+                    method,
+                    locale,
+                    lastSeen: now,
+                },
+            },
+            { upsert: true, new: true },
+        );
+
+        await UserModel.findByIdAndUpdate(userId, {
+            lastActive: now,
+        });
+    } catch {
+        // ignore activity logging errors
+    }
+};
+
 export default async function RootLayout({ children }: PropsWithChildren) {
+    await logActivityIfSession();
     return (
         <html lang="en">
             <Script

@@ -9,4 +9,5 @@ export const Endpoints = {
     DASHBOARD: 'dashboard',
     PAYMENT_METHODS: 'payment-methods',
     SHARE_TOKENS: 'share-tokens',
+    ADMIN_DASHBOARD: 'admin/dashboard',
 };

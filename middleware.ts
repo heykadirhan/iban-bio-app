@@ -1,6 +1,7 @@
 import createMiddleware from 'next-intl/middleware';
 import { NextRequest, NextResponse } from 'next/server';
 import { Locale } from '@core/enums';
+import { getToken } from 'next-auth/jwt';
 
 const rateLimit = new Map();
 
@@ -30,6 +31,23 @@ function rateLimiter(req: any) {
 }
 
 export default async function middleware(request: NextRequest) {
+    // Check if the request is for admin pages
+    const pathname = request.nextUrl.pathname;
+    const isAdminRoute = pathname.includes('/admin');
+
+    if (isAdminRoute) {
+        const token = await getToken({
+            req: request,
+            secret: process.env.NEXTAUTH_SECRET,
+        });
+
+        if (!token || !(token as any).isAdmin) {
+            const url = request.nextUrl.clone();
+            url.pathname = '/';
+            return NextResponse.redirect(url);
+        }
+    }
+
     if (!rateLimiter(request) && request.method !== 'GET') {
         return NextResponse.json(
             { success: false, message: 'Too many requests' },

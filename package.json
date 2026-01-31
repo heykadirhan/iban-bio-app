@@ -55,6 +55,7 @@
     "tailwindcss": "^4.1.16",
     "twilio": "^5.11.1",
     "typescript-cookie": "^1.0.6",
+    "ua-parser-js": "^1.0.37",
     "use-mask-input": "^3.5.2",
     "web-push": "^3.6.7",
     "zod": "^4.3.5"
@@ -67,6 +68,7 @@
     "@types/nodemailer": "^7.0.3",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/ua-parser-js": "^0.7.39",
     "@types/web-push": "^3.6.4",
     "baseline-browser-mapping": "^2.8.32",
     "eslint": "^9",

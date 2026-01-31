@@ -51,16 +51,6 @@ export const AUTH_CONFIG: AuthOptions = {
                     );
                 }
 
-                await UserModel.findOneAndUpdate(
-                    {
-                        phone,
-                        country,
-                    },
-                    {
-                        lastLogin: new Date(),
-                    },
-                );
-
                 return {
                     id: user._id.toString(),
                     ...user.toObject(),
@@ -114,6 +104,7 @@ export const AUTH_CONFIG: AuthOptions = {
                         token.phone = dbUser.phone;
                         token.country = dbUser.country;
                         token.visibility = dbUser.visibility;
+                        token.isAdmin = dbUser.isAdmin;
                     }
                 } else {
                     const u = user as any;
@@ -125,6 +116,7 @@ export const AUTH_CONFIG: AuthOptions = {
                     token.phone = u.phone;
                     token.country = u.country;
                     token.visibility = u.visibility;
+                    token.isAdmin = u.isAdmin;
                 }
             } else if (token?._id) {
                 await connectDB();
@@ -135,6 +127,7 @@ export const AUTH_CONFIG: AuthOptions = {
                     token.avatarUrl = freshUser.avatarUrl;
                     token.username = freshUser.username;
                     token.visibility = freshUser.visibility;
+                    token.isAdmin = freshUser.isAdmin;
                 }
             }
 

@@ -14,7 +14,7 @@ interface IUser extends mongoose.Document {
     persona?: string;
     viewCount: number;
     visibility: ProfileVisibility;
-    lastLogin?: Date;
+    isAdmin?: boolean;
     deletedAt?: Date | null;
     createdAt: string;
     updatedAt: string;
@@ -63,7 +63,7 @@ const UserSchema = new mongoose.Schema(
             enum: Object.values(ProfileVisibility),
             default: ProfileVisibility.EXPIRABLE,
         },
-        lastLogin: { type: Date },
+        isAdmin: { type: Boolean, default: false },
         deletedAt: { type: Date },
     },
     { timestamps: true },
