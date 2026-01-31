@@ -8,6 +8,9 @@ import {
     CheckCircle2,
     Wallet,
     CreditCard,
+    Check,
+    Bitcoin,
+    Search,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -23,15 +26,12 @@ import { SectionFaq } from './components/section-faq';
 export function HomePage() {
     return (
         <>
-            {/* --- HERO SECTION --- */}
             <section className="relative pt-32 pb-20 lg:pt-32 lg:pb-32 overflow-hidden">
-                {/* Background Gradients */}
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-indigo-600/15 rounded-full blur-[120px] pointer-events-none" />
                 <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[100px] pointer-events-none" />
 
                 <div className="container">
-                    <div className="grid lg:grid-cols-2 gap-16 relative z-10">
-                        {/* Text */}
+                    <div className="grid lg:grid-cols-2 items-center gap-16 relative z-10">
                         <div className="text-center lg:text-left">
                             <div className="mb-8 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-900/30 border border-indigo-500/30 text-indigo-400 text-xs font-bold">
                                 <span className="relative flex h-2 w-2">
@@ -94,101 +94,120 @@ export function HomePage() {
                             </div>
                         </div>
 
-                        <div className="overflow-hidden order-1 lg:order-2 relative">
-                            <div className="relative w-full h-[500px] flex items-center justify-center perspective-1000">
-                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-indigo-500/30 rounded-full blur-[80px] animate-pulse-slow"></div>
+                        <div className="relative mx-auto lg:mr-0 perspective-1000 w-full max-w-[600px] lg:max-w-none flex justify-center lg:justify-end">
+                            <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,#000_70%,transparent_100%)] -z-10 transform rotate-6 scale-125"></div>
 
-                                <div className="absolute top-20 right-0 lg:right-10 w-64 h-40 bg-[#111] border border-white/10 rounded-2xl p-4 shadow-2xl transform rotate-[15deg] translate-z-[-50px] opacity-60 hover:opacity-100 transition-all duration-500 animate-float-delayed backdrop-blur-md">
-                                    <div className="flex items-center gap-3 mb-4">
-                                        <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center text-green-500">
-                                            <Zap size={20} />
-                                        </div>
-                                        <div>
-                                            <div className="h-2 w-16 bg-white/20 rounded mb-1"></div>
-                                            <div className="h-2 w-10 bg-white/10 rounded"></div>
-                                        </div>
-                                    </div>
-                                    <div className="space-y-2 mt-6">
-                                        <div className="h-2 w-full bg-white/10 rounded"></div>
-                                        <div className="h-2 w-2/3 bg-white/10 rounded"></div>
-                                    </div>
-                                </div>
+                            <div className="relative z-20 animate-float mx-auto">
+                                <div className="relative z-10 w-[300px] sm:w-[320px] h-[640px] bg-[#050505] rounded-[3.5rem] border-[6px] border-[#1a1a1a] ring-1 ring-white/10 shadow-[0_0_50px_-12px_rgba(79,70,229,0.3)] overflow-hidden">
+                                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-28 h-7 bg-black rounded-b-2xl z-30"></div>
 
-                                <div className="absolute bottom-20 left-0 lg:left-10 w-64 h-40 bg-[#151515] border border-white/10 rounded-2xl p-4 shadow-2xl transform -rotate-[12deg] translate-z-[-30px] opacity-70 hover:opacity-100 transition-all duration-500 animate-float backdrop-blur-md">
-                                    <div className="flex justify-between items-start mb-6">
-                                        <div className="w-8 h-8 rounded bg-primary/20 text-primary/60 flex items-center justify-center">
-                                            <CreditCard size={18} />
-                                        </div>
-                                        <div className="text-[10px] bg-white/5 px-2 py-1 rounded text-zinc-500">
-                                            IBAN
-                                        </div>
-                                    </div>
-                                    <div className="text-zinc-500 font-mono text-xs mb-1">
-                                        TR12 **** **** 56
-                                    </div>
-                                    <div className="text-white font-bold">
-                                        Garanti BBVA
-                                    </div>
-                                </div>
+                                    <div className="w-full h-full relative">
+                                        <div className="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent z-20 pointer-events-none"></div>
 
-                                <div className="relative z-10 w-full max-w-[370px] bg-gradient-to-b from-[#1a1a1a] to-[#0a0a0a] border border-white/10 rounded-3xl p-3 sm:!p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5)] transform hover:scale-105 transition-transform duration-500 group">
-                                    <div className="flex justify-between items-center mb-3">
-                                        <div className="w-12 h-12 rounded-full p-[2px] bg-gradient-to-tr from-indigo-500 to-purple-500">
-                                            <Image
-                                                src="/img/user.jpg"
-                                                className="w-full h-full rounded-full border-2 border-[#0a0a0a] object-cover"
-                                                alt="Avatar"
-                                                width={128}
-                                                height={128}
-                                            />
-                                        </div>
-                                        <div className="bg-green-500/10 text-green-500 px-3 py-1 rounded-full text-xs font-bold border border-green-500/20 flex items-center gap-1">
-                                            <CheckCircle2 size={12} /> Verified
-                                        </div>
-                                    </div>
-
-                                    <h3 className="text-2xl font-bold text-white mb-1">
-                                        Joe Doe
-                                    </h3>
-                                    <p className="text-indigo-400 text-sm font-medium mb-6">
-                                        @joe-doe
-                                    </p>
-
-                                    <div className="space-y-3">
-                                        <PaymentCard
-                                            paymentData={{
-                                                type: PaymentMethodType.IBAN,
-                                                decryptedValue:
-                                                    'GB15HBUK40127612345678',
-                                                meta: {
-                                                    accountHolderName:
-                                                        'Joe Doe',
-                                                    bankName: 'HSBC',
-                                                    currency: 'GBP',
-                                                },
-                                                appearance: 'dark',
-                                                copyCount: 42,
-                                                isActive: true,
-                                            }}
-                                            isPreview
+                                        <img
+                                            src="/img/app-screenshot.png"
+                                            alt="SecurePay App Interface"
+                                            className="h-[115%] sm:h-[120%] object-cover pt-6 overflow-hidden"
                                         />
                                     </div>
+                                </div>
 
-                                    <div className="mt-6">
-                                        <Link href={Routes.GET_STARTED}>
-                                            <Button
-                                                className="w-full font-semibold"
-                                                size="lg">
-                                                Create Your iban.bio
-                                                <ArrowRight />
-                                            </Button>
-                                        </Link>
+                                <div className="hidden sm:block absolute top-12 -left-12 sm:-left-48 z-20 animate-float-delayed">
+                                    <div className="bg-[#0a0a0a]/80 backdrop-blur-xl border border-white/10 p-4 pr-6 rounded-2xl shadow-2xl flex items-center gap-4 transform -rotate-2 hover:rotate-0 transition-transform duration-500 hover:border-green-500/30 group">
+                                        <div className="w-12 h-12 rounded-full bg-green-500/10 flex items-center justify-center border border-green-500/20 group-hover:scale-110 transition-transform">
+                                            <ShieldCheck
+                                                size={24}
+                                                className="text-green-500"
+                                            />
+                                        </div>
+                                        <div>
+                                            <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider">
+                                                Security
+                                            </p>
+                                            <p className="text-sm text-white font-bold">
+                                                AES-256 Encrypted
+                                            </p>
+                                            <div className="flex gap-1 mt-1">
+                                                <div className="w-1 h-1 rounded-full bg-green-500 animate-pulse"></div>
+                                                <span className="text-[10px] text-green-500 font-medium">
+                                                    Protected
+                                                </span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div className="absolute top-10 left-10 w-16 h-16 bg-gradient-to-br from-purple-600 to-transparent opacity-20 rounded-full blur-2xl animate-pulse"></div>
-                                <div className="absolute bottom-10 right-10 w-24 h-24 bg-gradient-to-tl from-indigo-600 to-transparent opacity-20 rounded-full blur-2xl animate-pulse"></div>
+                                <div className="hidden sm:block absolute top-32 -right-8 sm:-right-48 z-0 animate-float">
+                                    <div className="bg-[#0a0a0a]/80 backdrop-blur-xl border border-white/10 p-4 rounded-2xl shadow-2xl transform rotate-3 hover:rotate-0 transition-transform duration-500 hover:border-indigo-500/30">
+                                        <div className="flex items-center gap-3 mb-2">
+                                            <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400">
+                                                <CreditCard size={16} />
+                                            </div>
+                                            <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center text-green-400">
+                                                <Wallet size={16} />
+                                            </div>
+                                            <div className="w-8 h-8 rounded-full bg-orange-500/20 flex items-center justify-center text-orange-400">
+                                                <Bitcoin size={16} />
+                                            </div>
+                                        </div>
+                                        <p className="text-xs text-zinc-400 font-medium text-center">
+                                            All Assets Supported
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="hidden sm:block absolute bottom-32 -right-4 sm:-right-32 z-30 animate-float-delayed-2">
+                                    <div className="bg-[#0a0a0a]/90 backdrop-blur-xl border border-white/10 p-4 rounded-2xl shadow-2xl flex flex-col gap-3 transform rotate-6 border-l-4 border-l-blue-500 hover:rotate-0 transition-transform duration-500 min-w-[220px]">
+                                        <div className="flex justify-between items-center border-b border-white/5 pb-2">
+                                            <span className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider flex items-center gap-1.5">
+                                                <Search
+                                                    size={12}
+                                                    className="text-blue-500"
+                                                />{' '}
+                                                Find by Phone
+                                            </span>
+                                            <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></div>
+                                        </div>
+
+                                        <div className="flex items-center gap-3">
+                                            <div className="relative">
+                                                <div className="w-10 h-10 rounded-full p-[2px] bg-gradient-to-tr from-blue-500 to-indigo-500">
+                                                    <img
+                                                        src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop"
+                                                        className="w-full h-full rounded-full object-cover border-2 border-[#0a0a0a]"
+                                                        alt="User"
+                                                    />
+                                                </div>
+                                                <div className="absolute -bottom-1 -right-1 bg-black rounded-full p-0.5">
+                                                    <div className="bg-green-500 w-3 h-3 rounded-full border-2 border-black"></div>
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <p className="text-xs text-zinc-500 font-mono mb-0.5">
+                                                    +1 (555) 123-4567
+                                                </p>
+                                                <p className="text-sm text-white font-bold flex items-center gap-1">
+                                                    Joe Doe{' '}
+                                                    <CheckCircle2
+                                                        size={12}
+                                                        className="text-blue-500"
+                                                    />
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div className="mt-1 flex justify-end">
+                                            <span className="text-[10px] text-blue-400 font-bold bg-blue-500/10 px-2 py-1 rounded border border-blue-500/20">
+                                                Profile Found
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+
+                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-indigo-600/20 blur-[120px] -z-10 rounded-full pointer-events-none mix-blend-screen"></div>
+                            <div className="absolute bottom-0 right-0 w-[300px] h-[300px] bg-purple-600/10 blur-[100px] -z-10 rounded-full pointer-events-none"></div>
                         </div>
                     </div>
                 </div>
@@ -241,12 +260,10 @@ export function HomePage() {
             <section
                 id="search-pay"
                 className="relative py-24">
-                {/* Decorative Glow */}
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-blue-900/10 rounded-full blur-[100px] -z-10"></div>
 
                 <div className="container">
                     <div className="glass-card rounded-[3rem] py-12 px-6 lg:px-20 lg:py-20 flex flex-col md:flex-row items-center gap-16 border border-white/10 relative">
-                        {/* Text Side */}
                         <div className="flex-1 text-center md:text-left">
                             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-900/30 border border-primary/30 text-primary/60 text-xs font-bold mb-6">
                                 <Smartphone size={12} /> Search & Pay
@@ -271,7 +288,6 @@ export function HomePage() {
                             </Link>
                         </div>
 
-                        {/* Interactive Component Side */}
                         <div className="flex-1 w-full max-w-md">
                             <div className="bg-[#0a0a0a] border border-zinc-800 rounded-3xl p-6 shadow-2xl relative group">
                                 <div className="absolute -top-10 -right-10 w-32 h-32 bg-primary/20 rounded-full blur-2xl pointer-events-none group-hover:bg-primary/30 transition-colors"></div>
@@ -283,7 +299,6 @@ export function HomePage() {
                                     <PhoneSearch />
                                 </div>
 
-                                {/* Mock Result Animation */}
                                 <div className="bg-zinc-900/50 rounded-xl p-4 flex items-center gap-4 opacity-60 group-hover:opacity-100 transition-opacity">
                                     <div className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center">
                                         <Smartphone
@@ -302,7 +317,6 @@ export function HomePage() {
                 </div>
             </section>
 
-            {/* --- HOW IT WORKS (STEPS) --- */}
             <section
                 id="how-it-works"
                 className="py-24">
@@ -355,10 +369,8 @@ export function HomePage() {
                 </div>
             </section>
 
-            {/* --- USE CASES (INTERACTIVE TABS) --- */}
             <SectionUseCases />
 
-            {/* --- BENTO FEATURES --- */}
             <section
                 id="features"
                 className="py-24">
@@ -370,7 +382,6 @@ export function HomePage() {
                     </div>
 
                     <div className="grid md:grid-cols-3 gap-6">
-                        {/* Feature: Privacy */}
                         <div className="md:col-span-2 glass-card rounded-3xl p-10 relative overflow-hidden group">
                             <div className="absolute top-0 right-0 p-10 opacity-10 transition-transform group-hover:scale-110 duration-700">
                                 <Lock size={200} />
@@ -391,7 +402,6 @@ export function HomePage() {
                             </div>
                         </div>
 
-                        {/* Feature: Mobile */}
                         <div className="glass-card rounded-3xl p-10 group">
                             <div className="w-12 h-12 bg-pink-500/20 text-pink-400 rounded-2xl flex items-center justify-center mb-6">
                                 <Smartphone />
@@ -405,7 +415,6 @@ export function HomePage() {
                             </p>
                         </div>
 
-                        {/* Feature: Crypto */}
                         <div className="glass-card rounded-3xl p-10 group">
                             <div className="w-12 h-12 bg-green-500/20 text-green-400 rounded-2xl flex items-center justify-center mb-6">
                                 <Zap />
@@ -419,7 +428,6 @@ export function HomePage() {
                             </p>
                         </div>
 
-                        {/* Feature: Global */}
                         <div className="md:col-span-2 glass-card rounded-3xl p-10 flex flex-col md:flex-row items-center gap-8 group">
                             <div className="flex-1">
                                 <div className="w-12 h-12 bg-primary/20 text-primary/60 rounded-2xl flex items-center justify-center mb-6">
@@ -434,7 +442,6 @@ export function HomePage() {
                                     link with clients anywhere in the world.
                                 </p>
                             </div>
-                            {/* Abstract Map Viz */}
                             <div className="w-full max-w-xs h-32 bg-zinc-900 rounded-xl border border-white/5 relative overflow-hidden opacity-80 group-hover:opacity-100 transition-opacity">
                                 <div className="absolute inset-0 grid grid-cols-6 gap-1 p-2">
                                     {[...Array(24)].map((_, i) => (
@@ -453,17 +460,13 @@ export function HomePage() {
                 </div>
             </section>
 
-            {/* --- FAQ SECTION --- */}
             <SectionFaq />
 
-            {/* --- CTA SECTION --- */}
             <section className="py-20">
                 <div className="container">
                     <div className="max-w-5xl mx-auto bg-gradient-to-br from-indigo-900 via-[#0a0a0a] to-[#0a0a0a] rounded-[3rem] border border-indigo-500/30 p-12 lg:p-20 text-center relative overflow-hidden group">
-                        {/* Animated Noise */}
                         <div className="absolute top-0 left-0 w-full h-full bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 pointer-events-none"></div>
 
-                        {/* Glow Blob */}
                         <div className="absolute -top-20 -right-20 w-96 h-96 bg-indigo-500/30 rounded-full blur-[100px] pointer-events-none group-hover:bg-indigo-500/40 transition-colors duration-1000"></div>
 
                         <div className="relative z-10">
