@@ -1,3 +1,4 @@
+'use client';
 import {
     ArrowRight,
     ShieldCheck,
@@ -8,20 +9,53 @@ import {
     CheckCircle2,
     Wallet,
     CreditCard,
-    Check,
     Bitcoin,
     Search,
+    User,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Routes } from '@/core/constants';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
 import { TypingEffect } from './components/typing-effect';
-import PaymentCard from '@/components/payment-card';
-import { PaymentMethodType } from '@/core/enums';
-import { PhoneSearch } from './components/phone-search';
-import { SectionUseCases } from './components/section-use-cases';
-import { SectionFaq } from './components/section-faq';
+
+const PhoneSearch = dynamic(
+    () =>
+        import('./components/phone-search').then((mod) => ({
+            default: mod.PhoneSearch,
+        })),
+    {
+        loading: () => (
+            <div className="h-96 animate-pulse bg-white/5 rounded-3xl" />
+        ),
+        ssr: false,
+    },
+);
+const SectionUseCases = dynamic(
+    () =>
+        import('./components/section-use-cases').then((mod) => ({
+            default: mod.SectionUseCases,
+        })),
+    {
+        loading: () => (
+            <div className="h-96 animate-pulse bg-white/5 rounded-3xl" />
+        ),
+        ssr: false,
+    },
+);
+const SectionFaq = dynamic(
+    () =>
+        import('./components/section-faq').then((mod) => ({
+            default: mod.SectionFaq,
+        })),
+    {
+        loading: () => (
+            <div className="h-96 animate-pulse bg-white/5 rounded-3xl" />
+        ),
+        ssr: false,
+    },
+);
 
 export function HomePage() {
     return (
@@ -104,10 +138,17 @@ export function HomePage() {
                                     <div className="w-full h-full relative">
                                         <div className="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent z-20 pointer-events-none"></div>
 
-                                        <img
+                                        <Image
                                             src="/img/app-screenshot.png"
-                                            alt="SecurePay App Interface"
+                                            alt="iban.bio App Interface"
+                                            width={640}
+                                            height={1280}
+                                            priority
+                                            unoptimized={true}
                                             className="h-[115%] sm:h-[120%] object-cover pt-6 overflow-hidden"
+                                            style={{
+                                                imageRendering: 'crisp-edges',
+                                            }}
                                         />
                                     </div>
                                 </div>
@@ -172,10 +213,13 @@ export function HomePage() {
                                         <div className="flex items-center gap-3">
                                             <div className="relative">
                                                 <div className="w-10 h-10 rounded-full p-[2px] bg-gradient-to-tr from-blue-500 to-indigo-500">
-                                                    <img
+                                                    <Image
                                                         src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop"
+                                                        width={40}
+                                                        height={40}
                                                         className="w-full h-full rounded-full object-cover border-2 border-[#0a0a0a]"
                                                         alt="User"
+                                                        loading="lazy"
                                                     />
                                                 </div>
                                                 <div className="absolute -bottom-1 -right-1 bg-black rounded-full p-0.5">
@@ -335,7 +379,7 @@ export function HomePage() {
                             {
                                 title: 'Claim Username',
                                 desc: 'Sign up with your phone number and secure your unique URL.',
-                                icon: UserLinkIcon,
+                                icon: User,
                             },
                             {
                                 title: 'Add Assets',
@@ -507,59 +551,3 @@ export function HomePage() {
         </>
     );
 }
-
-const UserLinkIcon = ({ className }: { className?: string }) => (
-    <svg
-        className={className}
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round">
-        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-        <circle
-            cx="12"
-            cy="7"
-            r="4"
-        />
-    </svg>
-);
-const BriefcaseIcon = ({ className }: { className?: string }) => (
-    <svg
-        className={className}
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round">
-        <rect
-            width="20"
-            height="14"
-            x="2"
-            y="7"
-            rx="2"
-            ry="2"
-        />
-        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
-    </svg>
-);
-const HeartIcon = ({ className }: { className?: string }) => (
-    <svg
-        className={className}
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round">
-        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
-    </svg>
-);

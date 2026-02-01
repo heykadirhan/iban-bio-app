@@ -11,10 +11,17 @@ export function HomeHeader() {
     const [isScrolled, setIsScrolled] = useState(false);
 
     useEffect(() => {
+        let ticking = false;
         const handleScroll = () => {
-            setIsScrolled(window.scrollY > 0);
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    setIsScrolled(window.scrollY > 20);
+                    ticking = false;
+                });
+                ticking = true;
+            }
         };
-        window.addEventListener('scroll', handleScroll);
+        window.addEventListener('scroll', handleScroll, { passive: true });
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
@@ -35,6 +42,7 @@ export function HomeHeader() {
                             width={120}
                             height={40}
                             className="hidden sm:inline"
+                            priority
                         />
                         <Image
                             src="/img/logo-icon.png"
@@ -42,6 +50,7 @@ export function HomeHeader() {
                             width={32}
                             height={32}
                             className="sm:hidden"
+                            priority
                         />
                     </Link>
 

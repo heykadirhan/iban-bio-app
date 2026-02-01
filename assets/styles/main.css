@@ -2,9 +2,21 @@
 html,
 body {
     scroll-behavior: smooth;
-    scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+/* Performance optimization for animated elements */
+.animate-float,
+.animate-float-delayed,
+.animate-gradient-x,
+.animate-pulse,
+.animate-ping,
+.animate-blink {
+    will-change: transform, opacity;
+    transform: translateZ(0);
+    backface-visibility: hidden;
 }
 
 .content {

@@ -1,35 +1,32 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 export function TypingEffect() {
     const [typedName, setTypedName] = useState('');
     const targetName = 'joe-doe';
 
-    useEffect(() => {
+    const startTyping = useCallback(() => {
         let i = 0;
-        let interval: ReturnType<typeof setInterval>;
+        const interval = setInterval(() => {
+            i++;
+            setTypedName(targetName.slice(0, i));
 
-        const startTyping = () => {
-            interval = setInterval(() => {
-                i++;
-                setTypedName(targetName.slice(0, i));
+            if (i === targetName.length) {
+                clearInterval(interval);
+                setTimeout(() => {
+                    setTypedName('');
+                    startTyping();
+                }, 2000);
+            }
+        }, 150); // Faster typing for better UX
 
-                if (i === targetName.length) {
-                    clearInterval(interval);
-
-                    setTimeout(() => {
-                        i = 0;
-                        setTypedName('');
-                        startTyping();
-                    }, 2000);
-                }
-            }, 300);
-        };
-
-        startTyping();
-
-        return () => clearInterval(interval);
+        return interval;
     }, [targetName]);
+
+    useEffect(() => {
+        const interval = startTyping();
+        return () => clearInterval(interval);
+    }, [startTyping]);
 
     return (
         <span className="text-white font-mono font-bold text-lg relative">

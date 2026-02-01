@@ -89,9 +89,24 @@ export default async function RootLayout({ children }: PropsWithChildren) {
     logActivityIfSession().catch(() => {});
     return (
         <html lang="en">
+            <head>
+                <link
+                    rel="preconnect"
+                    href="https://fonts.googleapis.com"
+                />
+                <link
+                    rel="preconnect"
+                    href="https://fonts.gstatic.com"
+                    crossOrigin="anonymous"
+                />
+                <link
+                    rel="dns-prefetch"
+                    href="https://www.googletagmanager.com"
+                />
+            </head>
             <Script
                 id="hotjar"
-                strategy="lazyOnload">
+                strategy="worker">
                 {`
 				(function(h,o,t,j,a,r){
 					h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
@@ -106,7 +121,11 @@ export default async function RootLayout({ children }: PropsWithChildren) {
             <GoogleAnalytics gaId={process.env.GA_ID} />
 
             <body className={`${fontFamily.className} antialiased dark`}>
-                <NextTopLoader color="#615fff" />
+                <NextTopLoader
+                    color="#615fff"
+                    showSpinner={false}
+                    height={2}
+                />
 
                 <NextIntlClientProvider>
                     <Toaster
