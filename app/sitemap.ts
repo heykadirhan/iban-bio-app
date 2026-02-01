@@ -1,5 +1,5 @@
 export const revalidate = 21600;
-export const dynamic = 'force-static';
+export const dynamic = 'force-dynamic';
 
 import type { MetadataRoute } from 'next';
 import { Routes } from '@/core/constants';
