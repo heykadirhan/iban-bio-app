@@ -246,7 +246,7 @@ export default function ModalPayment({
                                 </div>
 
                                 <div className="col-12 mb-4">
-                                    <Label>Title</Label>
+                                    <Label>Title (Optional)</Label>
                                     <FormField
                                         control={form.control}
                                         name="title"

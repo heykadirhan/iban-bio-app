@@ -1,0 +1,49 @@
+{
+    "result": 200,
+    "message": "Valid IBAN Number",
+    "validations": [
+        {
+            "result": 200,
+            "message": "Valid IBAN length"
+        },
+        {
+            "result": 200,
+            "message": "Valid IBAN Checksum"
+        },
+        {
+            "result": 200,
+            "message": "Valid IBAN Structure"
+        },
+        {
+            "result": 200,
+            "message": "Valid Account Number Checksum"
+        }
+    ],
+    "expremental": 0,
+    "data": {
+        "country_code": "EE",
+        "iso_alpha3": "EST",
+        "country_name": "Estonia",
+        "currency_code": "EUR",
+        "sepa_member": "Yes",
+        "sepa": {
+            "sepa_credit_transfer": "Yes",
+            "sepa_credit_transfer_inst": "No",
+            "sepa_direct_debit": "No",
+            "sepa_sdd_core": "No",
+            "sepa_b2b": "No",
+            "sepa_card_clearing": "No"
+        },
+        "bban": "1000001020145685",
+        "bank_account": "00102014568",
+        "bank": {
+            "bank_name": "AS SEB PANK",
+            "phone": "6 655 100",
+            "address": "Tornimäe tn 2 FLOOR 10",
+            "bic": "EEUHEE2X",
+            "city": "TALLINN",
+            "state": "",
+            "zip": "15010"
+        }
+    }
+}

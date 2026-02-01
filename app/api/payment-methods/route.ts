@@ -1,8 +1,23 @@
+import IBAN_API_RES from '@/assets/data/iban-api-res.json';
 import { NextRequest, NextResponse } from 'next/server';
 import { encrypt, decrypt, connectDB, getServerAuth, HttpStatus } from '@/lib';
 import { PaymentMethodModel } from '@/core/models';
 import { paymentMethodBaseReqDto, paymentMethodReqDto } from '@/core/dtos';
 import { PaymentMethodType } from '@/core/enums';
+
+function getIbanApiData(ibanNumber: string) {
+    if (process.env.NODE_ENV === 'development') {
+        return Promise.resolve({
+            json: async () => IBAN_API_RES,
+        });
+    }
+    return fetch(
+        `https://api.ibanapi.com/v1/validate/${ibanNumber.replace(
+            /\s+/g,
+            '',
+        )}?api_key=${process.env.IBAN_API_KEY}`,
+    );
+}
 
 export async function POST(req: NextRequest) {
     try {
@@ -32,15 +47,7 @@ export async function POST(req: NextRequest) {
         let bankBic: string | undefined;
 
         if (body.type === PaymentMethodType.IBAN) {
-            const ibanRes = await fetch(
-                `https://api.ibanapi.com/v1/validate/${body.meta.ibanNumber.replace(
-                    /\s+/g,
-                    '',
-                )}?api_key=${process.env.IBAN_API_KEY}`,
-            ).catch((err) => {
-                console.error('Error fetching IBAN API:', err);
-                throw new Error('Failed to validate IBAN number');
-            });
+            const ibanRes = await getIbanApiData(body.meta.ibanNumber);
             const ibanData = await ibanRes.json();
             if (ibanData.result !== 200) {
                 return NextResponse.json(
@@ -138,12 +145,7 @@ export async function PATCH(req: NextRequest) {
             encryptedData = encrypt(value || '');
 
             if (body.type === PaymentMethodType.IBAN) {
-                const ibanRes = await fetch(
-                    `https://api.ibanapi.com/v1/validate/${value.replace(
-                        /\s+/g,
-                        '',
-                    )}?api_key=${process.env.IBAN_API_KEY}`,
-                );
+                const ibanRes = await getIbanApiData(value);
                 const ibanData = await ibanRes.json();
                 if (ibanData.result !== 200) {
                     return NextResponse.json(
