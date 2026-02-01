@@ -87,7 +87,6 @@ const logActivityIfSession = async () => {
 };
 
 export default async function RootLayout({ children }: PropsWithChildren) {
-    await logActivityIfSession();
     return (
         <html lang="en">
             <head>
@@ -141,8 +140,6 @@ export default async function RootLayout({ children }: PropsWithChildren) {
         </html>
     );
 }
-
-export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
     metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL),

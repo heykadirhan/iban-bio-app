@@ -1,11 +1,18 @@
 'use client';
-import InputPhone from '@/components/input-phone';
+import dynamic from 'next/dynamic';
 import { Button } from '@/components/ui/button';
 import { Routes } from '@/core/constants';
 import { createRoute } from '@/core/utils';
 import { SearchIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
+
+const InputPhone = dynamic(() => import('@/components/input-phone'), {
+    ssr: false,
+    loading: () => (
+        <div className="h-12 w-full rounded-xl bg-[#111] border border-zinc-800 animate-pulse" />
+    ),
+});
 
 export function PhoneSearch() {
     const [phoneSearch, setPhoneSearch] = useState('');

@@ -71,7 +71,15 @@ export default function InputPhone({
             }
         };
 
-        detectUserCountry();
+        const requestIdle =
+            (window as any).requestIdleCallback ||
+            ((cb: () => void) => window.setTimeout(cb, 200));
+        const cancelIdle =
+            (window as any).cancelIdleCallback || window.clearTimeout;
+
+        const idleId = requestIdle(() => detectUserCountry());
+
+        return () => cancelIdle(idleId);
     }, []);
 
     useEffect(() => {
@@ -105,12 +113,19 @@ export default function InputPhone({
         setSearch('');
     };
 
-    const filteredCountries = COUNTRIES.filter(
-        (c) =>
-            c.name.toLowerCase().includes(search.toLowerCase()) ||
-            c.dial.includes(search) ||
-            c.code.toLowerCase().includes(search.toLowerCase()),
-    );
+    const filteredCountries = useMemo(() => {
+        const query = search.trim().toLowerCase();
+        if (!query) {
+            return COUNTRIES;
+        }
+
+        return COUNTRIES.filter(
+            (c) =>
+                c.name.toLowerCase().includes(query) ||
+                c.dial.includes(query) ||
+                c.code.toLowerCase().includes(query),
+        );
+    }, [search]);
 
     return (
         <div
