@@ -1,7 +1,7 @@
-@import 'tailwindcss';
-@import './main.css';
+/* Non-critical CSS - Load after initial render */
 @import 'bootstrap/dist/css/bootstrap-grid.min.css';
 @import 'tw-animate-css';
+@import './main.css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -44,12 +44,10 @@
 }
 
 :root {
-    --radius: 0.625rem;
     --card: oklch(1 0 0);
     --card-foreground: #fff;
     --popover: #1a1a1a;
     --popover-foreground: oklch(100% 0.00011 271.152);
-    --primary: #615fff;
     --primary-foreground: oklch(0.985 0 0);
     --secondary: #27272a;
     --secondary-foreground: #9e9e9e;
@@ -58,7 +56,6 @@
     --accent: oklch(24.354% 0.00003 271.152);
     --accent-foreground: #fff;
     --destructive: oklch(0.577 0.245 27.325);
-    --border: #121212;
     --input: oklch(0.922 0 0);
     --ring: oklch(0.708 0 0);
     --chart-1: oklch(0.646 0.222 41.116);
@@ -74,118 +71,17 @@
     --sidebar-accent-foreground: oklch(0.205 0 0);
     --sidebar-border: oklch(0.922 0 0);
     --sidebar-ring: oklch(0.708 0 0);
-    --background: #050505;
-    --foreground: #fff;
-}
-
-@layer base {
-    * {
-        @apply border-border outline-ring/50;
-    }
-    body {
-        @apply bg-background text-foreground;
-    }
 }
 
 button {
-    @apply !cursor-pointer;
-}
-
-.container {
-    @apply mx-auto px-4 md:px-0;
+    cursor: pointer !important;
 }
 
 .hide-scrollbar::-webkit-scrollbar {
     display: none;
 }
+
 .hide-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
-}
-
-@keyframes float {
-    0%,
-    100% {
-        transform: translateY(0px);
-    }
-    50% {
-        transform: translateY(-15px);
-    }
-}
-.animate-float {
-    will-change: transform;
-    animation: float 6s ease-in-out infinite;
-}
-.animate-float-delayed {
-    will-change: transform;
-    animation: float 7s ease-in-out infinite 1s;
-}
-
-@keyframes scroll {
-    0% {
-        transform: translateX(0);
-    }
-    100% {
-        transform: translateX(-50%);
-    }
-}
-.animate-scroll {
-    will-change: transform;
-    animation: scroll 40s linear infinite;
-}
-
-@keyframes blink {
-    0%,
-    100% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0;
-    }
-}
-.animate-blink {
-    animation: blink 1s step-end infinite;
-}
-
-.glass-card {
-    background: rgba(20, 20, 20, 0.8);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    backdrop-filter: none; /* Mobilde kapalı */
-    -webkit-backdrop-filter: none;
-}
-
-@media (min-width: 768px) {
-    .glass-card {
-        background: rgba(255, 255, 255, 0.03);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-    }
-}
-
-@media print {
-    body {
-        background-color: white !important;
-        color: black !important;
-    }
-    .no-print {
-        display: none !important;
-    }
-    .print-content {
-        color: black !important;
-        background: white !important;
-        border: none !important;
-        box-shadow: none !important;
-        padding: 0 !important;
-    }
-    .print-header {
-        color: black !important;
-        border-bottom: 1px solid #ddd;
-        padding-bottom: 20px;
-        margin-bottom: 20px;
-    }
-    a {
-        text-decoration: none;
-        color: black !important;
-    }
 }

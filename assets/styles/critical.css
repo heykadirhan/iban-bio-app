@@ -1,0 +1,46 @@
+/* Critical CSS - Inline this for fastest FCP/LCP */
+@import 'tailwindcss';
+
+:root {
+    --radius: 0.625rem;
+    --background: #050505;
+    --foreground: #fff;
+    --primary: #615fff;
+    --border: #121212;
+}
+
+@layer base {
+    * {
+        border-color: var(--border);
+    }
+    body {
+        background-color: var(--background);
+        color: var(--foreground);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+}
+
+/* Container - Critical for layout */
+.container {
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+    .container {
+        max-width: 90%;
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
+/* Glass card effect - Used in hero */
+.glass-card {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
