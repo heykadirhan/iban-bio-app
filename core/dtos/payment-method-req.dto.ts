@@ -7,6 +7,7 @@ export const paymentMethodBaseReqDto = z.object({
         .enum(PaymentMethodType)
         .nonoptional({ error: 'Please select a payment method type' }),
     appearance: z.string().nonempty({ error: 'Please select an appearance' }),
+    logoUrl: z.string().url().optional(),
     title: z.string().optional(),
     isActive: z.boolean().optional(),
     order: z.number().optional(),

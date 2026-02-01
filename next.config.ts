@@ -15,8 +15,13 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
-    reactStrictMode: false,
+    reactStrictMode: true,
+    compress: true,
+    compiler: {
+        removeConsole: process.env.NODE_ENV === 'production',
+    },
     images: {
+        formats: ['image/avif', 'image/webp'],
         remotePatterns: [
             {
                 hostname: process.env.AWS_STORAGE_URL,
@@ -29,6 +34,9 @@ const nextConfig: NextConfig = {
             },
             {
                 hostname: 'lh3.googleusercontent.com',
+            },
+            {
+                hostname: 'cdn.simpleicons.org',
             },
         ],
     },

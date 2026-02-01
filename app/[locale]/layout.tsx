@@ -17,6 +17,8 @@ import { ActivityModel, UserModel } from '@/core/models';
 
 const fontFamily = Gabarito({
     subsets: ['latin'],
+    display: 'swap',
+    preload: true,
 });
 
 const logActivityIfSession = async () => {
@@ -49,44 +51,47 @@ const logActivityIfSession = async () => {
 
         const now = new Date();
 
-        await connectDB();
-
-        await ActivityModel.findOneAndUpdate(
-            { userId, ip },
-            {
-                $set: {
-                    userAgent,
-                    deviceType: ua.device.type,
-                    deviceVendor: ua.device.vendor,
-                    deviceModel: ua.device.model,
-                    browserName: ua.browser.name,
-                    browserVersion: ua.browser.version,
-                    osName: ua.os.name,
-                    osVersion: ua.os.version,
-                    path,
-                    method,
-                    locale,
-                    lastSeen: now,
-                },
-            },
-            { upsert: true, new: true },
-        );
-
-        await UserModel.findByIdAndUpdate(userId, {
-            lastActive: now,
-        });
+        connectDB()
+            .then(() => {
+                Promise.all([
+                    ActivityModel.findOneAndUpdate(
+                        { userId, ip },
+                        {
+                            $set: {
+                                userAgent,
+                                deviceType: ua.device.type,
+                                deviceVendor: ua.device.vendor,
+                                deviceModel: ua.device.model,
+                                browserName: ua.browser.name,
+                                browserVersion: ua.browser.version,
+                                osName: ua.os.name,
+                                osVersion: ua.os.version,
+                                path,
+                                method,
+                                locale,
+                                lastSeen: now,
+                            },
+                        },
+                        { upsert: true, new: true },
+                    ),
+                    UserModel.findByIdAndUpdate(userId, {
+                        lastActive: now,
+                    }),
+                ]).catch(() => {});
+            })
+            .catch(() => {});
     } catch {
         // ignore activity logging errors
     }
 };
 
 export default async function RootLayout({ children }: PropsWithChildren) {
-    await logActivityIfSession();
+    logActivityIfSession().catch(() => {});
     return (
         <html lang="en">
             <Script
                 id="hotjar"
-                strategy="afterInteractive">
+                strategy="lazyOnload">
                 {`
 				(function(h,o,t,j,a,r){
 					h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
