@@ -9,6 +9,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { PropsWithChildren } from 'react';
 import { TOAST_CONFIG, AUTH_CONFIG } from '@/core/config';
 import { AuthWrapper } from '@/components/auth-wrapper';
+import { ActivityLogger } from '../../components/activity-logger';
 import { headers } from 'next/headers';
 import { getServerSession } from 'next-auth';
 import UAParser from 'ua-parser-js';
@@ -24,8 +25,10 @@ const fontFamily = Gabarito({
 const logActivityIfSession = async () => {
     try {
         const session = await getServerSession(AUTH_CONFIG);
-        const userId =
-            (session?.user as any)?._id || (session?.user as any)?.id;
+        const sessionUser = session?.user as
+            | Record<string, string | undefined>
+            | undefined;
+        const userId = sessionUser?._id ?? sessionUser?.id ?? sessionUser?.sub;
 
         if (!userId) return;
 
@@ -51,42 +54,40 @@ const logActivityIfSession = async () => {
 
         const now = new Date();
 
-        connectDB()
-            .then(() => {
-                Promise.all([
-                    ActivityModel.findOneAndUpdate(
-                        { userId, ip },
-                        {
-                            $set: {
-                                userAgent,
-                                deviceType: ua.device.type,
-                                deviceVendor: ua.device.vendor,
-                                deviceModel: ua.device.model,
-                                browserName: ua.browser.name,
-                                browserVersion: ua.browser.version,
-                                osName: ua.os.name,
-                                osVersion: ua.os.version,
-                                path,
-                                method,
-                                locale,
-                                lastSeen: now,
-                            },
-                        },
-                        { upsert: true, new: true },
-                    ),
-                    UserModel.findByIdAndUpdate(userId, {
-                        lastActive: now,
-                    }),
-                ]).catch(() => {});
-            })
-            .catch(() => {});
+        await connectDB();
+
+        await Promise.all([
+            ActivityModel.findOneAndUpdate(
+                { userId, ip },
+                {
+                    $set: {
+                        userAgent,
+                        deviceType: ua.device.type,
+                        deviceVendor: ua.device.vendor,
+                        deviceModel: ua.device.model,
+                        browserName: ua.browser.name,
+                        browserVersion: ua.browser.version,
+                        osName: ua.os.name,
+                        osVersion: ua.os.version,
+                        path,
+                        method,
+                        locale,
+                        lastSeen: now,
+                    },
+                },
+                { upsert: true, new: true },
+            ),
+            UserModel.findByIdAndUpdate(userId, {
+                lastActive: now,
+            }),
+        ]);
     } catch {
         // ignore activity logging errors
     }
 };
 
 export default async function RootLayout({ children }: PropsWithChildren) {
-    logActivityIfSession().catch(() => {});
+    await logActivityIfSession();
     return (
         <html lang="en">
             <head>
@@ -128,6 +129,7 @@ export default async function RootLayout({ children }: PropsWithChildren) {
                 />
 
                 <NextIntlClientProvider>
+                    <ActivityLogger />
                     <Toaster
                         position="bottom-right"
                         toastOptions={TOAST_CONFIG}
@@ -139,6 +141,8 @@ export default async function RootLayout({ children }: PropsWithChildren) {
         </html>
     );
 }
+
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
     metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL),
