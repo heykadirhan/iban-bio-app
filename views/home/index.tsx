@@ -146,9 +146,6 @@ export function HomePage() {
                                             priority
                                             unoptimized={true}
                                             className="h-[115%] sm:h-[120%] object-cover pt-6 overflow-hidden"
-                                            style={{
-                                                imageRendering: 'crisp-edges',
-                                            }}
                                         />
                                     </div>
                                 </div>
