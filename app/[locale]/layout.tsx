@@ -126,7 +126,6 @@ export default async function RootLayout({ children }: PropsWithChildren) {
                     showSpinner={false}
                     height={2}
                 />
-
                 <NextIntlClientProvider>
                     <ActivityLogger />
                     <Toaster
