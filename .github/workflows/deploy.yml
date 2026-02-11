@@ -76,7 +76,7 @@ jobs:
                   yarn install --production --ignore-scripts
 
                   echo "🔄 PM2 Reloading..."
-                  pm2 reload 1 || pm2 start yarn --name "iban-bio" -- start
+                  pm2 reload 0 || pm2 start yarn --name "iban-bio" -- start --port 3001
 
                   # Temizlik
                   rm $GITHUB_WORKSPACE/release.tar.gz
