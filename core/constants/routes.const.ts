@@ -9,4 +9,5 @@ export const Routes = {
     USER: '/:username',
     DASHBOARD: '/dashboard',
     SETTINGS: '/settings',
+    TOOLS_IBAN_QR: '/tools/iban-qr-generator',
 };
