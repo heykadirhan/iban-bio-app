@@ -13,14 +13,30 @@ export function HomeLayout({ children }: { children: React.ReactNode }) {
             <footer className="py-12 border-t border-white/5 bg-[#020202] text-zinc-500 text-sm">
                 <div className="container px-4 mx-auto">
                     <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-                        <div className="flex items-center gap-2 text-white opacity-80">
-                            <Sparkles
-                                size={20}
-                                className="text-indigo-400"
-                            />
-                            <span className="font-bold text-lg tracking-tight">
-                                iban.bio
-                            </span>
+                        <div className="flex flex-col gap-1">
+                            <div className="flex items-center gap-2 text-white opacity-80">
+                                <Sparkles
+                                    size={20}
+                                    className="text-indigo-400"
+                                />
+                                <span className="font-bold text-lg tracking-tight">
+                                    iban.bio
+                                </span>
+                            </div>
+
+                            <p className="text-zinc-500">
+                                <Link
+                                    href="https://kadirhan.dev"
+                                    target="_blank"
+                                    rel="noopener"
+                                    className="group relative inline-flex items-center transition-all duration-300 hover:text-zinc-200">
+                                    Made by{' '}
+                                    <span className="relative ml-1 font-medium text-zinc-300 transition-all duration-300 group-hover:text-indigo-300 group-hover:drop-shadow-[0_0_10px_rgba(129,140,248,0.45)]">
+                                        kadirhan
+                                        <span className="w-0 group-hover:w-full pointer-events-none absolute bottom-0 left-0 h-px border-b border-indigo-400 transition-all duration-300 group-hover:scale-x-100" />
+                                    </span>
+                                </Link>
+                            </p>
                         </div>
 
                         <div className="flex flex-wrap justify-center gap-6 md:gap-8">
