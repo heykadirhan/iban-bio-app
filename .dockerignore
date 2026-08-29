@@ -4,3 +4,10 @@ node_modules
 .dockerignore
 Dockerfile
 docker-compose.yml
+# secrets - imaja gomulmesin
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+.github
